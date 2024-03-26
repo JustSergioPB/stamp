@@ -84,6 +84,9 @@ importers:
       '@angular/compiler-cli':
         specifier: 17.3.1
         version: 17.3.1(@angular/compiler@17.3.1)(typescript@5.4.3)
+      '@ngx-translate/core':
+        specifier: ^15.0.0
+        version: 15.0.0(@angular/common@17.3.1)(@angular/core@17.3.1)(rxjs@7.8.0)
       '@types/jasmine':
         specifier: 4.3.0
         version: 4.3.0
@@ -406,7 +409,6 @@ packages:
       '@angular/core': 17.3.1(rxjs@7.8.0)(zone.js@0.14.4)
       rxjs: 7.8.0
       tslib: 2.3.0
-    dev: false
 
   /@angular/compiler-cli@17.3.1(@angular/compiler@17.3.1)(typescript@5.4.3):
     resolution: {integrity: sha512-xLV9KU+zOpe57/2rQ59ku21EaStNpLSlR9+qkDYf8JR09fB+W9vY3UYbpi5RjHxAFIZBM5D9SFQjjll8rch26g==}
@@ -2556,6 +2558,19 @@ packages:
       '@angular/compiler-cli': 17.3.1(@angular/compiler@17.3.1)(typescript@5.4.3)
       typescript: 5.4.3
       webpack: 5.90.3(esbuild@0.20.1)
+    dev: true
+
+  /@ngx-translate/core@15.0.0(@angular/common@17.3.1)(@angular/core@17.3.1)(rxjs@7.8.0):
+    resolution: {integrity: sha512-Am5uiuR0bOOxyoercDnAA3rJVizo4RRqJHo8N3RqJ+XfzVP/I845yEnMADykOHvM6HkVm4SZSnJBOiz0Anx5BA==}
+    engines: {node: ^16.13.0 || >=18.10.0}
+    peerDependencies:
+      '@angular/common': '>=16.0.0'
+      '@angular/core': '>=16.0.0'
+      rxjs: ^6.5.5 || ^7.4.0
+    dependencies:
+      '@angular/common': 17.3.1(@angular/core@17.3.1)(rxjs@7.8.0)
+      '@angular/core': 17.3.1(rxjs@7.8.0)(zone.js@0.14.4)
+      rxjs: 7.8.0
     dev: true
 
   /@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1:
@@ -8615,6 +8630,7 @@ packages:
 
   /semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
+    requiresBuild: true
     dev: true
 
   /semver@6.3.1:

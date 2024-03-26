@@ -1,0 +1,15 @@
+@for (navlink of navlinks(); track navlink) {
+  <a
+    class="navlink"
+    routerLink="{{ navlink.url }}"
+    [ngClass]="rla.isActive ? 'navlink--active' : 'navlink--hover'"
+    routerLinkActive
+    #rla="routerLinkActive"
+  >
+    <lucide-angular
+      class="navlink__icon"
+      name="{{ navlink.icon }}"
+    ></lucide-angular>
+    {{ navlink.title }}
+  </a>
+}
