@@ -10,6 +10,7 @@ import {
   ChevronsRight,
 } from 'lucide-angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,5 +25,6 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     importProvidersFrom(TranslateModule.forRoot()),
+    importProvidersFrom(HttpClientModule),
   ],
 };

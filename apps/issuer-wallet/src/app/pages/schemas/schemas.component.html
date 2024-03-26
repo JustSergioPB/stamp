@@ -2,11 +2,16 @@
   <h1 class="text-3xl font-bold text-slate-900">Schemas</h1>
   <button class="button button--primary">Create</button>
 </div>
-<div class="grow shrink-0 basis-auto"></div>
+<div class="grow shrink-0 basis-auto">
+  @if (schemaService.schemas$ | async; as schemas) {
+    @if (schemas.items.length) {
+    } @else {
+      <p>No schemas found</p>
+    }
+  } @else {
+    <p>Loading...</p>
+  }
+</div>
 <div class="flex justify-end">
-  <stamp-paginator
-    [itemsPerPage]="25"
-    [page]="1"
-    [totalPages]="10"
-  ></stamp-paginator>
+  <stamp-paginator pageSize="25" [page]="1" [totalPages]="10"></stamp-paginator>
 </div>

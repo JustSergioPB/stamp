@@ -21,7 +21,8 @@
     "lucide-angular": "^0.363.0",
     "rxjs": "7.8.0",
     "tslib": "2.3.0",
-    "zone.js": "0.14.4"
+    "zone.js": "0.14.4",
+    "domain": "workspace:*"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "17.3.2",

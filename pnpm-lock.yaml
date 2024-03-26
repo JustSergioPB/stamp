@@ -62,6 +62,9 @@ importers:
       '@angular/router':
         specifier: 17.3.1
         version: 17.3.1(@angular/common@17.3.1)(@angular/core@17.3.1)(@angular/platform-browser@17.3.1)(rxjs@7.8.0)
+      domain:
+        specifier: workspace:*
+        version: link:../../packages/domain
       lucide-angular:
         specifier: ^0.363.0
         version: 0.363.0(@angular/common@17.3.1)(@angular/core@17.3.1)
@@ -117,6 +120,12 @@ importers:
       tailwindcss:
         specifier: 3.4.1
         version: 3.4.1
+      typescript:
+        specifier: 5.4.3
+        version: 5.4.3
+
+  packages/domain:
+    dependencies:
       typescript:
         specifier: 5.4.3
         version: 5.4.3
@@ -9566,7 +9575,6 @@ packages:
     resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}

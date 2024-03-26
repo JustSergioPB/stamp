@@ -1,8 +1,5 @@
 import { Component, input } from '@angular/core';
-import {
-  ItemsPerPageOptions,
-  itemsPerPageOptions,
-} from '@models/paginator/items-per-page-options';
+import { PageSize, pageSizes } from '@domain/page';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -13,8 +10,8 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './paginator.component.css',
 })
 export class PaginatorComponent {
-  itemsPerPage = input.required<ItemsPerPageOptions>();
+  pageSize = input.required<PageSize>();
   page = input.required<number>();
   totalPages = input.required<number>();
-  itemsPerPageOptions = itemsPerPageOptions;
+  pageSizes = pageSizes;
 }
