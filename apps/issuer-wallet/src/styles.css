@@ -30,4 +30,24 @@ body {
   .navlink__icon {
     @apply w-4 h-4;
   }
+
+  .button {
+    @apply text-sm flex items-center gap-2 rounded-md py-2 px-4 shadow-sm hover:cursor-pointer;
+  }
+
+  .select {
+    @apply text-sm rounded-md p-2 shadow-sm text-slate-900 border border-slate-200 hover:cursor-pointer font-light;
+  }
+
+  .button--icon {
+    @apply p-2;
+  }
+
+  .button--primary {
+    @apply text-white bg-slate-900 shadow-slate-900 hover:bg-slate-700;
+  }
+
+  .button--secondary {
+    @apply text-slate-900 border border-slate-200;
+  }
 }

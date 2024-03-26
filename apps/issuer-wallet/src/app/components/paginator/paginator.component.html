@@ -1,0 +1,25 @@
+<span class="text-sm font-semibold flex items-center gap-2">
+  Items per page:
+  <select class="select" [value]="itemsPerPage()">
+    @for (option of itemsPerPageOptions; track option) {
+      <option value="{{ option }}">{{ option }}</option>
+    }
+  </select>
+</span>
+<span class="text-sm font-semibold">
+  Page {{ page() }} of {{ totalPages() }}
+</span>
+<div class="flex gap-2">
+  <button class="button button--icon button--secondary">
+    <lucide-angular class="h-4 w-4" name="chevronLeft"></lucide-angular>
+  </button>
+  <button class="button button--icon button--secondary">
+    <lucide-angular class="h-4 w-4" name="chevronsLeft"></lucide-angular>
+  </button>
+  <button class="button button--icon button--secondary">
+    <lucide-angular class="h-4 w-4" name="chevronsRight"></lucide-angular>
+  </button>
+  <button class="button button--icon button--secondary">
+    <lucide-angular class="h-4 w-4" name="chevronRight"></lucide-angular>
+  </button>
+</div>

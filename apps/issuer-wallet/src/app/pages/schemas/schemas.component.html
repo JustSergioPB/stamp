@@ -1,1 +1,12 @@
-<p>schemas works!</p>
+<div class="flex justify-between items-center">
+  <h1 class="text-3xl font-bold text-slate-900">Schemas</h1>
+  <button class="button button--primary">Create</button>
+</div>
+<div class="grow shrink-0 basis-auto"></div>
+<div class="flex justify-end">
+  <stamp-paginator
+    [itemsPerPage]="25"
+    [page]="1"
+    [totalPages]="10"
+  ></stamp-paginator>
+</div>
