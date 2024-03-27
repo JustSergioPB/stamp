@@ -38,6 +38,7 @@ export class SchemaApiService {
     this._query$.next(
       new SchemaQuery(query.pageSize ?? pageSize, query.page ?? page),
     );
+    this._schemas$.next(null);
     this._query$
       .asObservable()
       .pipe(

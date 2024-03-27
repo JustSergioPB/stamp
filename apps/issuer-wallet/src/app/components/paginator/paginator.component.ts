@@ -19,9 +19,12 @@ export class PaginatorComponent {
   pageSize = input<number>();
   page = input<number>();
   count = input<number>();
-  lastPage = computed(() =>
-    Math.ceil((this.count() ?? 0) / (this.pageSize() ?? 10)),
-  );
+  lastPage = computed(() => {
+    const lastPage = Math.ceil(
+      (this.count() ?? 0) / (this.pageSize() ?? 10) - 1,
+    );
+    return lastPage < 0 ? 0 : lastPage;
+  });
   pageSizes = SchemaQuery.pageSizes;
 
   @Output() pageChange = new EventEmitter<number>();

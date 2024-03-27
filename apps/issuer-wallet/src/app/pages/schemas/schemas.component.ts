@@ -3,11 +3,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { PaginatorComponent } from '@components/paginator/paginator.component';
 import { SchemaApiService } from 'src/app/services/schema/schema-api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ProgressBarComponent } from '@components/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'stamp-schemas',
   standalone: true,
-  imports: [PaginatorComponent, CommonModule],
+  imports: [PaginatorComponent, ProgressBarComponent, CommonModule],
   templateUrl: './schemas.component.html',
   styleUrl: './schemas.component.css',
 })

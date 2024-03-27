@@ -1,15 +1,22 @@
 <div class="flex justify-between items-center">
   <h1 class="text-3xl font-bold text-slate-900">Schemas</h1>
-  <button class="button button--primary">Create</button>
+  <button class="button button--primary" [disabled]="!schemas()">Create</button>
 </div>
-<div class="grow shrink-0 basis-auto">
+<div
+  class="grow shrink-0 basis-auto flex flex-col items-center justify-center gap-2"
+>
   @if (schemas()) {
-    @if (schemas()?.items?.length) {
-    } @else {
-      <p>No schemas found</p>
+    @for (schema of schemas()?.items; track schema.id) {
+    } @empty {
+      <h1 class="text-2xl font-bold text-slate-900">No schemas found</h1>
+      <h2 class="text-slate-500 mb-4">
+        Try adjusting your search and if you still don't find it you can add it!
+      </h2>
+      <button class="button button--primary">Create</button>
     }
   } @else {
-    <p>Loading...</p>
+    <p class="text-slate-500">Loading...</p>
+    <stamp-progress-bar></stamp-progress-bar>
   }
 </div>
 <div class="flex justify-end">

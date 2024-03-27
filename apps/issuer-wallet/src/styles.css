@@ -48,7 +48,11 @@ body {
   }
 
   .button--primary {
-    @apply text-white bg-slate-900 shadow-slate-900 hover:bg-slate-700;
+    @apply text-slate-50 bg-slate-900 shadow-slate-900 hover:bg-slate-700;
+  }
+
+  .button--primary:disabled {
+    @apply  bg-slate-700 cursor-not-allowed;
   }
 
   .button--secondary {

@@ -1,0 +1,26 @@
+:host {
+  width: 300px;
+}
+
+.progress-bar {
+  @apply bg-slate-200 h-1 w-full overflow-hidden;
+}
+
+.progress-bar-value {
+  animation: indeterminateAnimation 1s infinite linear;
+  transform-origin: 0% 50%;
+
+  @apply bg-slate-900 h-full w-full;
+}
+
+@keyframes indeterminateAnimation {
+  0% {
+    transform: translateX(0) scaleX(0);
+  }
+  40% {
+    transform: translateX(0) scaleX(0.4);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.5);
+  }
+}
