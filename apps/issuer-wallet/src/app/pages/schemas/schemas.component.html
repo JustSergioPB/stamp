@@ -3,8 +3,8 @@
   <button class="button button--primary">Create</button>
 </div>
 <div class="grow shrink-0 basis-auto">
-  @if (schemaService.schemas$ | async; as schemas) {
-    @if (schemas.items.length) {
+  @if (schemas()) {
+    @if (schemas()?.items?.length) {
     } @else {
       <p>No schemas found</p>
     }
@@ -13,5 +13,9 @@
   }
 </div>
 <div class="flex justify-end">
-  <stamp-paginator pageSize="25" [page]="1" [totalPages]="10"></stamp-paginator>
+  <stamp-paginator
+    [pageSize]="schemas()?.pageSize"
+    [page]="schemas()?.page"
+    [count]="schemas()?.count"
+  ></stamp-paginator>
 </div>

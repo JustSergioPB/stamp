@@ -1,13 +1,13 @@
 <span class="text-sm font-semibold flex items-center gap-2">
   Items per page:
-  <select class="select" [value]="pageSize()">
+  <select class="select" [value]="pageSize() ?? 10">
     @for (option of pageSizes; track option) {
-      <option value="{{ option }}">{{ option }}</option>
+      <option [value]="option">{{ option }}</option>
     }
   </select>
 </span>
 <span class="text-sm font-semibold">
-  Page {{ page() }} of {{ totalPages() }}
+  {{ page() ?? 0 }} - {{ (page() ?? 0) + (count() ?? 0) }} elements
 </span>
 <div class="flex gap-2">
   <button class="button button--icon button--secondary">

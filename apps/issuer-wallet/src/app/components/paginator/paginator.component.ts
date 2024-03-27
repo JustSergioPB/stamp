@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { PageSize, pageSizes } from '@domain/page';
+import { SchemaQuery } from '@domain/schema';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -10,8 +10,8 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './paginator.component.css',
 })
 export class PaginatorComponent {
-  pageSize = input.required<PageSize>();
-  page = input.required<number>();
-  totalPages = input.required<number>();
-  pageSizes = pageSizes;
+  pageSize = input<number>();
+  page = input<number>();
+  count = input<number>();
+  pageSizes = SchemaQuery.pageSizes;
 }

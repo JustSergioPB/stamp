@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Schema, SchemaJson, SchemaQuery } from '@domain/schema';
 import { Page } from '@domain/page';
 import { BehaviorSubject, take, tap } from 'rxjs';
+import { environment } from 'src/envs/env.dev';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SchemaApiService {
-  private BASE_URL = '/api/schema';
   private _schema$ = new BehaviorSubject<Schema | null>(null);
   private _schemas$ = new BehaviorSubject<Page<Schema> | null>(null);
 
@@ -19,7 +19,7 @@ export class SchemaApiService {
 
   getSchema(id: string): void {
     this.httpClient
-      .get<SchemaJson>(`${this.BASE_URL}/schema/${id}`)
+      .get<SchemaJson>(`${environment.apiUrl}/schema/${id}`)
       .pipe(
         tap((schema) => this._schema$.next(Schema.fromJson(schema))),
         take(1),
@@ -29,7 +29,7 @@ export class SchemaApiService {
 
   searchSchemas(query: SchemaQuery): void {
     this.httpClient
-      .get<Page<SchemaJson>>(`${this.BASE_URL}/schemas`, {
+      .get<Page<SchemaJson>>(`${environment.apiUrl}/schemas`, {
         params: {
           page: query.page.toString(),
           pageSize: query.pageSize,
@@ -41,7 +41,7 @@ export class SchemaApiService {
             items: schemas.items.map(Schema.fromJson),
             page: schemas.page,
             pageSize: schemas.pageSize,
-            totalItems: schemas.totalItems,
+            count: schemas.count,
           }),
         ),
         take(1),
