@@ -1,3 +1,7 @@
+export type SchemaQueryJson = {
+  pageSize: number;
+  page: number;
+};
 export class SchemaQuery {
   readonly pageSize: number;
   readonly page: number;
@@ -9,5 +13,12 @@ export class SchemaQuery {
     }
     this.pageSize = pageSize;
     this.page = page;
+  }
+
+  toJson(): SchemaQueryJson {
+    return {
+      pageSize: this.pageSize,
+      page: this.page,
+    };
   }
 }

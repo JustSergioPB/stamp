@@ -1,25 +1,37 @@
 <span class="text-sm font-semibold flex items-center gap-2">
   Items per page:
-  <select class="select" [value]="pageSize() ?? 10">
+  <select class="select" [value]="pageSize() ?? 10" (change)="onPageSizeChange($event)">
     @for (option of pageSizes; track option) {
       <option [value]="option">{{ option }}</option>
     }
   </select>
 </span>
 <span class="text-sm font-semibold">
-  {{ page() ?? 0 }} - {{ (page() ?? 0) + (count() ?? 0) }} elements
+  {{ page() ?? 0 }} - {{ (page() ?? 0) + (count() ?? 0) }} of {{ count() ?? 0 }}
 </span>
 <div class="flex gap-2">
-  <button class="button button--icon button--secondary">
-    <lucide-angular class="h-4 w-4" name="chevronLeft"></lucide-angular>
-  </button>
-  <button class="button button--icon button--secondary">
+  <button
+    class="button button--icon button--secondary"
+    [disabled]="page() === 0"
+  >
     <lucide-angular class="h-4 w-4" name="chevronsLeft"></lucide-angular>
   </button>
-  <button class="button button--icon button--secondary">
-    <lucide-angular class="h-4 w-4" name="chevronsRight"></lucide-angular>
+  <button
+    class="button button--icon button--secondary"
+    [disabled]="page() === 0"
+  >
+    <lucide-angular class="h-4 w-4" name="chevronLeft"></lucide-angular>
   </button>
-  <button class="button button--icon button--secondary">
+  <button
+    class="button button--icon button--secondary"
+    [disabled]="page() === lastPage()"
+  >
     <lucide-angular class="h-4 w-4" name="chevronRight"></lucide-angular>
+  </button>
+  <button
+    class="button button--icon button--secondary"
+    [disabled]="page() === lastPage()"
+  >
+    <lucide-angular class="h-4 w-4" name="chevronsRight"></lucide-angular>
   </button>
 </div>

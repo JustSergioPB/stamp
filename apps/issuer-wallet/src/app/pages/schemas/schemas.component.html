@@ -17,5 +17,7 @@
     [pageSize]="schemas()?.pageSize"
     [page]="schemas()?.page"
     [count]="schemas()?.count"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
   ></stamp-paginator>
 </div>

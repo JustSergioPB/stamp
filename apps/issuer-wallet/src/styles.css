@@ -39,6 +39,10 @@ body {
     @apply text-sm rounded-md p-2 shadow-sm text-slate-900 border border-slate-200 hover:cursor-pointer font-light;
   }
 
+  .select:disabled {
+    @apply text-slate-400 border border-slate-200 bg-slate-100 cursor-not-allowed;
+  }
+
   .button--icon {
     @apply p-2;
   }
@@ -48,6 +52,10 @@ body {
   }
 
   .button--secondary {
-    @apply text-slate-900 border border-slate-200;
+    @apply text-slate-900 border border-slate-200 hover:bg-slate-100;
+  }
+
+  .button--secondary:disabled {
+    @apply text-slate-400 border border-slate-200 bg-slate-100 cursor-not-allowed;
   }
 }

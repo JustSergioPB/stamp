@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { PaginatorComponent } from '@components/paginator/paginator.component';
-import { SchemaQuery } from '@domain/schema';
 import { SchemaApiService } from 'src/app/services/schema/schema-api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -17,6 +16,14 @@ export class SchemasComponent implements OnInit {
   schemas = toSignal(this.schemaService.schemas$, { initialValue: null });
 
   ngOnInit(): void {
-    this.schemaService.searchSchemas(new SchemaQuery());
+    this.schemaService.searchSchemas({});
+  }
+
+  onPageSizeChange(pageSize: number): void {
+    this.schemaService.searchSchemas({ pageSize });
+  }
+
+  onPageChange(page: number): void {
+    this.schemaService.searchSchemas({ page });
   }
 }
