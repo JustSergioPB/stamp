@@ -20,13 +20,18 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "rootDir": "./src"
+    "paths": {
+      "@routes/*": ["src/routes/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@domain/*": ["../../packages/domain/src/*"],
+      "@repositories/*": ["src/repositories/*"],
+      "@collections/*": ["src/collections/*"]
+    }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }
