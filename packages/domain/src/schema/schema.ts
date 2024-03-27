@@ -1,13 +1,15 @@
+export type SchemaId = string;
+
 export type SchemaJson = {
-  id: string | undefined;
+  id: SchemaId | undefined;
   name: string;
 };
 
 export class Schema {
-  readonly id: string | undefined;
+  readonly id: SchemaId | undefined;
   private name: string;
 
-  private constructor(id: string | undefined, name: string) {
+  private constructor(id: SchemaId | undefined, name: string) {
     this.id = id;
     this.name = name;
   }
