@@ -16,6 +16,9 @@
     "start": {
       "dependsOn": ["build"]
     },
-    "e2e:headless": {}
+    "e2e:headless": {},
+    "test": {
+      "dependsOn": ["^test"]
+    }
   }
 }
