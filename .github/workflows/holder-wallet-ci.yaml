@@ -1,4 +1,4 @@
-name: Issuer Wallet Main PR
+name: Holder Wallet Main PR
 
 on:
   pull_request:
