@@ -1,3 +1,4 @@
+import { EmptyLabelError } from "../errors";
 import { Claim, ClaimPrimitive } from "./claim";
 
 export const valueType = [
@@ -117,7 +118,7 @@ export class SchemaNode {
 
   static validate(schemaNode: SchemaNodePrimitive): void {
     if (!schemaNode.label) {
-      throw new Error("Label cannot be empty");
+      throw new EmptyLabelError();
     }
   }
 }

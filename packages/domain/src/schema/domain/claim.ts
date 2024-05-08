@@ -1,3 +1,4 @@
+import { EmptyClaimError } from "../errors";
 import { SchemaNode, SchemaNodePrimitive } from "./schema-node";
 
 export type ClaimPrimitive = {
@@ -40,7 +41,7 @@ export class Claim {
   private static validate(claim: ClaimPrimitive): void {
     const keys = Object.keys(claim);
     if (keys.length === 0) {
-      throw new Error("Credential subject must have at least one property");
+      throw new EmptyClaimError();
     }
   }
 }

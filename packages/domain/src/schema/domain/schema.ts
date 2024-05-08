@@ -1,3 +1,4 @@
+import { EmptyTypesError } from "../errors";
 import { Claim, ClaimPrimitive } from "./claim";
 import { SchemaStatus } from "./schema-status";
 
@@ -108,7 +109,7 @@ export class Schema {
 
   private static validate(schema: CreateSchema | SchemaPrimitive): void {
     if (schema.types.length === 0) {
-      throw new Error("Types must not be empty");
+      throw new EmptyTypesError();
     }
   }
 }
