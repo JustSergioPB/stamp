@@ -12,7 +12,32 @@ on:
       - "packages/domain/**"
       - ".github/workflows/holder-wallet-ci.yaml"
 jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    environment: testing
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache turbo build setup
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.0.0
+      - name: Install dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint
+
   e2e:
+    needs: lint
     runs-on: ubuntu-22.04
     environment: testing
     env:
