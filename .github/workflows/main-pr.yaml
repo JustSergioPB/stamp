@@ -38,6 +38,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          install: false
           working-directory: apps/issuer-wallet
           start: npm run e2e:headless
 
@@ -70,5 +71,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          install: false
           working-directory: apps/holder-wallet
           start: npm run e2e:headless
