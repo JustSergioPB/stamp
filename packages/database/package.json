@@ -1,0 +1,15 @@
+{
+  "name": "@stamp/database",
+  "version": "0.0.1",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "mongoose": "8.3.4",
+    "typescript": "5.3.3"
+  }
+}

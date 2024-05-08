@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "dotenv -- turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
     "e2e:headless": "turbo e2e:headless",
@@ -14,7 +14,7 @@
     "@repo/typescript-config": "*",
     "prettier": "3.2.5",
     "ts-node": "10.9.2",
-    "turbo": "latest"
+    "turbo": "1.13.3"
   },
   "engines": {
     "node": ">=18"
@@ -23,5 +23,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "dotenv-cli": "7.4.2"
+  }
 }
