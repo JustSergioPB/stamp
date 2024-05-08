@@ -1,2 +1,2 @@
-export * from "./schema/domain";
+export * from "./schema/models";
 export * from "./schema/errors";
