@@ -14,18 +14,18 @@ export type ValueType = (typeof valueType)[number];
 
 export type SchemaNodePrimitive = {
   label: string;
-  valueType: ValueType;
+  type: ValueType;
   lang?: string;
-  valueSubtype?: ValueType;
+  subtype?: ValueType;
   types?: string[];
   properties?: ClaimPrimitive;
 };
 
 export class SchemaNode {
   private _label: string;
-  private _valueType: ValueType;
+  private _type: ValueType;
   private _lang?: string;
-  private _valueSubtype?: ValueType;
+  private _subtype?: ValueType;
   private _types?: string[];
   private _properties?: Claim;
 
@@ -34,14 +34,14 @@ export class SchemaNode {
     valueType: ValueType,
     lang?: string,
     properties?: Claim,
-    valueSubtype?: ValueType,
+    subtype?: ValueType,
     types?: string[]
   ) {
     this._label = label;
     this._lang = lang;
-    this._valueType = valueType;
+    this._type = valueType;
     this._properties = properties;
-    this._valueSubtype = valueSubtype;
+    this._subtype = subtype;
     this._types = types;
   }
 
@@ -58,17 +58,17 @@ export class SchemaNode {
     }
     return new SchemaNode(
       sanitized.label,
-      sanitized.valueType,
+      sanitized.type,
       sanitized.lang,
       properties,
-      sanitized.valueSubtype,
+      sanitized.subtype,
       sanitized.types
     );
   }
 
   toPrimitive(): SchemaNodePrimitive {
     const primitive: SchemaNodePrimitive = {
-      valueType: this._valueType,
+      type: this._type,
       label: this._label,
     };
 
@@ -77,8 +77,8 @@ export class SchemaNode {
       primitive.properties = properties;
     }
 
-    if (this._valueSubtype) {
-      primitive.valueSubtype = this._valueSubtype;
+    if (this._subtype) {
+      primitive.subtype = this._subtype;
     }
 
     if (this._lang) {
@@ -93,7 +93,7 @@ export class SchemaNode {
   }
 
   static sanitize(schemaNode: SchemaNodePrimitive): SchemaNodePrimitive {
-    const { types, properties, lang, valueSubtype, ...rest } = schemaNode;
+    const { types, properties, lang, subtype, ...rest } = schemaNode;
 
     const sanitized: SchemaNodePrimitive = rest;
 
@@ -101,8 +101,8 @@ export class SchemaNode {
       sanitized.lang = lang;
     }
 
-    if (valueSubtype) {
-      sanitized.valueSubtype = valueSubtype;
+    if (subtype) {
+      sanitized.subtype = subtype;
     }
 
     if (types && types.filter((type) => type).length) {

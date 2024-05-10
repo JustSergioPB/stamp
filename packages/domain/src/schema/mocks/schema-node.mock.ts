@@ -2,48 +2,48 @@ import { SchemaNodePrimitive } from "../models";
 
 export const VACCINE_NAME_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Name",
-  valueType: "string",
+  type: "string",
 };
 
 export const VACCINE_ILLNESS_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Illness",
-  valueType: "string",
+  type: "string",
 };
 
 export const VACCINE_CODE_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Code",
-  valueType: "string",
+  type: "string",
 };
 
 export const VACCINE_DATE_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Date",
-  valueType: "string",
+  type: "string",
 };
 
 export const BREED_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Breed",
-  valueType: "list",
-  valueSubtype: "string",
+  type: "list",
+  subtype: "string",
 };
 
 export const NON_SANITIZED_BREED_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Breed",
-  valueType: "list",
-  valueSubtype: "string",
+  type: "list",
+  subtype: "string",
   properties: {},
 };
 
 export const INVALID_BREED_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Breed",
-  valueType: "list",
-  valueSubtype: "string",
+  type: "list",
+  subtype: "string",
   types: [],
 };
 
 export const VACCINES_SCHEMA_NODE_MOCK: SchemaNodePrimitive = {
   label: "Vaccines",
-  valueType: "list",
-  valueSubtype: "object",
+  type: "list",
+  subtype: "object",
   properties: {
     name: VACCINE_NAME_SCHEMA_NODE_MOCK,
     illness: VACCINE_ILLNESS_SCHEMA_NODE_MOCK,
