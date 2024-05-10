@@ -12,7 +12,7 @@ export default function AppLayout({ children }: Props) {
   return (
     <main className="h-full overflow-hidden flex">
       <Sidebar links={NAV_LINKS} className="basis-16" />
-      <div className="h-full basis-auto">{children}</div>
+      <div className="h-full basis-auto grow shrink-0 bg-neutral-100 p-4">{children}</div>
     </main>
   );
 }

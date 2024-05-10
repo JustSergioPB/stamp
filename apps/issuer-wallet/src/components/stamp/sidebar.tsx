@@ -35,7 +35,7 @@ export function Sidebar({ links, className }: SidebarProps) {
   return (
     <div
       className={cn(
-        "h-full border-r-2 border-r-neutral-200 flex flex-col items-center",
+        "h-full border-r-2 flex flex-col items-center",
         className
       )}
     >
