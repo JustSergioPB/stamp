@@ -1,9 +1,18 @@
+"use client";
+
+import { Sidebar } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
+import { NAV_LINKS } from "./nav-links";
 
 type Props = {
   children: ReactNode;
 };
 
-export default async function AppLayout({ children }: Props) {
-  return <main className="h-screen overflow-hidden">{children}</main>;
+export default function AppLayout({ children }: Props) {
+  return (
+    <main className="h-full overflow-hidden flex">
+      <Sidebar links={NAV_LINKS} className="basis-16" />
+      <div className="h-full basis-auto">{children}</div>
+    </main>
+  );
 }
