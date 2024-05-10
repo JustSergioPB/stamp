@@ -16,6 +16,7 @@ import { CirclePlus } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { SchemaNodeForm, formSchemaNode } from "./schema-node-form";
+import TreeLine from "@components/stamp/tree-line";
 
 type Props = {
   schema?: Schema;
@@ -83,7 +84,7 @@ export default function SchemaForm({ schema }: Props) {
         <FormItem className="grow shrink-0 basis-auto flex flex-col">
           <FormLabel>Data</FormLabel>
           <div className="block grow shrink-0 basis-auto h-0 overflow-y-auto">
-            <ul className="w-full">
+            <ul className="w-full pl-2">
               {fields.map((_, index) => (
                 <SchemaNodeForm
                   control={form.control}
@@ -110,7 +111,12 @@ export default function SchemaForm({ schema }: Props) {
             </Button>
           </div>
         </FormItem>
-        <Button type="submit">Submit</Button>
+        <div className="flex gap-2 justify-end">
+          <Button type="reset" variant="secondary">
+            Cancel
+          </Button>
+          <Button type="submit">Submit</Button>
+        </div>
       </form>
     </Form>
   );

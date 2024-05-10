@@ -77,13 +77,13 @@ export function SchemaNodeForm({ control, index, remove, parent }: Props) {
   }
 
   return (
-    <li className="w-full ml-2" key={`${parent}.${index}`}>
+    <li className="w-full" key={`${parent}.${index}`}>
       <div className="flex items-center gap-2 mb-2">
         <FormField
           control={control}
           name={`${parent}.${index}.label`}
           render={({ field }) => (
-            <FormItem className="basis-auto grow shrink-0">
+            <FormItem className="grow basis-auto">
               <FormLabel>Label</FormLabel>
               <FormControl>
                 <Input placeholder="Breed" {...field} />
@@ -97,7 +97,7 @@ export function SchemaNodeForm({ control, index, remove, parent }: Props) {
           control={control}
           name={`${parent}.${index}.type`}
           render={({ field }) => (
-            <FormItem className="basis-[30%]">
+            <FormItem className="basis-1/5">
               <FormLabel>Type</FormLabel>
               <Select
                 onValueChange={(value) => onTypeChange(field, value)}
@@ -125,7 +125,7 @@ export function SchemaNodeForm({ control, index, remove, parent }: Props) {
             control={control}
             name={`${parent}.${index}.subtype`}
             render={({ field }) => (
-              <FormItem className="basis-[30%]">
+              <FormItem className="basis-1/5">
                 <FormLabel>Subtype</FormLabel>
                 <Select
                   onValueChange={(value) => onSubtypeChange(field, value)}
@@ -159,16 +159,19 @@ export function SchemaNodeForm({ control, index, remove, parent }: Props) {
           <Trash className="h-4 w-4" />
         </Button>
       </div>
-      {fields.map((_, index) => (
-        <SchemaNodeForm
-          control={control}
-          index={index}
-          remove={() => subRemove(index)}
-          parent={`${parent}.${index}`}
-        />
-      ))}
+      <ul className="w-full pl-8">
+        {fields.map((_, index) => (
+          <SchemaNodeForm
+            control={control}
+            index={index}
+            remove={() => subRemove(index)}
+            parent={`${parent}.${index}`}
+          />
+        ))}
+      </ul>
       {(type === "object" || subtype === "object") && (
         <Button
+          className="ml-8"
           variant="ghost"
           size="sm"
           type="button"

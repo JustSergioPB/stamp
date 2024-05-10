@@ -11,8 +11,8 @@ export default async function Schemas({ searchParams }: SchemasProps) {
   const queryResult = await searchSchemas(fromUrl(searchParams));
   return (
     <div className="h-full flex gap-4">
-      <div className="basis-2/3"></div>
-      <Card className="h-full basis-1/3 flex flex-col">
+      <div className="basis-1/2"></div>
+      <Card className="h-full basis-1/2 flex flex-col">
         <CardHeader>
           <CardTitle>Create a new schema</CardTitle>
         </CardHeader>
