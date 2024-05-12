@@ -32,8 +32,6 @@ export function useSchemaNodeForm(prefix: string = "") {
     name: propertiesInputPath,
   });
 
-  console.log(prefix);
-
   const addSchemaNode = () => {
     append({ name: "", type: "string" });
   };

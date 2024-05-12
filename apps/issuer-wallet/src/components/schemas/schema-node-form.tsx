@@ -41,7 +41,7 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
 
   return (
     <li className="w-full" key={id}>
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-start gap-2 mb-2">
         <FormField
           control={control}
           name={nameInputPath}
@@ -55,7 +55,7 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
             </FormItem>
           )}
         />
-        <ArrowBigRight className="mt-7 text-neutral-400" />
+        <ArrowBigRight className="mt-10 text-neutral-400" />
         <FormField
           control={control}
           name={typeInputPath}
