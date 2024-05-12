@@ -8,8 +8,8 @@ export const INVALID_PET_PASSPORT_SCHEMA_MOCK: SchemaPrimitive = {
   status: "private",
   version: 0,
   lang: "en",
-  createdAt: new Date(2024, 25, 4),
-  modifiedAt: new Date(2024, 25, 4),
+  createdAt: new Date(2024, 25, 4).toISOString(),
+  modifiedAt: new Date(2024, 25, 4).toISOString(),
 };
 
 export const PET_PASSPORT_SCHEMA_MOCK: SchemaPrimitive = {
@@ -19,8 +19,8 @@ export const PET_PASSPORT_SCHEMA_MOCK: SchemaPrimitive = {
   status: "private",
   version: 0,
   lang: "en",
-  createdAt: new Date(2024, 25, 4),
-  modifiedAt: new Date(2024, 25, 4),
+  createdAt: new Date(2024, 25, 4).toISOString(),
+  modifiedAt: new Date(2024, 25, 4).toISOString(),
 };
 
 export const NON_SANITIZED_PET_PASSPORT_SCHEMA_MOCK: SchemaPrimitive = {
@@ -30,6 +30,6 @@ export const NON_SANITIZED_PET_PASSPORT_SCHEMA_MOCK: SchemaPrimitive = {
   status: "private",
   version: 0,
   lang: "en",
-  createdAt: new Date(2024, 25, 4),
-  modifiedAt: new Date(2024, 25, 4),
+  createdAt: new Date(2024, 25, 4).toISOString(),
+  modifiedAt: new Date(2024, 25, 4).toISOString(),
 };

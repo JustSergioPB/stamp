@@ -9,14 +9,12 @@ const SchemaSchema = new mongoose.Schema<SchemaPrimitive>({
   credentialSubject: { type: Object, required: true },
   status: { type: String, required: true },
   createdAt: {
-    type: Date,
+    type: String,
     required: true,
-    transform: (date: Date) => date.toISOString(),
   },
   modifiedAt: {
-    type: Date,
+    type: String,
     required: true,
-    transform: (date: Date) => date.toISOString(),
   },
 });
 

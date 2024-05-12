@@ -12,8 +12,8 @@ export type SchemaPrimitive = {
   lang: string;
   credentialSubject: ClaimPrimitive;
   status: SchemaStatus;
-  createdAt: Date;
-  modifiedAt: Date;
+  createdAt: string;
+  modifiedAt: string;
 };
 
 export type CreateSchema = Omit<
@@ -63,8 +63,8 @@ export class Schema {
       ...create,
       version: 0,
       status: "private",
-      createdAt: new Date(),
-      modifiedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
     });
   }
 
@@ -79,8 +79,8 @@ export class Schema {
       credetialSubject,
       sanitized.status,
       sanitized.lang,
-      sanitized.createdAt,
-      sanitized.modifiedAt,
+      new Date(sanitized.createdAt),
+      new Date(sanitized.modifiedAt),
       sanitized.id
     );
   }
@@ -94,12 +94,13 @@ export class Schema {
       credentialSubject: this._credentialSubject.toPrimitive(),
       status: this._status,
       id: this.id,
-      createdAt: this._createdAt,
-      modifiedAt: this._modifiedAt,
+      createdAt: this._createdAt.toISOString(),
+      modifiedAt: this._modifiedAt.toISOString(),
     };
   }
 
   private static sanitize(schema: SchemaPrimitive): SchemaPrimitive {
+    console.log("schema", schema);
     const { types, ...rest } = schema;
     return {
       ...rest,

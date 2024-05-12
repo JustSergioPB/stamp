@@ -17,13 +17,34 @@ import { FormSchema, useSchemaForm } from "@hooks/schemas/use-schema-form";
 import TreeAngle from "@components/stamp/tree-angle";
 import { Badge } from "@components/ui/badge";
 import { useState } from "react";
+import { ClaimPrimitive, Schema } from "@stamp/domain";
+import { createSchemaAction } from "src/actions/schema.action";
 
 export default function SchemaForm() {
   const { form, addSchemaNode, removeSchemaNode, fields } = useSchemaForm();
   const [types, setTypes] = useState<string>("");
 
-  function onSubmit(data: FormSchema) {
-    console.log(data);
+  async function onSubmit(data: FormSchema) {
+    await createSchemaAction(toSchema(data).toPrimitive());
+  }
+
+  function toSchema(data: FormSchema): Schema {
+    const credentialSubject: ClaimPrimitive = {};
+
+    data.properties.forEach(({ name, type, subtype }) => {
+      credentialSubject[name] = {
+        type: type,
+        name,
+        subtype,
+      };
+    });
+
+    return Schema.create({
+      name: data.name,
+      types: data.types,
+      lang: "en",
+      credentialSubject,
+    });
   }
 
   return (
@@ -105,7 +126,7 @@ export default function SchemaForm() {
           />
           <FormField
             control={form.control}
-            name="credentialSubject"
+            name="properties"
             render={() => (
               <FormItem className="grow shrink-0 basis-auto flex flex-col">
                 <FormLabel>Data</FormLabel>

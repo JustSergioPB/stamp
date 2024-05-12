@@ -1,1 +1,1 @@
-export * from "./repositories/search";
+export * from "./repositories/schema.mongo";

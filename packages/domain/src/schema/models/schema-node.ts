@@ -13,7 +13,7 @@ export const valueType = [
 export type ValueType = (typeof valueType)[number];
 
 export type SchemaNodePrimitive = {
-  label: string;
+  name: string;
   type: ValueType;
   lang?: string;
   subtype?: ValueType;
@@ -22,7 +22,7 @@ export type SchemaNodePrimitive = {
 };
 
 export class SchemaNode {
-  private _label: string;
+  private _name: string;
   private _type: ValueType;
   private _lang?: string;
   private _subtype?: ValueType;
@@ -37,7 +37,7 @@ export class SchemaNode {
     subtype?: ValueType,
     types?: string[]
   ) {
-    this._label = label;
+    this._name = label;
     this._lang = lang;
     this._type = valueType;
     this._properties = properties;
@@ -57,7 +57,7 @@ export class SchemaNode {
       properties = Claim.fromPrimitive(sanitized.properties);
     }
     return new SchemaNode(
-      sanitized.label,
+      sanitized.name,
       sanitized.type,
       sanitized.lang,
       properties,
@@ -69,7 +69,7 @@ export class SchemaNode {
   toPrimitive(): SchemaNodePrimitive {
     const primitive: SchemaNodePrimitive = {
       type: this._type,
-      label: this._label,
+      name: this._name,
     };
 
     if (this._properties) {
@@ -117,7 +117,7 @@ export class SchemaNode {
   }
 
   static validate(schemaNode: SchemaNodePrimitive): void {
-    if (!schemaNode.label) {
+    if (!schemaNode.name) {
       throw new EmptyLabelError();
     }
   }
