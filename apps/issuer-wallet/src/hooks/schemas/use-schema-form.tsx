@@ -5,7 +5,9 @@ import { recursiveSchemaNodeForm } from "./use-schema-node-form";
 
 export const schemaForm = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  types: z.string().min(1, { message: "You must submit at least one" }),
+  types: z
+    .array(z.string())
+    .min(1, { message: "You must submit at least one" }),
   properties: z
     .array(recursiveSchemaNodeForm)
     .min(1, { message: "You must submit at least one" }),
@@ -18,7 +20,7 @@ export function useSchemaForm() {
     resolver: zodResolver(schemaForm),
     defaultValues: {
       name: "",
-      types: "",
+      types: [],
       properties: [],
     },
   });
