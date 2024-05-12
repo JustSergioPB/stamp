@@ -103,43 +103,50 @@ export default function SchemaForm() {
               </FormItem>
             )}
           />
-          <FormItem className="grow shrink-0 basis-auto flex flex-col">
-            <FormLabel>Data</FormLabel>
-            <div className="block grow shrink-0 basis-auto">
-              <div className="flex">
-                <span className="border-l-2 border-l-neutral-300 inline-block"></span>
-                <ul className="w-full">
-                  {fields.map((field, index) => (
-                    <SchemaNodeForm
-                      prefix={`properties.${index}`}
-                      id={field.id}
+          <FormField
+            control={form.control}
+            name="credentialSubject"
+            render={() => (
+              <FormItem className="grow shrink-0 basis-auto flex flex-col">
+                <FormLabel>Data</FormLabel>
+                <div className="block grow shrink-0 basis-auto">
+                  <div className="flex">
+                    <span className="border-l-2 border-l-neutral-300 inline-block"></span>
+                    <ul className="w-full">
+                      {fields.map((field, index) => (
+                        <SchemaNodeForm
+                          prefix={`properties.${index}`}
+                          id={field.id}
+                        >
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            type="button"
+                            className="mt-8"
+                            onClick={() => removeSchemaNode(index)}
+                          >
+                            <Trash className="h-4 w-4" />
+                          </Button>
+                        </SchemaNodeForm>
+                      ))}
+                    </ul>
+                  </div>
+                  <TreeAngle>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      type="button"
+                      onClick={addSchemaNode}
                     >
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        type="button"
-                        className="mt-8"
-                        onClick={() => removeSchemaNode(index)}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </SchemaNodeForm>
-                  ))}
-                </ul>
-              </div>
-              <TreeAngle>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  type="button"
-                  onClick={addSchemaNode}
-                >
-                  <CirclePlus className="h-4 w-4 mr-2" />
-                  Add property
-                </Button>
-              </TreeAngle>
-            </div>
-          </FormItem>
+                      <CirclePlus className="h-4 w-4 mr-2" />
+                      Add property
+                    </Button>
+                  </TreeAngle>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
         </div>
         <div className="flex gap-2 justify-end">
           <Button type="reset" variant="ghost">

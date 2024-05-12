@@ -7,10 +7,10 @@ export const schemaForm = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   types: z
     .array(z.string())
-    .min(1, { message: "You must submit at least one" }),
-  properties: z
+    .min(1, { message: "You must submit at least one type" }),
+  credentialSubject: z
     .array(recursiveSchemaNodeForm)
-    .min(1, { message: "You must submit at least one" }),
+    .min(1, { message: "You must submit at least one property" }),
 });
 
 export type FormSchema = z.infer<typeof schemaForm>;
@@ -21,13 +21,13 @@ export function useSchemaForm() {
     defaultValues: {
       name: "",
       types: [],
-      properties: [],
+      credentialSubject: [],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "properties",
+    name: "credentialSubject",
   });
 
   const addSchemaNode = () => {
