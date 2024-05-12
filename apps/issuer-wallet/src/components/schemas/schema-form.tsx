@@ -10,42 +10,14 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Schema } from "@stamp/domain";
-import { CirclePlus } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { SchemaNodeForm, formSchemaNode } from "./schema-node-form";
-import TreeLine from "@components/stamp/tree-line";
+import { CirclePlus, Trash } from "lucide-react";
+import { SchemaNodeForm } from "./schema-node-form";
+import { FormSchema, useSchemaForm } from "@hooks/schemas/use-schema-form";
 
-type Props = {
-  schema?: Schema;
-};
+export default function SchemaForm() {
+  const { form, addSchemaNode, removeSchemaNode, fields } = useSchemaForm();
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  types: z.string().min(1, { message: "You must submit at least one" }),
-  credentialSubject: z
-    .array(formSchemaNode)
-    .min(1, { message: "You must submit at least one" }),
-});
-
-export default function SchemaForm({ schema }: Props) {
-  const primitives = schema?.toPrimitive();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: primitives?.name ?? "",
-      types: primitives?.types.join(",") ?? [].join(","),
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "credentialSubject",
-  });
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  function onSubmit(data: FormSchema) {
     console.log(data);
   }
 
@@ -62,7 +34,7 @@ export default function SchemaForm({ schema }: Props) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Breed" {...field} />
+                <Input placeholder="Dog's passport" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,26 +57,25 @@ export default function SchemaForm({ schema }: Props) {
           <FormLabel>Data</FormLabel>
           <div className="block grow shrink-0 basis-auto h-0 overflow-y-auto">
             <ul className="w-full pl-2">
-              {fields.map((_, index) => (
-                <SchemaNodeForm
-                  control={form.control}
-                  index={index}
-                  remove={remove}
-                  parent="credentialSubject"
-                />
+              {fields.map((field, index) => (
+                <SchemaNodeForm prefix={`properties.${index}`} id={field.id}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    className="mt-8"
+                    onClick={() => removeSchemaNode(index)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </SchemaNodeForm>
               ))}
             </ul>
             <Button
               variant="ghost"
               size="sm"
               type="button"
-              onClick={() =>
-                append({
-                  label: "",
-                  type: "string",
-                  properties: [],
-                })
-              }
+              onClick={addSchemaNode}
             >
               <CirclePlus className="h-4 w-4 mr-2" />
               Add property
