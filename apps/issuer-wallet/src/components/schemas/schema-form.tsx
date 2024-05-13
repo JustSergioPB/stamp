@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { CirclePlus, Trash, X } from "lucide-react";
+import { CirclePlus, LoaderCircle, Trash, X } from "lucide-react";
 import { SchemaNodeForm } from "./schema-node-form";
 import { FormSchema, useSchemaForm } from "@hooks/schemas/use-schema-form";
 import TreeAngle from "@components/stamp/tree-angle";
@@ -20,17 +20,32 @@ import { useState } from "react";
 import { ClaimPrimitive, Schema } from "@stamp/domain";
 import { createSchemaAction } from "src/actions/schema.action";
 
-export default function SchemaForm() {
+type Props = {
+  onSubmit: () => void;
+  onReset: () => void;
+};
+
+export default function SchemaForm({ onSubmit, onReset }: Props) {
   const { form, addSchemaNode, removeSchemaNode, fields } = useSchemaForm();
   const [types, setTypes] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  async function onSubmit(data: FormSchema) {
+  async function onSubmitClick(data: FormSchema) {
     try {
+      setLoading(true);
       await createSchemaAction(toSchema(data).toPrimitive());
       form.reset();
+      onSubmit();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  function onResetClick() {
+    form.reset();
+    onReset();
   }
 
   function toSchema(data: FormSchema): Schema {
@@ -55,7 +70,7 @@ export default function SchemaForm() {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmitClick)}
         className="h-full flex flex-col gap-4"
       >
         <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-4 px-1">
@@ -175,10 +190,18 @@ export default function SchemaForm() {
           />
         </div>
         <div className="flex gap-2 justify-end">
-          <Button type="reset" variant="ghost" onClick={() => form.reset()}>
+          <Button
+            type="reset"
+            variant="ghost"
+            onClick={onResetClick}
+            disabled={loading}
+          >
             Discard
           </Button>
-          <Button type="submit">Save Schema</Button>
+          <Button type="submit" disabled={loading}>
+            {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
+            Save Schema
+          </Button>
         </div>
       </form>
     </Form>

@@ -11,8 +11,10 @@ type Props = {
 export default function AppLayout({ children }: Props) {
   return (
     <main className="h-full overflow-hidden flex">
-      <Sidebar links={NAV_LINKS} className="basis-16" />
-      <div className="h-full basis-auto grow shrink-0 bg-neutral-100 p-4">{children}</div>
+      <Sidebar links={NAV_LINKS} className="basis-64" />
+      <div className="h-full basis-auto grow shrink-0 px-4 py-6">
+        {children}
+      </div>
     </main>
   );
 }

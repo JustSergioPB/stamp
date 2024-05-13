@@ -1,33 +1,36 @@
-import SchemaForm from "@components/schemas/schema-form";
 import { DataTable } from "@components/stamp/data-table";
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Query, fromUrl, searchSchemas } from "@stamp/database";
 import { Schema } from "@stamp/domain";
 import { columns } from "./columns";
+import { Sidepanel } from "./sidepanel";
 
 type SchemasProps = {
-  searchParams: Record<keyof Query<Schema>, string | undefined>;
+  searchParams: {
+    mode: string;
+  } & Record<keyof Query<Schema>, string | undefined>;
 };
 
 export default async function Schemas({ searchParams }: SchemasProps) {
-  const queryResult = await searchSchemas(fromUrl(searchParams));
+  const { mode, ...rest } = searchParams;
+  const queryResult = await searchSchemas(fromUrl(rest));
   return (
-    <div className="h-full flex gap-4">
-      <div className="basis-3/5 flex flex-col">
-        <div className="grow shrink-0 basis-auto"></div>
+    <>
+      <div className="h-full flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Schemas</h2>
+            <p className=" text-neutral-500">
+              Create, edit and manage your schemas here
+            </p>
+          </div>
+          <Sidepanel isOpen={mode === "create"}></Sidepanel>
+        </div>
         <DataTable
+          className="grow shrink-0 basis-auto"
           columns={columns}
           data={queryResult.items.map((it) => it.toPrimitive())}
         />
       </div>
-      <Card className="h-full basis-2/5 flex flex-col">
-        <CardHeader>
-          <CardTitle>Create a new schema</CardTitle>
-        </CardHeader>
-        <CardContent className="grow shrink-0 basis-auto">
-          <SchemaForm></SchemaForm>
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 }
