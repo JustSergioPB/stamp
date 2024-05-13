@@ -7,9 +7,8 @@ import { revalidatePath } from "next/cache";
 export const createSchemaAction = (schema: SchemaPrimitive) => {
   try {
     createSchema(Schema.create(schema));
+    revalidatePath("/posts");
   } catch (error) {
     console.error(error);
   }
-
-  revalidatePath("/posts");
 };

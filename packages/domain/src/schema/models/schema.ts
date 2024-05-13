@@ -100,7 +100,6 @@ export class Schema {
   }
 
   private static sanitize(schema: SchemaPrimitive): SchemaPrimitive {
-    console.log("schema", schema);
     const { types, ...rest } = schema;
     return {
       ...rest,

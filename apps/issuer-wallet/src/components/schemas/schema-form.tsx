@@ -25,7 +25,12 @@ export default function SchemaForm() {
   const [types, setTypes] = useState<string>("");
 
   async function onSubmit(data: FormSchema) {
-    await createSchemaAction(toSchema(data).toPrimitive());
+    try {
+      await createSchemaAction(toSchema(data).toPrimitive());
+      form.reset();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function toSchema(data: FormSchema): Schema {
@@ -170,10 +175,10 @@ export default function SchemaForm() {
           />
         </div>
         <div className="flex gap-2 justify-end">
-          <Button type="reset" variant="ghost">
-            Cancel
+          <Button type="reset" variant="ghost" onClick={() => form.reset()}>
+            Discard
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Save Schema</Button>
         </div>
       </form>
     </Form>
