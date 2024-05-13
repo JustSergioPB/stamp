@@ -4,6 +4,7 @@ import { Schema } from "@stamp/domain";
 import { columns } from "./columns";
 import { Sidepanel } from "./sidepanel";
 import Empty from "./empty";
+import { Paginator } from "@components/stamp/paginator";
 
 type SchemasProps = {
   searchParams: {
@@ -27,13 +28,17 @@ export default async function Schemas({ searchParams }: SchemasProps) {
           <Sidepanel isOpen={mode === "create"}></Sidepanel>
         </div>
         {queryResult.items.length > 0 ? (
-          <DataTable
-            columns={columns}
-            data={queryResult.items.map((it) => it.toPrimitive())}
-            currentPage={queryResult.currentPage}
-            pageSize={queryResult.pageSize}
-            totalPages={queryResult.totalPages}
-          />
+          <>
+            <DataTable
+              columns={columns}
+              data={queryResult.items.map((it) => it.toPrimitive())}
+            />
+            <Paginator
+              currentPage={queryResult.currentPage}
+              pageSize={queryResult.pageSize}
+              totalPages={queryResult.totalPages}
+            />
+          </>
         ) : (
           <Empty />
         )}

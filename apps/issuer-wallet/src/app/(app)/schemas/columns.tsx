@@ -28,6 +28,7 @@ export const columns: ColumnDef<SchemaPrimitive>[] = [
       </div>
     ),
     enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "types",
@@ -79,6 +80,7 @@ export const columns: ColumnDef<SchemaPrimitive>[] = [
       return value.includes(row.getValue(id));
     },
     enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "lang",
@@ -94,6 +96,7 @@ export const columns: ColumnDef<SchemaPrimitive>[] = [
       return value.includes(row.getValue(id));
     },
     enableHiding: false,
+    enableSorting: false,
   },
   {
     id: "actions",
