@@ -6,7 +6,7 @@
     "dev": "dotenv -- turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
-    "e2e:headless": "turbo e2e:headless",
+    "e2e:headless": "dotenv -- turbo e2e:headless",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

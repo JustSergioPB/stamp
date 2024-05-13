@@ -3,7 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@components/ui/badge";
-import { Checkbox } from "@components/ui/checkbox";
 import { SchemaPrimitive } from "@stamp/domain";
 import { DataTableRowActions } from "@components/stamp/data-table-row-actions";
 import { DataTableColumnHeader } from "@components/stamp/data-table-column-header";
@@ -12,7 +11,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@radix-ui/react-tooltip";
+} from "@components/ui/tooltip";
 
 export const columns: ColumnDef<SchemaPrimitive>[] = [
   {
