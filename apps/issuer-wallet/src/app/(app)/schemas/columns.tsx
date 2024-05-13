@@ -7,32 +7,14 @@ import { Checkbox } from "@components/ui/checkbox";
 import { SchemaPrimitive } from "@stamp/domain";
 import { DataTableRowActions } from "@components/stamp/data-table-row-actions";
 import { DataTableColumnHeader } from "@components/stamp/data-table-column-header";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 export const columns: ColumnDef<SchemaPrimitive>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -46,6 +28,40 @@ export const columns: ColumnDef<SchemaPrimitive>[] = [
       </div>
     ),
     enableHiding: false,
+  },
+  {
+    accessorKey: "types",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Types" />
+    ),
+    cell: ({ row }) => {
+      const types: string[] = row.getValue("types");
+      const displayed = types.slice(0, 2);
+      const hidden = types.slice(2);
+
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] flex gap-1">
+            <Badge>{displayed[0]}</Badge>
+            {displayed[1] && <Badge>{displayed[1]}</Badge>}
+            {hidden.length > 0 && (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Badge>+{hidden.length}</Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{hidden.join("; ")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </span>
+        </div>
+      );
+    },
+    enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "status",

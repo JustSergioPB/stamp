@@ -11,7 +11,10 @@ export async function searchSchemas(
     throw new Error("MONGODB_URI is not defined");
   }
   await connectToMongo(mongoUri);
-  const results = await SchemaModel.find().exec();
+  const results = await SchemaModel.find()
+    .skip(query.page * query.pageSize)
+    .limit(query.pageSize)
+    .exec();
   const count = await SchemaModel.countDocuments().exec();
   return {
     items: results.map(({ _doc, id }) =>
@@ -20,6 +23,7 @@ export async function searchSchemas(
     count,
     currentPage: query.page,
     totalPages: Math.ceil(count / query.pageSize),
+    pageSize: query.pageSize,
   };
 }
 

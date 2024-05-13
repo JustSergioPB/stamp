@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import SchemaForm from "@components/schemas/schema-form";
 import { Button } from "@components/ui/button";
-import { CirclePlus, X } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Props = {

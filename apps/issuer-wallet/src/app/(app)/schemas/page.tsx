@@ -3,6 +3,7 @@ import { Query, fromUrl, searchSchemas } from "@stamp/database";
 import { Schema } from "@stamp/domain";
 import { columns } from "./columns";
 import { Sidepanel } from "./sidepanel";
+import Empty from "./empty";
 
 type SchemasProps = {
   searchParams: {
@@ -25,11 +26,17 @@ export default async function Schemas({ searchParams }: SchemasProps) {
           </div>
           <Sidepanel isOpen={mode === "create"}></Sidepanel>
         </div>
-        <DataTable
-          className="grow shrink-0 basis-auto"
-          columns={columns}
-          data={queryResult.items.map((it) => it.toPrimitive())}
-        />
+        {queryResult.items.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={queryResult.items.map((it) => it.toPrimitive())}
+            currentPage={queryResult.currentPage}
+            pageSize={queryResult.pageSize}
+            totalPages={queryResult.totalPages}
+          />
+        ) : (
+          <Empty />
+        )}
       </div>
     </>
   );
