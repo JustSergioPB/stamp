@@ -4,9 +4,6 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "scripts": {
-    "lint": "eslint ./src"
-  },
   "dependencies": {
     "@stamp/domain": "*",
     "mongoose": "8.3.4",
