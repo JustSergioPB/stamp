@@ -4,7 +4,7 @@ import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function Component() {
+export default function EmptyScreen() {
   const router = useRouter();
 
   function onOpenClick() {
