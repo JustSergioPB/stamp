@@ -5,12 +5,14 @@ import SchemaForm from "@components/schemas/schema-form";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Translatable } from "@i18n/types/translatable";
+import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
 
 type Props = {
   isOpen: boolean;
-};
+} & Translatable;
 
-export function Sidepanel({ isOpen }: Props) {
+export function Sidepanel({ isOpen, lang }: Props) {
   const router = useRouter();
 
   function onOpenClick() {
@@ -25,7 +27,7 @@ export function Sidepanel({ isOpen }: Props) {
     <>
       <Button size="sm" onClick={onOpenClick}>
         <CirclePlus className="h-4 w-4 mr-2" />
-        Add schema
+        {DICTIONARIES[lang]?.addSchema}
       </Button>
       <div
         data-state={isOpen ? "open" : "closed"}
@@ -36,10 +38,14 @@ export function Sidepanel({ isOpen }: Props) {
           className="sidepanel w-2/5 flex flex-col absolute right-4 top-4 transition-transform duration-300 ease-in-out [&[data-state=open]]:translate-x-0 [&[data-state=closed]]:translate-x-full"
         >
           <CardHeader>
-            <CardTitle>Create a new schema</CardTitle>
+            <CardTitle>{DICTIONARIES[lang]?.createSchema}</CardTitle>
           </CardHeader>
           <CardContent className="grow shrink-0 basis-auto">
-            <SchemaForm onReset={onClose} onSubmit={onClose}></SchemaForm>
+            <SchemaForm
+              lang={lang}
+              onReset={onClose}
+              onSubmit={onClose}
+            ></SchemaForm>
           </CardContent>
         </Card>
       </div>

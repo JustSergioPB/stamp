@@ -5,12 +5,13 @@ import { Query, fromUrl, searchSchemas } from "@stamp/database";
 import { Schema } from "@stamp/domain";
 import ErrorScreen from "@components/stamp/error-screen";
 import EmptyScreen from "@components/stamp/empty-screen";
+import { Translatable } from "@i18n/types/translatable";
 
 type Props = {
   searchParams: Record<keyof Query<Schema>, string | undefined>;
-};
+} & Translatable;
 
-export default async function Content({ searchParams }: Props) {
+export default async function Content({ searchParams, lang }: Props) {
   try {
     const queryResult = await searchSchemas(fromUrl(searchParams));
     return queryResult.items.length > 0 ? (
@@ -23,12 +24,13 @@ export default async function Content({ searchParams }: Props) {
           currentPage={queryResult.currentPage}
           pageSize={queryResult.pageSize}
           totalPages={queryResult.totalPages}
+          lang={lang}
         />
       </>
     ) : (
       <EmptyScreen />
     );
   } catch (error) {
-    return <ErrorScreen />;
+    return <ErrorScreen lang={lang} />;
   }
 }

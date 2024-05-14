@@ -16,6 +16,10 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { useSchemaNodeForm } from "@hooks/schemas/use-schema-node-form";
+import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import { VALUE_TYPE_LANG_MAP } from "@i18n/constants/schemas.const";
+import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
+import { Translatable } from "@i18n/types/translatable";
 import { ValueType, valueType } from "@stamp/domain";
 import { ArrowBigRight, CirclePlus, Trash } from "lucide-react";
 import { useState } from "react";
@@ -24,9 +28,9 @@ type Props = {
   prefix: string;
   id: string;
   children?: React.ReactNode;
-};
+} & Translatable;
 
-export function SchemaNodeForm({ prefix, id, children }: Props) {
+export function SchemaNodeForm({ prefix, id, children, lang }: Props) {
   const {
     control,
     fields,
@@ -50,9 +54,16 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
             name={nameInputPath}
             render={({ field }) => (
               <FormItem className="grow basis-auto">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.property.label}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Breed" {...field} />
+                  <Input
+                    placeholder={
+                      DICTIONARIES[lang]?.schemaForm.property.placeholder
+                    }
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -63,8 +74,10 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
             control={control}
             name={typeInputPath}
             render={({ field }) => (
-              <FormItem className="basis-1/5">
-                <FormLabel>Type</FormLabel>
+              <FormItem>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.type.label}
+                </FormLabel>
                 <Select
                   onValueChange={(value) => {
                     setType(value);
@@ -74,13 +87,20 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="String" />
+                      <SelectValue
+                        placeholder={
+                          DICTIONARIES[lang]?.schemaForm.type.placeholder
+                        }
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {valueType.map((type) => (
                       <SelectItem value={type}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                        {getDynamicTranslation(
+                          lang,
+                          VALUE_TYPE_LANG_MAP[type]!
+                        )}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -94,8 +114,10 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
               control={control}
               name={subtypeInputPath}
               render={({ field }) => (
-                <FormItem className="basis-1/5">
-                  <FormLabel>Subtype</FormLabel>
+                <FormItem>
+                  <FormLabel>
+                    {DICTIONARIES[lang]?.schemaForm.subtype.label}
+                  </FormLabel>
                   <Select
                     onValueChange={(value) => {
                       setSubtype(value);
@@ -105,7 +127,11 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="String" />
+                        <SelectValue
+                          placeholder={
+                            DICTIONARIES[lang]?.schemaForm.subtype.placeholder
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -131,6 +157,7 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
             <SchemaNodeForm
               prefix={`${prefix}.properties.${index}`}
               id={field.id}
+              lang={lang}
             >
               <Button
                 variant="ghost"
@@ -154,7 +181,7 @@ export function SchemaNodeForm({ prefix, id, children }: Props) {
             onClick={addSchemaNode}
           >
             <CirclePlus className="h-4 w-4 mr-2" />
-            Add property
+            {DICTIONARIES[lang]?.schemaForm.addProperty}
           </Button>
         </TreeAngle>
       )}

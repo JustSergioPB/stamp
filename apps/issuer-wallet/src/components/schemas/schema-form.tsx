@@ -19,13 +19,15 @@ import { Badge } from "@components/ui/badge";
 import { useState } from "react";
 import { ClaimPrimitive, Schema } from "@stamp/domain";
 import { createSchemaAction } from "src/actions/schema.action";
+import { Translatable } from "@i18n/types/translatable";
+import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
 
 type Props = {
   onSubmit: () => void;
   onReset: () => void;
-};
+} & Translatable;
 
-export default function SchemaForm({ onSubmit, onReset }: Props) {
+export default function SchemaForm({ onSubmit, onReset, lang }: Props) {
   const { form, addSchemaNode, removeSchemaNode, fields } = useSchemaForm();
   const [types, setTypes] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -79,9 +81,16 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.name.label}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Dog's passport" {...field} />
+                  <Input
+                    placeholder={
+                      DICTIONARIES[lang]?.schemaForm.name.placeholder
+                    }
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,13 +101,17 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
             name="types"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Types</FormLabel>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.types.label}
+                </FormLabel>
                 <FormControl>
                   <div className="max-w-full">
                     <div className="flex items-center gap-2 mb-2">
                       <Input
                         value={types}
-                        placeholder="Ownership"
+                        placeholder={
+                          DICTIONARIES[lang]?.schemaForm.types.placeholder
+                        }
                         onChange={(e) => setTypes(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
@@ -138,7 +151,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
                   </div>
                 </FormControl>
                 <FormDescription>
-                  Hit enter to add a type. Click on a tag to remove it.
+                  {DICTIONARIES[lang]?.schemaForm.types.hint}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -149,7 +162,9 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
             name="properties"
             render={() => (
               <FormItem className="grow shrink-0 basis-auto flex flex-col">
-                <FormLabel>Data</FormLabel>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.data.label}
+                </FormLabel>
                 <div className="block grow shrink-0 basis-auto">
                   <div className="flex">
                     <span className="border-l-2 border-l-neutral-300 inline-block"></span>
@@ -158,6 +173,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
                         <SchemaNodeForm
                           prefix={`properties.${index}`}
                           id={field.id}
+                          lang={lang}
                         >
                           <Button
                             variant="ghost"
@@ -180,7 +196,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
                       onClick={addSchemaNode}
                     >
                       <CirclePlus className="h-4 w-4 mr-2" />
-                      Add property
+                      {DICTIONARIES[lang]?.schemaForm.addProperty}
                     </Button>
                   </TreeAngle>
                   <FormMessage />
@@ -196,11 +212,11 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
             onClick={onResetClick}
             disabled={loading}
           >
-            Discard
+            {DICTIONARIES[lang]?.schemaForm.discard}
           </Button>
           <Button type="submit" disabled={loading}>
             {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
-            Save Schema
+            {DICTIONARIES[lang]?.schemaForm.save}
           </Button>
         </div>
       </form>

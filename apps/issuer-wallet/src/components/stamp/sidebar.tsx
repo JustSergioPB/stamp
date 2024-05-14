@@ -3,6 +3,8 @@ import { cn } from "@lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@components/ui/button";
 import { usePathname } from "next/navigation";
+import { Translatable } from "@i18n/types/translatable";
+import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
 
 export type NavLink = {
   title: string;
@@ -15,9 +17,9 @@ export type NavLink = {
 export type SidebarProps = {
   links: NavLink[];
   className?: string;
-};
+} & Translatable;
 
-export function Sidebar({ links, className }: SidebarProps) {
+export function Sidebar({ links, className, lang }: SidebarProps) {
   const pathName = usePathname();
   links.forEach((link) => {
     if (link.href === pathName) {
@@ -43,7 +45,7 @@ export function Sidebar({ links, className }: SidebarProps) {
             )}
           >
             <link.icon className="mr-2 h-4 w-4" />
-            {link.title}
+            {getDynamicTranslation(lang, link.title)}
             {link.label && (
               <span
                 className={cn(
