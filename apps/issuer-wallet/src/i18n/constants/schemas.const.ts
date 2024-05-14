@@ -9,3 +9,8 @@ export const VALUE_TYPE_LANG_MAP: Record<ValueType, string> = {
   did: "schemaForm.type.values.did",
   date: "schemaForm.type.values.date",
 };
+
+export const LANG_MAP: Record<string, string> = {
+  en: "schemaForm.lang.values.en",
+  es: "schemaForm.lang.values.es",
+};

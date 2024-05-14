@@ -8,6 +8,7 @@ export const schemaForm = z.object({
   types: z
     .array(z.string())
     .min(1, { message: "You must submit at least one type" }),
+  lang: z.string().min(1, { message: "Language is required" }),
   properties: z
     .array(recursiveSchemaNodeForm)
     .min(1, { message: "You must submit at least one property" }),
@@ -22,6 +23,7 @@ export function useSchemaForm() {
       name: "",
       types: [],
       properties: [],
+      lang: "es",
     },
   });
 

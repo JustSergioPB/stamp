@@ -137,7 +137,10 @@ export function SchemaNodeForm({ prefix, id, children, lang }: Props) {
                     <SelectContent>
                       {valueType.map((type) => (
                         <SelectItem value={type}>
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                          {getDynamicTranslation(
+                            lang,
+                            VALUE_TYPE_LANG_MAP[type]!
+                          )}
                         </SelectItem>
                       ))}
                     </SelectContent>

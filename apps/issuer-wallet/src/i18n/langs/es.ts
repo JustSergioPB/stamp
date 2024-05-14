@@ -42,6 +42,14 @@ export const esDictionary: Dictionary = {
       label: "Nombre",
       placeholder: "Fecha de nacimiento",
     },
+    lang: {
+      label: "Idioma",
+      placeholder: "Español",
+      values: {
+        en: "Inglés",
+        es: "Español",
+      },
+    },
     type: {
       label: "Tipo",
       placeholder: "Cadena de texto",

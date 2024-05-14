@@ -28,6 +28,10 @@ export type Dictionary = {
     data: FormField;
     types: WithHint;
     property: FormField;
+    lang: FormSelect<{
+      en: string;
+      es: string;
+    }>;
     type: FormSelect<{
       string: string;
       number: string;

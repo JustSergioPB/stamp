@@ -1,5 +1,6 @@
 import { EmptyTypesError } from "../errors";
 import { Claim, ClaimPrimitive } from "./claim";
+import { SchemaLang } from "./schema-lang";
 import { SchemaStatus } from "./schema-status";
 
 export type SchemaId = string;
@@ -9,7 +10,7 @@ export type SchemaPrimitive = {
   name: string;
   version: number;
   types: string[];
-  lang: string;
+  lang: SchemaLang;
   credentialSubject: ClaimPrimitive;
   status: SchemaStatus;
   createdAt: string;
@@ -32,7 +33,7 @@ export class Schema {
   private _type: string[];
   private _credentialSubject: Claim;
   private _status: SchemaStatus;
-  private _lang: string;
+  private _lang: SchemaLang;
   private _createdAt: Date;
   private _modifiedAt: Date;
 
@@ -42,7 +43,7 @@ export class Schema {
     version: number,
     credentialSubject: Claim,
     status: SchemaStatus,
-    lang: string,
+    lang: SchemaLang,
     createdAt: Date,
     modifiedAt: Date,
     id?: SchemaId

@@ -17,10 +17,20 @@ import { FormSchema, useSchemaForm } from "@hooks/schemas/use-schema-form";
 import TreeAngle from "@components/stamp/tree-angle";
 import { Badge } from "@components/ui/badge";
 import { useState } from "react";
-import { ClaimPrimitive, Schema } from "@stamp/domain";
+import { ClaimPrimitive, Schema, valueType } from "@stamp/domain";
 import { createSchemaAction } from "src/actions/schema.action";
 import { Translatable } from "@i18n/types/translatable";
 import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import { LANG_MAP, VALUE_TYPE_LANG_MAP } from "@i18n/constants/schemas.const";
+import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
+import { schemaLang } from "../../../../../packages/domain/src/schema/models/schema-lang";
 
 type Props = {
   onSubmit: () => void;
@@ -64,7 +74,7 @@ export default function SchemaForm({ onSubmit, onReset, lang }: Props) {
     return Schema.create({
       name: data.name,
       types: data.types,
-      lang: "en",
+      lang: data.lang,
       credentialSubject,
     });
   }
@@ -76,26 +86,61 @@ export default function SchemaForm({ onSubmit, onReset, lang }: Props) {
         className="h-full flex flex-col gap-4"
       >
         <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-4 px-1">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  {DICTIONARIES[lang]?.schemaForm.name.label}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={
-                      DICTIONARIES[lang]?.schemaForm.name.placeholder
-                    }
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex items-center gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="basis-auto grow">
+                  <FormLabel>
+                    {DICTIONARIES[lang]?.schemaForm.name.label}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={
+                        DICTIONARIES[lang]?.schemaForm.name.placeholder
+                      }
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lang"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {DICTIONARIES[lang]?.schemaForm.lang.label}
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={
+                            DICTIONARIES[lang]?.schemaForm.lang.placeholder
+                          }
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {schemaLang.map((schemaLang) => (
+                        <SelectItem value={schemaLang}>
+                          {getDynamicTranslation(lang, LANG_MAP[schemaLang]!)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="types"
