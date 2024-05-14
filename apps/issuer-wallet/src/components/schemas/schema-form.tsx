@@ -17,15 +17,27 @@ import { FormSchema, useSchemaForm } from "@hooks/schemas/use-schema-form";
 import TreeAngle from "@components/stamp/tree-angle";
 import { Badge } from "@components/ui/badge";
 import { useState } from "react";
-import { ClaimPrimitive, Schema } from "@stamp/domain";
+import { ClaimPrimitive, Schema, valueType } from "@stamp/domain";
 import { createSchemaAction } from "src/actions/schema.action";
+import { Translatable } from "@i18n/types/translatable";
+import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import { LANG_MAP, VALUE_TYPE_LANG_MAP } from "@i18n/constants/schemas.const";
+import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
+import { schemaLang } from "../../../../../packages/domain/src/schema/models/schema-lang";
 
 type Props = {
   onSubmit: () => void;
   onReset: () => void;
-};
+} & Translatable;
 
-export default function SchemaForm({ onSubmit, onReset }: Props) {
+export default function SchemaForm({ onSubmit, onReset, lang }: Props) {
   const { form, addSchemaNode, removeSchemaNode, fields } = useSchemaForm();
   const [types, setTypes] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -62,7 +74,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
     return Schema.create({
       name: data.name,
       types: data.types,
-      lang: "en",
+      lang: data.lang,
       credentialSubject,
     });
   }
@@ -74,31 +86,77 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
         className="h-full flex flex-col gap-4"
       >
         <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-4 px-1">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Dog's passport" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex items-center gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="basis-auto grow">
+                  <FormLabel>
+                    {DICTIONARIES[lang]?.schemaForm.name.label}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={
+                        DICTIONARIES[lang]?.schemaForm.name.placeholder
+                      }
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lang"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {DICTIONARIES[lang]?.schemaForm.lang.label}
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={
+                            DICTIONARIES[lang]?.schemaForm.lang.placeholder
+                          }
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {schemaLang.map((schemaLang) => (
+                        <SelectItem value={schemaLang}>
+                          {getDynamicTranslation(lang, LANG_MAP[schemaLang]!)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="types"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Types</FormLabel>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.types.label}
+                </FormLabel>
                 <FormControl>
                   <div className="max-w-full">
                     <div className="flex items-center gap-2 mb-2">
                       <Input
                         value={types}
-                        placeholder="Ownership"
+                        placeholder={
+                          DICTIONARIES[lang]?.schemaForm.types.placeholder
+                        }
                         onChange={(e) => setTypes(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
@@ -138,7 +196,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
                   </div>
                 </FormControl>
                 <FormDescription>
-                  Hit enter to add a type. Click on a tag to remove it.
+                  {DICTIONARIES[lang]?.schemaForm.types.hint}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -149,7 +207,9 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
             name="properties"
             render={() => (
               <FormItem className="grow shrink-0 basis-auto flex flex-col">
-                <FormLabel>Data</FormLabel>
+                <FormLabel>
+                  {DICTIONARIES[lang]?.schemaForm.data.label}
+                </FormLabel>
                 <div className="block grow shrink-0 basis-auto">
                   <div className="flex">
                     <span className="border-l-2 border-l-neutral-300 inline-block"></span>
@@ -158,6 +218,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
                         <SchemaNodeForm
                           prefix={`properties.${index}`}
                           id={field.id}
+                          lang={lang}
                         >
                           <Button
                             variant="ghost"
@@ -180,7 +241,7 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
                       onClick={addSchemaNode}
                     >
                       <CirclePlus className="h-4 w-4 mr-2" />
-                      Add property
+                      {DICTIONARIES[lang]?.schemaForm.addProperty}
                     </Button>
                   </TreeAngle>
                   <FormMessage />
@@ -196,11 +257,11 @@ export default function SchemaForm({ onSubmit, onReset }: Props) {
             onClick={onResetClick}
             disabled={loading}
           >
-            Discard
+            {DICTIONARIES[lang]?.schemaForm.discard}
           </Button>
           <Button type="submit" disabled={loading}>
             {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
-            Save Schema
+            {DICTIONARIES[lang]?.schemaForm.save}
           </Button>
         </div>
       </form>

@@ -17,19 +17,22 @@ import {
 } from "@components/ui/select";
 import React from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { Translatable } from "@i18n/types/translatable";
+import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
 
 type Props = {
   pageSize: number;
   currentPage: number;
   totalPages: number;
   children?: React.ReactNode;
-};
+} & Translatable;
 
 export function Paginator({
   pageSize,
   currentPage,
   totalPages,
   children,
+  lang,
 }: Props) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -67,7 +70,9 @@ export function Paginator({
       {children}
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+          <p className="text-sm font-medium">
+            {DICTIONARIES[lang]?.paginator.rowsPerPage}
+          </p>
           <Select value={`${pageSize}`} onValueChange={onPageSizeChange}>
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={pageSize} />
@@ -82,7 +87,8 @@ export function Paginator({
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {currentPage + 1} of {totalPages}
+          {DICTIONARIES[lang]?.paginator.page} {currentPage + 1}{" "}
+          {DICTIONARIES[lang]?.paginator.of} {totalPages}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -91,7 +97,9 @@ export function Paginator({
             onClick={onFirstPage}
             disabled={currentPage === 0}
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">
+              {DICTIONARIES[lang]?.paginator.goToFirst}
+            </span>
             <ChevronsLeft className="h-4 w-4" />
           </Button>
           <Button
@@ -100,7 +108,9 @@ export function Paginator({
             onClick={onPreviousPage}
             disabled={currentPage === 0}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">
+              {DICTIONARIES[lang]?.paginator.goToPrevious}
+            </span>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
@@ -109,7 +119,9 @@ export function Paginator({
             onClick={onNextPage}
             disabled={currentPage === totalPages - 1}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">
+              {DICTIONARIES[lang]?.paginator.goToNext}
+            </span>
             <ChevronRight className="h-4 w-4" />
           </Button>
           <Button
@@ -118,7 +130,9 @@ export function Paginator({
             onClick={onLastPage}
             disabled={currentPage === totalPages - 1}
           >
-            <span className="sr-only">Go to last page</span>
+            <span className="sr-only">
+              {DICTIONARIES[lang]?.paginator.goToLast}
+            </span>
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
