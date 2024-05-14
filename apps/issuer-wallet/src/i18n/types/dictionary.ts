@@ -54,4 +54,15 @@ export type Dictionary = {
     save: string;
     addProperty: string;
   };
+  schemaTable: {
+    name: string;
+    types: string;
+    status: string;
+    lang: string;
+    actions: string;
+  };
+  schemaStatus: {
+    public: string;
+    private: string;
+  };
 };

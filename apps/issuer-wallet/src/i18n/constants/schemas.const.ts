@@ -1,4 +1,4 @@
-import { ValueType } from "@stamp/domain";
+import { SchemaLang, SchemaStatus, ValueType } from "@stamp/domain";
 
 export const VALUE_TYPE_LANG_MAP: Record<ValueType, string> = {
   string: "schemaForm.type.values.string",
@@ -10,7 +10,12 @@ export const VALUE_TYPE_LANG_MAP: Record<ValueType, string> = {
   date: "schemaForm.type.values.date",
 };
 
-export const LANG_MAP: Record<string, string> = {
+export const LANG_MAP: Record<SchemaLang, string> = {
   en: "schemaForm.lang.values.en",
   es: "schemaForm.lang.values.es",
+};
+
+export const STATUS_MAP: Record<SchemaStatus, string> = {
+  public: "schemaStatus.public",
+  private: "schemaStatus.private",
 };

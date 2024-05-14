@@ -1,41 +1,31 @@
-"use client";
-
-import { ColumnDef } from "@tanstack/react-table";
-
-import { Badge } from "@components/ui/badge";
-import { SchemaPrimitive } from "@stamp/domain";
 import { DataTableRowActions } from "@components/stamp/data-table-row-actions";
-import { DataTableColumnHeader } from "@components/stamp/data-table-column-header";
+import { Badge } from "@components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@components/ui/tooltip";
+import { LANG_MAP, STATUS_MAP } from "@i18n/constants/schemas.const";
+import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
+import { Column } from "@models/column";
+import { SchemaPrimitive } from "@stamp/domain";
 
-export const columns: ColumnDef<SchemaPrimitive>[] = [
+export const COLUMNS: Column<SchemaPrimitive>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
-    ),
-    cell: ({ row }) => (
+    key: "name",
+    name: "schemaTable.name",
+    cell: (item) => (
       <div className="flex space-x-2">
-        <span className="max-w-[500px] truncate font-medium">
-          {row.getValue("name")}
-        </span>
+        <span className="max-w-[500px] truncate font-medium">{item.name}</span>
       </div>
     ),
-    enableHiding: false,
-    enableSorting: false,
   },
   {
-    accessorKey: "types",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Types" />
-    ),
-    cell: ({ row }) => {
-      const types: string[] = row.getValue("types");
+    key: "types",
+    name: "schemaTable.types",
+    cell: (item) => {
+      const types: string[] = item.types;
       const displayed = types.slice(0, 2);
       const hidden = types.slice(2);
 
@@ -60,45 +50,32 @@ export const columns: ColumnDef<SchemaPrimitive>[] = [
         </div>
       );
     },
-    enableHiding: false,
-    enableSorting: false,
   },
   {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => (
+    key: "status",
+    name: "schemaTable.status",
+    cell: (item, lang) => (
       <div className="flex w-[100px] items-center">
         <span>
-          <Badge variant="outline">{row.getValue("status")}</Badge>
+          <Badge variant="outline">
+            {getDynamicTranslation(lang, STATUS_MAP[item.status]!)}
+          </Badge>
         </span>
       </div>
     ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-    enableHiding: false,
-    enableSorting: false,
   },
   {
-    accessorKey: "lang",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Lang" />
-    ),
-    cell: ({ row }) => (
+    key: "lang",
+    name: "schemaTable.lang",
+    cell: (item, lang) => (
       <div className="flex items-center">
-        <span>{row.getValue("lang")}</span>
+        <span>{getDynamicTranslation(lang, LANG_MAP[item.lang]!)}</span>
       </div>
     ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-    enableHiding: false,
-    enableSorting: false,
   },
   {
-    id: "actions",
+    key: "actions",
+    name: "schemaTable.actions",
     cell: () => <DataTableRowActions />,
   },
 ];

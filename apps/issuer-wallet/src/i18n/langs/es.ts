@@ -80,4 +80,15 @@ export const esDictionary: Dictionary = {
     save: "Guardar esquema",
     addProperty: "Añadir propiedad",
   },
+  schemaTable: {
+    name: "Nombre",
+    types: "Tipos",
+    status: "Estado",
+    lang: "Idioma",
+    actions: "",
+  },
+  schemaStatus: {
+    public: "Público",
+    private: "Privado",
+  },
 };
