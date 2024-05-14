@@ -99,6 +99,6 @@ export const columns: ColumnDef<SchemaPrimitive>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: () => <DataTableRowActions />,
   },
 ];

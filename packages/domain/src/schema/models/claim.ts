@@ -20,7 +20,7 @@ export class Claim {
     const sanitized: { [key: string]: SchemaNode } = {};
     for (const key in props) {
       const sanitizedKey = Claim.sanitize(key);
-      sanitized[sanitizedKey] = SchemaNode.fromPrimitive(props[key]);
+      sanitized[sanitizedKey] = SchemaNode.fromPrimitive(props[key]!);
     }
     Claim.validate(props);
     return new Claim(sanitized);
@@ -29,7 +29,7 @@ export class Claim {
   toPrimitive(): ClaimPrimitive {
     const claim: { [key: string]: SchemaNodePrimitive } = {};
     for (const key in this.properties) {
-      claim[key] = this.properties[key].toPrimitive();
+      claim[key] = this.properties[key]!.toPrimitive();
     }
     return claim;
   }
