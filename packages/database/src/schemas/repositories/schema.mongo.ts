@@ -1,24 +1,38 @@
-import { Schema } from "@stamp/domain";
+import { Schema, SchemaId } from "@stamp/domain";
 import { Query, QueryResult } from "../../query/models";
-import SchemaModel from "../mongoose/schema.model";
-import { connectToMongo } from "../../lib/connect";
+import { collections, connectToDatabase } from "../../lib";
+import { ObjectId } from "mongodb";
 
 export async function searchSchemas(
   query: Query<Schema>
 ): Promise<QueryResult<Schema>> {
   const mongoUri = process.env.MONGODB_URI;
+  
   if (!mongoUri) {
     throw new Error("MONGODB_URI is not defined");
   }
-  await connectToMongo(mongoUri);
-  const results = await SchemaModel.find()
-    .skip(query.page * query.pageSize)
-    .limit(query.pageSize)
-    .exec();
-  const count = await SchemaModel.countDocuments().exec();
+  await connectToDatabase();
+
+  if (!collections.schemas) {
+    throw new Error("'Schemas' collection not found");
+  }
+  const { page, pageSize, orderBy, orderDirection } = query;
+  const skip = page * Number(pageSize);
+  const cursor = collections.schemas.find().skip(skip).limit(Number(pageSize));
+
+  if (orderBy) {
+    cursor.sort({ [orderBy]: orderDirection === "desc" ? -1 : 1 });
+  }
+
+  const items = await cursor.toArray();
+  const count = await collections.schemas.countDocuments();
+
   return {
-    items: results.map(({ _doc, id }) =>
-      Schema.fromPrimitive({ ..._doc, id: id.toString() })
+    items: items.map(({ _id, ...rest }) =>
+      Schema.fromPrimitive({
+        id: _id.toString(),
+        ...rest,
+      })
     ),
     count,
     currentPage: query.page,
@@ -27,12 +41,39 @@ export async function searchSchemas(
   };
 }
 
+export async function get(id: SchemaId): Promise<Schema> {
+  if (!collections.schemas) {
+    throw new Error("'Schemas' collection not found");
+  }
+
+  const document = await collections.schemas.findOne({
+    _id: new ObjectId(id),
+  });
+
+  if (!document) {
+    throw new Error("Schema not found");
+  }
+
+  const { _id, ...rest } = document;
+
+  return Schema.fromPrimitive({
+    id: _id.toString(),
+    ...rest,
+  });
+}
+
 export async function createSchema(schema: Schema): Promise<void> {
   const mongoUri = process.env.MONGODB_URI;
+
   if (!mongoUri) {
     throw new Error("MONGODB_URI is not defined");
   }
-  await connectToMongo(mongoUri);
-  const schemaModel = new SchemaModel(schema.toPrimitive());
-  await schemaModel.save();
+
+  await connectToDatabase();
+
+  if (!collections.schemas) {
+    throw new Error("'Schemas' collection not found");
+  }
+
+  await collections.schemas.insertOne(schema.toPrimitive());
 }
