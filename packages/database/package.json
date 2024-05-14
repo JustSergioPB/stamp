@@ -4,12 +4,12 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint ./src"
-  },
   "dependencies": {
-    "mongoose": "8.3.4",
+    "@stamp/domain": "*",
+    "mongodb": "^6.6.1",
     "typescript": "5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12"
   }
 }
