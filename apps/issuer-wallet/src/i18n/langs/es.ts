@@ -91,4 +91,6 @@ export const esDictionary: Dictionary = {
     public: "Público",
     private: "Privado",
   },
+  delete: "Eliminar",
+  edit: "Editar",
 };

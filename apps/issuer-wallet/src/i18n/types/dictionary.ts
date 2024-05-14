@@ -65,4 +65,6 @@ export type Dictionary = {
     public: string;
     private: string;
   };
+  delete: string;
+  edit: string;
 };

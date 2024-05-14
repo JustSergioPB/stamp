@@ -76,6 +76,6 @@ export const COLUMNS: Column<SchemaPrimitive>[] = [
   {
     key: "actions",
     name: "schemaTable.actions",
-    cell: () => <DataTableRowActions />,
+    cell: (_, lang) => <DataTableRowActions lang={lang} />,
   },
 ];
