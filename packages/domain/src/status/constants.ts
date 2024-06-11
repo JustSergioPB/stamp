@@ -1,0 +1,1 @@
+export const MINIMUM_BITSTRING_SIZE = 131072;

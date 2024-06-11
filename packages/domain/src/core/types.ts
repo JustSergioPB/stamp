@@ -5,3 +5,6 @@ export type VerifiableCredentialType =
 export type VerifiablePresentationType =
   | "VerifiablePresentation"
   | ["VerifiablePresentation", ...string[]];
+export type EnvelopedVerifiableCredentialType = "EnvelopedVerifiableCredential";
+export type EnvelopedVerifiablePresentationType =
+  "EnvelopedVerifiablePresentation";

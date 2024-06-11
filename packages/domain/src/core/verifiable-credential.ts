@@ -1,13 +1,12 @@
-import { Type } from "typescript";
 import { V2Context } from "./context";
 import { CredentialSchema } from "./credential-schema";
-import { CredentialStatus } from "./credential-status";
 import { CredentialSubject } from "./credential-subject";
 import { Id } from "./id";
 import { Issuer } from "./issuer";
 import { LanguageValueObject } from "./language-value-object";
+import { Type, VerifiableCredentialType } from "./types";
+import { CredentialStatus } from "./credential-status";
 import { Proof } from "./proof";
-import { VerifiableCredentialType } from "./types";
 
 export type VerifiableCredentialV2 = {
   "@context": V2Context;
@@ -93,7 +92,7 @@ export abstract class CredentialBuilder {
     credentialSchema: CredentialSchema | CredentialSchema[]
   ): CredentialBuilder;
 
-  build(): VerifiableCredentialV2 { 
+  build(): VerifiableCredentialV2 {
     return {
       "@context": this["@context"],
       id: this.id,

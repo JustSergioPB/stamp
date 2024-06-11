@@ -1,9 +1,8 @@
-import { EnvelopedVerifiableCredential } from "./enveloped-verifiable-credential";
 import { Holder } from "./holder";
 import { Id } from "./id";
-import { Proof } from "./proof";
 import { VerifiablePresentationType } from "./types";
 import { VerifiableCredentialV2 } from "./verifiable-credential";
+import { EnvelopedVerifiableCredential, Proof } from "../security";
 
 export type VerifiablePresentation = {
   id?: Id;

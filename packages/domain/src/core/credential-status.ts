@@ -1,5 +1,5 @@
-import { Type } from "typescript";
-import { Id } from "./id";
+import { Type } from "../core/types";
+import { Id } from "../core/id";
 
 export type CredentialStatus = {
   id?: Id;
