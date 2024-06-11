@@ -1,0 +1,1 @@
+export type Id = string; //It can be a URL or a UUID or a DID, when it's a URL it should be dereferenceable
