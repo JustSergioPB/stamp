@@ -1,3 +1,5 @@
+export * from "./bitstring-multi-status-list";
+export * from "./bitstring-single-status-list";
 export * from "./bitstring-status-list-credential";
 export * from "./bitstring-status-list-entry";
 export * from "./bitstring-status-list";

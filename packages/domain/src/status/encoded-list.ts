@@ -11,62 +11,6 @@ export class EncodedList {
     this._statusSize = statusSize;
   }
 
-  setStatus(index: number, status: number): void {
-    const currentStatus = this.getStatus(index);
-    if (currentStatus !== 0) {
-      throw new Error("The bit position is already set.");
-    }
-
-    const bitStart = Number(index) * this._statusSize;
-    const byteStart = Math.floor(bitStart / 8);
-    const bitOffset = bitStart % 8;
-
-    for (let i = 0; i < this._statusSize; i++) {
-      const bitIndex = bitOffset + i;
-      const byteIndex = byteStart + Math.floor(bitIndex / 8);
-      const bitPos = bitIndex % 8;
-
-      if (status & (1 << i)) {
-        this._bitstring[byteIndex] |= 1 << bitPos;
-      } else {
-        this._bitstring[byteIndex] &= ~(1 << bitPos);
-      }
-    }
-  }
-
-  getStatus(index: number): number {
-    const bitStart = index * this._statusSize;
-    const byteStart = Math.floor(bitStart / 8);
-    const bitOffset = bitStart % 8;
-    let status = 0;
-
-    for (let i = 0; i < this._statusSize; i++) {
-      const bitIndex = bitOffset + i;
-      const byteIndex = byteStart + Math.floor(bitIndex / 8);
-      const bitPos = bitIndex % 8;
-
-      if (this._bitstring[byteIndex] & (1 << bitPos)) {
-        status |= 1 << i;
-      }
-    }
-
-    return status;
-  }
-
-  removeStatus(index: number): void {
-    const bitStart = index * this._statusSize;
-    const byteStart = Math.floor(bitStart / 8);
-    const bitOffset = bitStart % 8;
-
-    for (let i = 0; i < this._statusSize; i++) {
-      const bitIndex = bitOffset + i;
-      const byteIndex = byteStart + Math.floor(bitIndex / 8);
-      const bitPos = bitIndex % 8;
-
-      this._bitstring[byteIndex] &= ~(1 << bitPos);
-    }
-  }
-
   static create(
     listSize: number = MINIMUM_BITSTRING_SIZE,
     statusSize: number = 1
@@ -86,6 +30,29 @@ export class EncodedList {
     const decompressedBuffer = zlib.gunzipSync(Buffer.from(compressedBuffer));
     const bitstring = new Uint8Array(decompressedBuffer.buffer);
     return new EncodedList(bitstring);
+  }
+
+  push(index: number, status: number): void {
+    if (!this.isFree(index)) {
+      throw new Error("The bit position is already set.");
+    }
+    this.set(index, status);
+  }
+
+  set(index: number, status: number): void {
+    this._bitstring[index * this._statusSize] = status;
+  }
+
+  isFree(index: number): boolean {
+    return this._bitstring[index * this._statusSize] !== 0;
+  }
+
+  getFreeIndex(): number {
+    return this._bitstring.findIndex((status) => status === 0);
+  }
+
+  validate(index: number, status: number): boolean {
+    return this._bitstring[index * this._statusSize] === status;
   }
 
   toString(): string {
