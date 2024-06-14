@@ -1,6 +1,6 @@
+import { Base64UrlNoPadDecoder, Base64UrlNoPadEncoder } from "../security";
 import { MINIMUM_BITSTRING_SIZE } from "./constants";
 import * as zlib from "zlib";
-import base64url from "base64url";
 
 export class EncodedList {
   private _bitstring: Uint8Array;
@@ -26,7 +26,7 @@ export class EncodedList {
   }
 
   static fromString(encodedList: string): EncodedList {
-    const compressedBuffer = base64url.decode(encodedList);
+    const compressedBuffer = new Base64UrlNoPadDecoder().decode(encodedList);
     const decompressedBuffer = zlib.gunzipSync(Buffer.from(compressedBuffer));
     const bitstring = new Uint8Array(decompressedBuffer.buffer);
     return new EncodedList(bitstring);
@@ -58,6 +58,6 @@ export class EncodedList {
   toString(): string {
     const buffer = Buffer.from(this._bitstring.buffer);
     const compressed = zlib.gzipSync(buffer);
-    return base64url(compressed);
+    return new Base64UrlNoPadEncoder().encode(compressed);
   }
 }
