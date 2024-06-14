@@ -1,6 +1,4 @@
-import { Id } from "./id";
-
 export type CredentialSubject = {
-  id?: Id;
+  id?: string;
   [key: string]: unknown;
 };

@@ -1,3 +1,1 @@
-import { Id } from "./id";
-
-export type Issuer = Id | { id: Id; [key: string]: unknown };
+export type Issuer = string | { id: string; [key: string]: unknown };

@@ -1,11 +1,11 @@
+import { EnvelopedVerifiableCredential } from "./enveloped-verifiable-credential";
 import { Holder } from "./holder";
-import { Id } from "./id";
+import { Proof } from "./proof";
 import { VerifiablePresentationType } from "./types";
 import { VerifiableCredentialV2 } from "./verifiable-credential";
-import { EnvelopedVerifiableCredential, Proof } from "../security";
 
 export type VerifiablePresentation = {
-  id?: Id;
+  id?: string;
   type: VerifiablePresentationType;
   verifiableCredential: (
     | VerifiableCredentialV2
@@ -16,7 +16,7 @@ export type VerifiablePresentation = {
 };
 
 export class VerifiablePresentationBuilder {
-  private id?: Id;
+  private id?: string;
   private type: VerifiablePresentationType = "VerifiablePresentation";
   private verifiableCredential: (
     | VerifiableCredentialV2
@@ -34,7 +34,7 @@ export class VerifiablePresentationBuilder {
     this.verifiableCredential = verifiableCredential;
   }
 
-  public withId(id: Id): VerifiablePresentationBuilder {
+  public withId(id: string): VerifiablePresentationBuilder {
     this.id = id;
     return this;
   }
