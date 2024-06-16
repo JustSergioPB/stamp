@@ -1,12 +1,12 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import SchemaForm from "@components/schemas/schema-form";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Translatable } from "@i18n/types/translatable";
 import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import TemplateForm from "@components/forms/template-form";
 
 type Props = {
   isOpen: boolean;
@@ -41,11 +41,7 @@ export function Sidepanel({ isOpen, lang }: Props) {
             <CardTitle>{DICTIONARIES[lang]?.createSchema}</CardTitle>
           </CardHeader>
           <CardContent className="grow shrink-0 basis-auto">
-            <SchemaForm
-              lang={lang}
-              onReset={onClose}
-              onSubmit={onClose}
-            ></SchemaForm>
+            <TemplateForm onReset={onClose} onSubmit={onClose} lang={lang} />
           </CardContent>
         </Card>
       </div>

@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@components/ui/table";
-import { Column } from "@models/column";
+import { Column } from "@models/ui/column";
 import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
 import { Translatable } from "@i18n/types/translatable";
 

@@ -1,2 +1,2 @@
-export const ORDER_DIRECTION = ["asc", "desc"];
-export type OrderDirection = (typeof ORDER_DIRECTION)[number];
+export const orderDirections = ["asc", "desc"];
+export type OrderDirection = (typeof orderDirections)[number];

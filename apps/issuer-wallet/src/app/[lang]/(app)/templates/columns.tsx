@@ -6,12 +6,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@components/ui/tooltip";
-import { LANG_MAP, STATUS_MAP } from "@i18n/constants/schemas.const";
-import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
-import { Column } from "@models/column";
-import { SchemaPrimitive } from "@stamp/domain";
+import { Column } from "@models/ui/column";
+import { TemplateSchema } from "@schemas/template/template.schema";
 
-export const COLUMNS: Column<SchemaPrimitive>[] = [
+export const COLUMNS: Column<TemplateSchema>[] = [
   {
     key: "name",
     name: "schemaTable.name",
@@ -25,7 +23,7 @@ export const COLUMNS: Column<SchemaPrimitive>[] = [
     key: "types",
     name: "schemaTable.types",
     cell: (item) => {
-      const types: string[] = item.types;
+      const types = item.type ?? [];
       const displayed = types.slice(0, 2);
       const hidden = types.slice(2);
 
@@ -58,7 +56,7 @@ export const COLUMNS: Column<SchemaPrimitive>[] = [
       <div className="flex w-[100px] items-center">
         <span>
           <Badge variant="outline">
-            {getDynamicTranslation(lang, STATUS_MAP[item.status]!)}
+            Status
           </Badge>
         </span>
       </div>
@@ -67,9 +65,9 @@ export const COLUMNS: Column<SchemaPrimitive>[] = [
   {
     key: "lang",
     name: "schemaTable.lang",
-    cell: (item, lang) => (
+    cell: (item) => (
       <div className="flex items-center">
-        <span>{getDynamicTranslation(lang, LANG_MAP[item.lang]!)}</span>
+        <span>{item.lang}</span>
       </div>
     ),
   },

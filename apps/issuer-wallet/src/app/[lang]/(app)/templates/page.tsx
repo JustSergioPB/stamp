@@ -1,19 +1,19 @@
-import { Query } from "@stamp/database";
-import { Schema } from "@stamp/domain";
 import { Sidepanel } from "./sidepanel";
 import Content from "./content";
 import { Suspense } from "react";
 import LoadingScreen from "@components/stamp/loading-screen";
 import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import { TemplateSchema } from "@schemas/template/template.schema";
+import { Query } from "@models/query";
 
 type SchemasProps = {
   searchParams: {
     mode: string;
-  } & Record<keyof Query<Schema>, string | undefined>;
+  } & Record<keyof Query<TemplateSchema>, string | undefined>;
   params: { lang: string };
 };
 
-export default async function Schemas({
+export default async function Templates({
   searchParams,
   params: { lang },
 }: SchemasProps) {
