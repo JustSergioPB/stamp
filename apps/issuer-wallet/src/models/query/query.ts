@@ -1,6 +1,5 @@
-import { InvalidPageSizeError } from "../errors";
 import { OrderDirection } from "./order-direction";
-import { PAGE_SIZE, PageSize } from "./page-size";
+import { PageSize } from "./page-size";
 
 export type Query<T> = {
   page: number;

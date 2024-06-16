@@ -8,6 +8,8 @@
       "@hooks/*": ["./src/hooks/*"],
       "@i18n/*": ["./src/i18n/*"],
       "@models/*": ["./src/models/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@db/*": ["./src/db/*"],
     },
     "plugins": [
       {
