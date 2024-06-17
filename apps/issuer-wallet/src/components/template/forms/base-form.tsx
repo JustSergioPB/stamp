@@ -1,3 +1,5 @@
+"use client";
+
 import {
   FormControl,
   FormDescription,
@@ -20,13 +22,17 @@ import { Button } from "@components/ui/button";
 import { X } from "lucide-react";
 import { Control } from "react-hook-form";
 import { TemplateSchema } from "@schemas/template/template.schema";
+import { useTranslation } from "@i18n/client";
 
 type Props = {
   control?: Control<TemplateSchema, any>;
+  lang: string;
 };
 
-export default function BaseForm({ control }: Props) {
+export default function BaseForm({ control, lang }: Props) {
   const [types, setTypes] = useState<string>("");
+  const { t } = useTranslation(lang, "template");
+  const { t: tLang } = useTranslation(lang, "langs");
 
   return (
     <>
@@ -35,10 +41,13 @@ export default function BaseForm({ control }: Props) {
           control={control}
           name="name"
           render={({ field }) => (
-            <FormItem className="basis-auto grow">
-              <FormLabel>Name</FormLabel>
+            <FormItem className="basis-7/12">
+              <FormLabel>{t("props.name")}</FormLabel>
               <FormControl>
-                <Input placeholder="Name..." {...field} />
+                <Input
+                  placeholder={t("form.base.name.placeholder")}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -48,18 +57,20 @@ export default function BaseForm({ control }: Props) {
           control={control}
           name="lang"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Language</FormLabel>
+            <FormItem className="basis-5/12">
+              <FormLabel>{t("props.lang")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select language..." />
+                    <SelectValue
+                      placeholder={t("form.base.lang.placeholder")}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {["en", "es"].map((schemaLang) => (
                     <SelectItem key={schemaLang} value={schemaLang}>
-                      {schemaLang}
+                      {tLang(schemaLang)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -74,13 +85,13 @@ export default function BaseForm({ control }: Props) {
         name="type"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Tipos</FormLabel>
+            <FormLabel>{t("props.type")}</FormLabel>
             <FormControl>
               <div className="max-w-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Input
                     value={types}
-                    placeholder="Type..."
+                    placeholder={t("form.base.type.placeholder")}
                     onChange={(e) => setTypes(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -120,7 +131,7 @@ export default function BaseForm({ control }: Props) {
               </div>
             </FormControl>
             <FormDescription>
-              "hint for the user to know what to type in the input field"
+              {t("form.base.type.hint")}
             </FormDescription>
             <FormMessage />
           </FormItem>

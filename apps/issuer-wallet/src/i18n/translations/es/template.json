@@ -1,0 +1,38 @@
+{
+  "title": "Plantillas",
+  "cta": "Crea, edita y gestiona tus esquemas aquí",
+  "add": "Añadir plantilla",
+  "create": "Crear plantilla",
+  "props": {
+    "name": "Nombre",
+    "type": "Tipos",
+    "status": "Estado",
+    "lang": "Idioma",
+    "content": "Contenido"
+  },
+  "form": {
+    "base": {
+      "title": "Información básica",
+      "name": {
+        "placeholder": "Pasaporte"
+      },
+      "lang": {
+        "placeholder": "Selecciona un idioma"
+      },
+      "type": {
+        "placeholder": "Pasaporte, identificación, etc.",
+        "hint": "Dale a enter para añadir un nuevo tipo, haz click en el tipo para eliminarlo. Darle a la X eliminará todos."
+      }
+    },
+    "content": {
+      "title": "Contenido"
+    },
+    "actions": {
+      "addField": "Añadir campo"
+    }
+  },
+  "empty": {
+    "title": "No hay plantillas",
+    "subtitle": "Parece que no tienes ninguna plantilla creada. ¿Por qué no creas una ahora?"
+  }
+}

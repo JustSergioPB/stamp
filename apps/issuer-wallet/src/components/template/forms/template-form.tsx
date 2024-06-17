@@ -4,20 +4,25 @@ import { Button } from "@components/ui/button";
 import { Form } from "@components/ui/form";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
-import { Translatable } from "@i18n/types/translatable";
-import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TemplateSchema, templateSchema } from "@schemas/template/template.schema";
+import {
+  TemplateSchema,
+  templateSchema,
+} from "@schemas/template/template.schema";
 import BaseForm from "./base-form";
 import ContentForm from "./content-form";
+import { useTranslation } from "@i18n/client";
 
 type Props = {
   onSubmit: () => void;
   onReset: () => void;
-} & Translatable;
+  lang: string;
+};
 
 export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
+  const { t } = useTranslation(lang, "actions");
+  const { t: tTemplate } = useTranslation(lang, "template");
   const form = useForm<TemplateSchema>({
     resolver: zodResolver(templateSchema),
     defaultValues: {
@@ -54,9 +59,19 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
         onSubmit={form.handleSubmit(onSubmitClick)}
         className="h-full flex flex-col gap-4"
       >
-        <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-4 px-1">
-          <BaseForm control={form.control} />
-          <ContentForm control={form.control} />
+        <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-8 px-1">
+          <section>
+            <h2 className="text-lg font-semibold mb-2">
+              {tTemplate("form.base.title")}
+            </h2>
+            <BaseForm control={form.control} lang={lang} />
+          </section>
+          <section>
+            <h2 className="text-lg font-semibold mb-2">
+              {tTemplate("form.content.title")}
+            </h2>
+            <ContentForm control={form.control} lang={lang} />
+          </section>
         </div>
         <div className="flex gap-2 justify-end">
           <Button
@@ -65,11 +80,11 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
             onClick={onResetClick}
             disabled={loading}
           >
-            {DICTIONARIES[lang]?.schemaForm.discard}
+            {t("discard")}
           </Button>
           <Button type="submit" disabled={loading}>
             {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
-            {DICTIONARIES[lang]?.schemaForm.save}
+            {t("save")}
           </Button>
         </div>
       </form>

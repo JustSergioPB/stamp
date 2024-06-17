@@ -1,28 +1,42 @@
-import { match } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
-import { SUPPORTED_LOCALES } from "./i18n/constants/supported-locales.const";
-import { DEFAULT_LOCALE } from "./i18n/constants/default-locale.const";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import acceptLanguage from "accept-language";
+import { fallbackLang, languages, cookieName } from "./i18n/constants";
 
-function getLocale(request: Request): string {
-  const headers = new Headers(request.headers);
-  const headersObject = Object.fromEntries(headers.entries());
-  const languages = new Negotiator({ headers: headersObject }).languages();
-  return match(languages, SUPPORTED_LOCALES, DEFAULT_LOCALE);
-}
+acceptLanguage.languages(languages);
 
-export function middleware(request: NextRequest) {
-  const locale = getLocale(request) ?? DEFAULT_LOCALE;
-  const pathname = request.nextUrl.pathname;
-  let url = `/${locale}${pathname}`;
-  const params = Object.fromEntries(request.nextUrl.searchParams);
-  if (Object.keys(params).length > 0) {
-    url += `?${new URLSearchParams(params)}`;
+export function middleware(req: NextRequest) {
+  let lang = acceptLanguage.get(req.cookies.get(cookieName)?.value);
+  if (!lang) lang = acceptLanguage.get(req.headers.get("Accept-Language"));
+  if (!lang) lang = fallbackLang;
+
+  // Redirect if lang in path is not supported
+  if (
+    !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
+    !req.nextUrl.pathname.startsWith("/_next")
+  ) {
+    return NextResponse.redirect(
+      new URL(`/${lang}${req.nextUrl.pathname}`, req.url)
+    );
   }
-  const newUrl = new URL(url, request.nextUrl);
-  return NextResponse.rewrite(newUrl);
+
+  const referer = req.headers.get("referer");
+
+  if (referer) {
+    const refererUrl = new URL(referer);
+    const langInReferer = languages.find((l) =>
+      refererUrl.pathname.startsWith(`/${l}`)
+    );
+    const response = NextResponse.next();
+    if (langInReferer) response.cookies.set(cookieName, langInReferer);
+    return response;
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  // matcher: '/:lang*'
+  matcher: [
+    "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)",
+  ],
 };

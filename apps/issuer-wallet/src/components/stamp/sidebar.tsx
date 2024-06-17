@@ -1,10 +1,11 @@
+"use client";
+
 import { LucideIcon, PenTool } from "lucide-react";
 import { cn } from "@lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@components/ui/button";
 import { usePathname } from "next/navigation";
-import { Translatable } from "@i18n/types/translatable";
-import { getDynamicTranslation } from "@i18n/helpers/get-dynamic-translation";
+import { useTranslation } from "@i18n/client";
 
 export type NavLink = {
   title: string;
@@ -14,13 +15,16 @@ export type NavLink = {
   variant: "default" | "ghost";
 };
 
-export type SidebarProps = {
+export type Props = {
   links: NavLink[];
   className?: string;
-} & Translatable;
+  lang: string;
+};
 
-export function Sidebar({ links, className, lang }: SidebarProps) {
+export default function Sidebar({ links, className, lang }: Props) {
   const pathName = usePathname();
+  const { t } = useTranslation(lang, "sidebar");
+
   links.forEach((link) => {
     if (link.href === pathName) {
       link.variant = "default";
@@ -45,7 +49,7 @@ export function Sidebar({ links, className, lang }: SidebarProps) {
             )}
           >
             <link.icon className="mr-2 h-4 w-4" />
-            {getDynamicTranslation(lang, link.title)}
+            {t(link.title)}
             {link.label && (
               <span
                 className={cn(

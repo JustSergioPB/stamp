@@ -1,10 +1,10 @@
-import { Sidepanel } from "./sidepanel";
-import Content from "./content";
-import { Suspense } from "react";
-import LoadingScreen from "@components/stamp/loading-screen";
-import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import Sidepanel from "./sidepanel";
 import { TemplateSchema } from "@schemas/template/template.schema";
 import { Query } from "@models/query";
+import { useTranslation } from "@i18n/server";
+import { searchTemplate } from "@db/repositories";
+import { fromUrl } from "@utils/query";
+import Content from "./content";
 
 type SchemasProps = {
   searchParams: {
@@ -18,20 +18,20 @@ export default async function Templates({
   params: { lang },
 }: SchemasProps) {
   const { mode, ...rest } = searchParams;
+  const { t } = await useTranslation(lang, "template");
+  const queryResult = await searchTemplate(fromUrl(rest));
   return (
     <div className="h-full flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">
-            {DICTIONARIES[lang]?.schemas}
+            {t("title")}
           </h2>
-          <p className=" text-neutral-500">{DICTIONARIES[lang]?.schemasCTA}</p>
+          <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        <Sidepanel lang={lang} isOpen={mode === "create"} />
+        <Sidepanel isOpen={mode === "create"} lang={lang} />
       </div>
-      <Suspense fallback={<LoadingScreen />}>
-        <Content lang={lang} searchParams={rest} />
-      </Suspense>
+      <Content result={queryResult} lang={lang} />
     </div>
   );
 }

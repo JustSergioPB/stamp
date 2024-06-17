@@ -4,16 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Translatable } from "@i18n/types/translatable";
-import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
-import TemplateForm from "@components/forms/template-form";
+import { useTranslation } from "@i18n/client";
+import TemplateForm from "@components/template/forms/template-form";
 
 type Props = {
   isOpen: boolean;
-} & Translatable;
+  lang: string;
+};
 
-export function Sidepanel({ isOpen, lang }: Props) {
+export default function Sidepanel({ isOpen, lang }: Props) {
   const router = useRouter();
+  const { t } = useTranslation(lang, "template");
 
   function onOpenClick() {
     router.push("?mode=create");
@@ -27,7 +28,7 @@ export function Sidepanel({ isOpen, lang }: Props) {
     <>
       <Button size="sm" onClick={onOpenClick}>
         <CirclePlus className="h-4 w-4 mr-2" />
-        {DICTIONARIES[lang]?.addSchema}
+        {t("add")}
       </Button>
       <div
         data-state={isOpen ? "open" : "closed"}
@@ -38,7 +39,7 @@ export function Sidepanel({ isOpen, lang }: Props) {
           className="sidepanel w-2/5 flex flex-col absolute right-4 top-4 transition-transform duration-300 ease-in-out [&[data-state=open]]:translate-x-0 [&[data-state=closed]]:translate-x-full"
         >
           <CardHeader>
-            <CardTitle>{DICTIONARIES[lang]?.createSchema}</CardTitle>
+            <CardTitle>{t("create")}</CardTitle>
           </CardHeader>
           <CardContent className="grow shrink-0 basis-auto">
             <TemplateForm onReset={onClose} onSubmit={onClose} lang={lang} />

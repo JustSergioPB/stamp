@@ -9,12 +9,14 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { Translatable } from "@i18n/types/translatable";
-import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import { useTranslation } from "@i18n/client";
 
-type Props = Translatable;
+type Props = {
+  lang: string;
+};
 
-export function DataTableRowActions({ lang }: Props) {
+export default function DataTableRowActions({ lang }: Props) {
+  const { t } = useTranslation(lang, "actions");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,9 +29,9 @@ export function DataTableRowActions({ lang }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>{DICTIONARIES[lang]?.edit}</DropdownMenuItem>
+        <DropdownMenuItem>{t("edit")}</DropdownMenuItem>
         <DropdownMenuItem>
-          {DICTIONARIES[lang]?.delete}
+          {t("delete")}
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar } from "@components/stamp/sidebar";
+import Sidebar from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import { NAV_LINKS } from "./nav-links";
 

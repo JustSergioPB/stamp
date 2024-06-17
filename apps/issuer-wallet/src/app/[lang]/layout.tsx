@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
 import "./globals.css";
-import { DEFAULT_LOCALE } from "@i18n/constants/default-locale.const";
+import { dir } from "i18next";
+import { cn } from "@lib/utils";
+
+const inter = Roboto({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Issuer Wallet",
@@ -9,14 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params,
+  params: { lang },
 }: Readonly<{
   children: React.ReactNode;
   params: { lang: string };
 }>) {
   return (
-    <html lang={params.lang ?? DEFAULT_LOCALE}>
-      <body className="h-screen overflow-hidden">{children}</body>
+    <html lang={lang} dir={dir(lang)} suppressHydrationWarning>
+      <body className={cn(inter.className, "h-screen")}>{children}</body>
     </html>
   );
 }

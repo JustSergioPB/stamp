@@ -1,0 +1,9 @@
+{
+  "title": "¡Vaya! Algo salió mal",
+  "subtitle": "Estamos arreglandolo, mientras tanto puedes intentar lo siguiente:",
+  "options": {
+    "refresh": "Refrescar (Sí, a veces funciona)",
+    "tryAgain": "Volver a intentarlo en 10 minutos",
+    "sendEmail": "Enviar email a soporte explicando que ha pasado"
+  }
+}
