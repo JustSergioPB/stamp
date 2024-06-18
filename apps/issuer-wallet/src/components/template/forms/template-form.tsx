@@ -13,6 +13,10 @@ import {
 import BaseForm from "./base-form";
 import ContentForm from "./content-form";
 import { useTranslation } from "@i18n/client";
+import SecurityForm from "./security-form";
+import StatusForm from "./status-form";
+import ValdityForm from "./validity-form";
+import { createTemplateAction } from "@actions/template.action";
 
 type Props = {
   onSubmit: () => void;
@@ -25,20 +29,16 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
   const { t: tTemplate } = useTranslation(lang, "template");
   const form = useForm<TemplateSchema>({
     resolver: zodResolver(templateSchema),
-    defaultValues: {
-      type: [],
-      name: "",
-      description: "",
-      lang: "",
-    },
   });
+
+  const { watch } = form;
 
   const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmitClick(data: TemplateSchema) {
     try {
       setLoading(true);
-      //await createSchemaAction(toSchema(data).toPrimitive());
+      await createTemplateAction(data);
       form.reset();
       onSubmit();
     } catch (error) {
@@ -59,7 +59,7 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
         onSubmit={form.handleSubmit(onSubmitClick)}
         className="h-full flex flex-col gap-4"
       >
-        <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-8 px-1">
+        <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-16 px-1">
           <section>
             <h2 className="text-lg font-semibold mb-2">
               {tTemplate("form.base.title")}
@@ -71,6 +71,33 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
               {tTemplate("form.content.title")}
             </h2>
             <ContentForm control={form.control} lang={lang} />
+          </section>
+          <section>
+            <h2 className="text-lg font-semibold mb-2">
+              {tTemplate("form.security.title")}
+            </h2>
+            <h3 className="text-sm mb-8 text-muted-foreground">
+              {tTemplate("form.security.subtitle")}
+            </h3>
+            <SecurityForm control={form.control} lang={lang} />
+          </section>
+          <section>
+            <h2 className="text-lg font-semibold mb-2">
+              {tTemplate("form.status.title")}
+            </h2>
+            <h3 className="text-sm mb-8 text-muted-foreground">
+              {tTemplate("form.status.subtitle")}
+            </h3>
+            <StatusForm control={form.control} lang={lang} watch={watch} />
+          </section>
+          <section>
+            <h2 className="text-lg font-semibold mb-2">
+              {tTemplate("form.validity.title")}
+            </h2>
+            <h3 className="text-sm mb-8 text-muted-foreground">
+              {tTemplate("form.validity.subtitle")}
+            </h3>
+            <ValdityForm control={form.control} lang={lang} />
           </section>
         </div>
         <div className="flex gap-2 justify-end">

@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { contentSchema } from "./content.schema";
-import { validitySchema } from "./validity.schema";
 import { securitySchema } from "./security.schema";
 import { statusSchema } from "./status.schema";
 import { idSchema } from "./id.schema";
+import { validitySchema } from "./validity.schema";
 
 export const templateSchema = z.object({
   id: idSchema,
@@ -13,7 +13,7 @@ export const templateSchema = z.object({
   lang: z.string().optional(),
   content: contentSchema,
   security: securitySchema,
-  statusSchema: statusSchema,
+  status: statusSchema,
   validity: validitySchema,
 });
 

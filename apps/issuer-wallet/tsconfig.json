@@ -11,6 +11,7 @@
       "@schemas/*": ["./src/schemas/*"],
       "@db/*": ["./src/db/*"],
       "@utils/*": ["./src/utils/*"],
+      "@actions/*": ["./src/actions/*"]
     },
     "plugins": [
       {
@@ -18,11 +19,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

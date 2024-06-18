@@ -16,13 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
-import { Badge } from "@components/ui/badge";
-import { useState } from "react";
-import { Button } from "@components/ui/button";
-import { X } from "lucide-react";
 import { Control } from "react-hook-form";
 import { TemplateSchema } from "@schemas/template/template.schema";
 import { useTranslation } from "@i18n/client";
+import ChipInput from "@components/stamp/chip-input";
 
 type Props = {
   control?: Control<TemplateSchema, any>;
@@ -30,12 +27,11 @@ type Props = {
 };
 
 export default function BaseForm({ control, lang }: Props) {
-  const [types, setTypes] = useState<string>("");
   const { t } = useTranslation(lang, "template");
   const { t: tLang } = useTranslation(lang, "langs");
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="flex items-center gap-4">
         <FormField
           control={control}
@@ -87,56 +83,20 @@ export default function BaseForm({ control, lang }: Props) {
           <FormItem>
             <FormLabel>{t("props.type")}</FormLabel>
             <FormControl>
-              <div className="max-w-full">
-                <div className="flex items-center gap-2 mb-2">
-                  <Input
-                    value={types}
-                    placeholder={t("form.base.type.placeholder")}
-                    onChange={(e) => setTypes(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                      }
-
-                      if (e.key === "Enter" && types !== "") {
-                        field.onChange([...(field.value ?? []), types]);
-                        setTypes("");
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    disabled={field.value?.length === 0}
-                    onClick={() => field.onChange([])}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 bg-neutral-100 rounded-lg p-2 min-h-10">
-                  {field.value?.map((type, index) => (
-                    <Badge
-                      key={index}
-                      onClick={() =>
-                        field.onChange(
-                          field.value?.filter((_, i) => i !== index)
-                        )
-                      }
-                    >
-                      {type}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+              <ChipInput
+                placeholder={t("form.base.type.placeholder")}
+                onRemove={(value: string[]) => field.onChange(value)}
+                onEnter={(value: string[]) => field.onChange(value)}
+                onReset={() => {
+                  field.onChange([]);
+                }}
+              />
             </FormControl>
-            <FormDescription>
-              {t("form.base.type.hint")}
-            </FormDescription>
+            <FormDescription>{t("form.base.type.hint")}</FormDescription>
             <FormMessage />
           </FormItem>
         )}
       />
-    </>
+    </div>
   );
 }

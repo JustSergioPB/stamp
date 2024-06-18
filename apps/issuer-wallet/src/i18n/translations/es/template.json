@@ -27,6 +27,71 @@
     "content": {
       "title": "Contenido"
     },
+    "security": {
+      "title": "Seguridad",
+      "subtitle": "Configura si al emitir la credencial generada a partir de esta plantilla tiene que ser firmada y que funciones tienen dichas firmas.",
+      "authorization": {
+        "label": "Autorización",
+        "description": "Indica si se utiliza para acceder a recursos, sitios, etc."
+      },
+      "assertion": {
+        "label": "Verificación",
+        "description": "Indica que necesita ser firmada para demostrar su autenticidad y que no ha sido modificada."
+      },
+      "keyAgreement": {
+        "label": "Acuerdo de claves",
+        "description": "Indica que se han de establecer ciertos protocolos para compartir la información de forma segura."
+      },
+      "capabilityInvocation": {
+        "label": "Capacidad de invocación",
+        "description": "Permite definir cuales permisos tiene quien sobre la información que contiene la credencial."
+      },
+      "capabilityDelegation": {
+        "label": "Capacidad de delegación",
+        "description": "Permite al poseedor de la credencial otorgar ciertos permisos a terceros sobre esta."
+      }
+    },
+    "status": {
+      "title": "Estado",
+      "subtitle": "Establece si una credencial generada a partir de esta plantilla puede tener distintos estados, es revocable o se puede suspender. El estado por defecto será 'Activo'.",
+      "revocable": {
+        "label": "Revocable"
+      },
+      "suspendable": {
+        "label": "Suspendible"
+      },
+      "states": {
+        "label": "Estados adicionales",
+        "placeholder": "Pendiente, En proceso, etc.",
+        "hint": "Dale a enter para añadir un nuevo estado, haz click en el tipo para eliminarlo. Darle a la X eliminará todos."
+      },
+      "default": {
+        "label": "Estado por defecto",
+        "placeholder": "Selecciona un estado..."
+      }
+    },
+    "validity": {
+      "title": "Perido de validez",
+      "subtitle": "Configura el periodo de validez de la credencial generada a partir de esta plantilla. Si no quieres establecer un periodo de validez, déjalo en blanco.",
+      "years": {
+        "label": "Años"
+      },
+      "months": {
+        "label": "Meses"
+      },
+      "days": {
+        "label": "Días"
+      },
+      "hours": {
+        "label": "Horas"
+      },
+      "mins": {
+        "label": "Mins."
+      },
+      "secs": {
+        "label": "Segs."
+      }
+    },
     "actions": {
       "addField": "Añadir campo"
     }

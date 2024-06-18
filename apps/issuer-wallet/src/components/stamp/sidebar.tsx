@@ -23,13 +23,15 @@ export type Props = {
 
 export default function Sidebar({ links, className, lang }: Props) {
   const pathName = usePathname();
+  const fragment = pathName.split("/").pop();
   const { t } = useTranslation(lang, "sidebar");
 
   links.forEach((link) => {
-    if (link.href === pathName) {
+    if (fragment && link.href.includes(fragment)) {
       link.variant = "default";
     }
   });
+
   return (
     <div className={cn("h-full border-r shadow-sm p-4", className)}>
       <div className="flex items-center gap-2 mt-4">
