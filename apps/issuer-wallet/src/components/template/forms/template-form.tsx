@@ -59,7 +59,7 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
         onSubmit={form.handleSubmit(onSubmitClick)}
         className="h-full flex flex-col gap-4"
       >
-        <div className="grow shrink-0 basis-auto h-0 overflow-auto flex flex-col gap-16 px-1">
+        <div className="grow shrink-0 basis-auto h-0 overflow-auto space-y-16 px-1">
           <section>
             <h2 className="text-lg font-semibold mb-2">
               {tTemplate("form.base.title")}
@@ -70,7 +70,10 @@ export default function TemplateForm({ onSubmit, onReset, lang }: Props) {
             <h2 className="text-lg font-semibold mb-2">
               {tTemplate("form.content.title")}
             </h2>
-            <ContentForm control={form.control} lang={lang} />
+            <h3 className="text-sm mb-8 text-muted-foreground">
+              {tTemplate("form.content.subtitle")}
+            </h3>
+            <ContentForm control={form.control} lang={lang} watch={watch} />
           </section>
           <section>
             <h2 className="text-lg font-semibold mb-2">

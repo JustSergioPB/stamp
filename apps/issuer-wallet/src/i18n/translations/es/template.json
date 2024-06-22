@@ -7,7 +7,7 @@
     "name": "Nombre",
     "type": "Tipos",
     "status": "Estado",
-    "lang": "Idioma",
+    "lang": "Idioma del contenido",
     "content": "Contenido"
   },
   "form": {
@@ -25,7 +25,44 @@
       }
     },
     "content": {
-      "title": "Contenido"
+      "title": "Contenido",
+      "subtitle": "Indica que información contendrá la credencial generada a partir de esta plantilla como nombre, apellidos, fecha de nacimiento, etc.",
+      "id": {
+        "label": "Identificador",
+        "description": "El contenido tendrá un identificador único"
+      },
+      "required": {
+        "label": "Obligatorio"
+      },
+      "number": {
+        "minimum": "Mínimo",
+        "maximum": "Máximo",
+        "exclusive": "Exclusivo",
+        "multipleOf": "Múltiplo de"
+      },
+      "string": {
+        "minimum": "Mín. car",
+        "maximum": "Máx. car",
+        "pattern": "Patrón",
+        "format": "Formato"
+      },
+      "types": {
+        "string": "Texto",
+        "number": "Número",
+        "integer": "Entero",
+        "boolean": "Booleano",
+        "object": "Mapa",
+        "array": "Lista",
+        "null": "Nulo"
+      },
+      "format": {
+        "date": "Fecha",
+        "time": "Hora",
+        "date-time": "Fecha y hora",
+        "email": "Email",
+        "uri": "URL",
+        "did": "DID"
+      }
     },
     "security": {
       "title": "Seguridad",

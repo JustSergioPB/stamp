@@ -8,6 +8,6 @@ type Props = {
   prefix: string;
 };
 
-export default function ArrayForm({ control, lang }: Props) {
+export default function ObjectForm({ control, lang, watch }: Props) {
   return <></>;
 }

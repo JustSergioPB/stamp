@@ -1,19 +1,102 @@
+"use client";
+
 import { Button } from "@components/ui/button";
 import {
   CollapsibleContent,
   CollapsibleTrigger,
   Collapsible,
 } from "@components/ui/collapsible";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@components/ui/form";
+import { Input } from "@components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";
-import { ChevronsUpDown } from "lucide-react";
+import { TemplateSchema } from "@schemas/template";
+import { ChevronsUpDown, Trash } from "lucide-react";
 import { useState } from "react";
+import { Control, FieldPath, UseFormWatch } from "react-hook-form";
+import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
+import { Switch } from "@components/ui/switch";
+import ObjectForm from "./object-form";
+import ArrayForm from "./array-form";
+import NumberForm from "./number-form";
+import StringForm from "./string-form";
 
 type Props = {
   className?: string;
+  control?: Control<TemplateSchema, any>;
+  watch: UseFormWatch<TemplateSchema>;
+  lang: string;
+  prefix: string;
+  onRemove: () => void;
 };
 
-export default function JsonForm({ className }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export default function JsonForm({
+  className,
+  control,
+  lang,
+  onRemove,
+  prefix,
+  watch,
+}: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const { t } = useTranslation(lang, "template");
+
+  const namePath = `${prefix}.name` as FieldPath<TemplateSchema>;
+  const typePath = `${prefix}.type` as FieldPath<TemplateSchema>;
+  const requiredPath = `${prefix}.required` as FieldPath<TemplateSchema>;
+
+  const fieldValue = watch(typePath) as JsonSchemaType;
+
+  function renderForm() {
+    let form: JSX.Element;
+
+    switch (fieldValue) {
+      case "object":
+        form = (
+          <ObjectForm
+            control={control}
+            lang={lang}
+            watch={watch}
+            prefix={prefix}
+          />
+        );
+        break;
+      case "array":
+        form = (
+          <ArrayForm
+            control={control}
+            lang={lang}
+            watch={watch}
+            prefix={prefix}
+          />
+        );
+        break;
+      case "number":
+        form = <NumberForm control={control} lang={lang} prefix={prefix} />;
+        break;
+      case "string":
+        form = <StringForm control={control} lang={lang} prefix={prefix} />;
+        break;
+      default:
+        form = <></>;
+        break;
+    }
+
+    return form;
+  }
 
   return (
     <Collapsible
@@ -21,18 +104,92 @@ export default function JsonForm({ className }: Props) {
       onOpenChange={setIsOpen}
       className={cn(className, "space-y-2")}
     >
-      <div className="flex items-center justify-between space-x-4 px-4">
-        <div className="flex items-center"></div>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm">
-            <ChevronsUpDown className="h-4 w-4" />
-            <span className="sr-only">Toggle</span>
+      <div className="flex items-center justify-between space-x-4">
+        <div className="flex items-center gap-2 grow shrink-0 basis-auto">
+          <FormField
+            control={control}
+            name={namePath}
+            render={({ field }) => (
+              <FormItem className="basis-7/12">
+                <FormControl>
+                  <Input
+                    placeholder={t("form.base.name.placeholder")}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name={typePath}
+            render={({ field }) => (
+              <FormItem className="basis-5/12">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {JSONSchemaTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {t("form.content.types." + type)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name={requiredPath}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id={requiredPath}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                    <FormLabel htmlFor={requiredPath}>
+                      {t("form.content.required.label")}
+                    </FormLabel>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            className="shrink-0 basis-auto grow"
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={onRemove}
+          >
+            <Trash className="h-4 w-4" />
           </Button>
-        </CollapsibleTrigger>
+        </div>
+        {fieldValue !== "null" && fieldValue !== "boolean" && (
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm">
+              <ChevronsUpDown className="h-4 w-4" />
+              <span className="sr-only">Toggle</span>
+            </Button>
+          </CollapsibleTrigger>
+        )}
       </div>
-      <CollapsibleContent className="space-y-2">
-        
-      </CollapsibleContent>
+      {fieldValue !== "null" && fieldValue !== "boolean" && (
+        <CollapsibleContent>{renderForm()}</CollapsibleContent>
+      )}
     </Collapsible>
   );
 }

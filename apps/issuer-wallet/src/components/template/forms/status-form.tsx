@@ -9,7 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@components/ui/form";
-import { Label } from "@components/ui/label";
 import {
   Select,
   SelectContent,
@@ -46,9 +45,9 @@ export default function StatusForm({ control, lang, watch }: Props) {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
-                  <Label htmlFor="need-proof">
+                  <FormLabel htmlFor="revocable">
                     {t("form.status.revocable.label")}
-                  </Label>
+                  </FormLabel>
                 </div>
               </FormControl>
               <FormMessage />
@@ -67,9 +66,9 @@ export default function StatusForm({ control, lang, watch }: Props) {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
-                  <Label htmlFor="suspendable">
+                  <FormLabel htmlFor="suspendable">
                     {t("form.status.suspendable.label")}
-                  </Label>
+                  </FormLabel>
                 </div>
               </FormControl>
               <FormMessage />

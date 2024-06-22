@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { objectSchema } from "./object.schema";
+import { jsonSchema } from "./json.schema";
 
 export const contentSchema = z.object({
-  withId: z.boolean().optional(),
+  id: z.boolean().optional(),
   type: z.literal("object"),
   properties: z.object({
-    credentialSubject: objectSchema,
+    credentialSubject: z.array(jsonSchema),
   }),
   required: z.array(z.string()),
 });
