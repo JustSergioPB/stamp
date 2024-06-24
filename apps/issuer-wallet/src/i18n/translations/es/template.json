@@ -32,17 +32,18 @@
         "description": "El contenido tendrá un identificador único"
       },
       "required": {
-        "label": "Obligatorio"
+        "label": "Requerido"
       },
       "number": {
         "minimum": "Mínimo",
         "maximum": "Máximo",
-        "exclusive": "Exclusivo",
+        "exclusiveMinimum": "Mínimo incluido",
+        "exclusiveMaximum": "Máximo incluido",
         "multipleOf": "Múltiplo de"
       },
       "string": {
-        "minimum": "Mín. car",
-        "maximum": "Máx. car",
+        "minimum": "Mín. caracteres",
+        "maximum": "Máx. carecteres",
         "pattern": "Patrón",
         "format": "Formato"
       },
@@ -62,6 +63,14 @@
         "email": "Email",
         "uri": "URL",
         "did": "DID"
+      },
+      "array": {
+        "items": "Tipo de contenido",
+        "minItems": "Mín. elementos",
+        "maxItems": "Máx. elementos",
+        "unique": "Elementos únicos",
+        "type": "Tipo de contenido",
+        "contentProperties": "Propiedades del contenido"
       }
     },
     "security": {

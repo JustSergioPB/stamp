@@ -1,3 +1,5 @@
+"use client";
+
 import { Checkbox } from "@components/ui/checkbox";
 import {
   FormField,
@@ -7,6 +9,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
+import { Switch } from "@components/ui/switch";
 import { useTranslation } from "@i18n/client";
 import { TemplateSchema } from "@schemas/template";
 import { Control, FieldPath } from "react-hook-form";
@@ -29,90 +32,109 @@ export default function NumberForm({ control, lang, prefix }: Props) {
   const multipleOfPath = `${prefix}.multipleOf` as FieldPath<TemplateSchema>;
 
   return (
-    <div className="flex items-start gap-2">
-      <div className="basis-1/2 space-y-2">
-        <FormField
-          control={control}
-          name={minimumPath}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("form.content.number.minimum")}</FormLabel>
-              <FormControl>
-                <Input placeholder={"0"} type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={exclusiveMinimumPath}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                  <FormLabel>
-                    {t("form.content.number.exclusive")}
-                  </FormLabel>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      <div className="basis-1/2 space-y-2">
-        <FormField
-          control={control}
-          name={maximumPath}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("form.content.number.maximum")}</FormLabel>
-              <FormControl>
-                <Input placeholder={"0"} type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={exclusiveMaximumPath}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                  <FormLabel>
-                    {t("form.content.number.exclusive")}
-                  </FormLabel>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
+    <>
       <FormField
         control={control}
         name={multipleOfPath}
         render={({ field }) => (
-          <FormItem className="basis-1/2">
-            <FormLabel>{t("form.content.number.multipleOf")}</FormLabel>
+          <FormItem>
             <FormControl>
-              <Input placeholder={"0"} type="number" {...field} />
+              <div className="flex items-center justify-between">
+                <FormLabel>{t("form.content.number.multipleOf")}</FormLabel>
+                <Input
+                  className="basis-2/3"
+                  placeholder={"0"}
+                  type="number"
+                  {...field}
+                />
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-    </div>
+      <FormField
+        control={control}
+        name={minimumPath}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <div className="flex items-center justify-between">
+                <FormLabel>{t("form.content.number.minimum")}</FormLabel>
+                <Input
+                  className="basis-2/3"
+                  placeholder={"0"}
+                  type="number"
+                  {...field}
+                />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name={maximumPath}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <div className="flex items-center justify-between">
+                <FormLabel>{t("form.content.number.maximum")}</FormLabel>
+                <Input
+                  className="basis-2/3"
+                  placeholder={"0"}
+                  type="number"
+                  {...field}
+                />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name={exclusiveMinimumPath}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <div className="flex justify-between items-center">
+                <FormLabel htmlFor="exclusiveMinimum">
+                  {t("form.content.number.exclusiveMinimum")}
+                </FormLabel>
+                <Switch
+                  id="exclusiveMinimum"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name={exclusiveMaximumPath}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <div className="flex justify-between items-center">
+                <FormLabel htmlFor="exclusiveMaximum">
+                  {t("form.content.number.exclusiveMaximum")}
+                </FormLabel>
+                <Switch
+                  id="exclusiveMaximum"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
   );
 }

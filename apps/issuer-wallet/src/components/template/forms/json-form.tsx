@@ -87,6 +87,9 @@ export default function JsonForm({
       case "number":
         form = <NumberForm control={control} lang={lang} prefix={prefix} />;
         break;
+      case "integer":
+        form = <NumberForm control={control} lang={lang} prefix={prefix} />;
+        break;
       case "string":
         form = <StringForm control={control} lang={lang} prefix={prefix} />;
         break;
@@ -102,15 +105,15 @@ export default function JsonForm({
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className={cn(className, "space-y-2")}
+      className={cn(className, "space-y-4")}
     >
       <div className="flex items-center justify-between space-x-4">
-        <div className="flex items-center gap-2 grow shrink-0 basis-auto">
+        <div className="flex items-center gap-4">
           <FormField
             control={control}
             name={namePath}
             render={({ field }) => (
-              <FormItem className="basis-7/12">
+              <FormItem className="w-56">
                 <FormControl>
                   <Input
                     placeholder={t("form.base.name.placeholder")}
@@ -125,11 +128,8 @@ export default function JsonForm({
             control={control}
             name={typePath}
             render={({ field }) => (
-              <FormItem className="basis-5/12">
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+              <FormItem className="w-32">
+                <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Type" />
@@ -147,27 +147,11 @@ export default function JsonForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={control}
-            name={requiredPath}
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id={requiredPath}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                    <FormLabel htmlFor={requiredPath}>
-                      {t("form.content.required.label")}
-                    </FormLabel>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <ChevronsUpDown className="h-4 w-4" />
+            </Button>
+          </CollapsibleTrigger>
           <Button
             className="shrink-0 basis-auto grow"
             type="button"
@@ -178,18 +162,31 @@ export default function JsonForm({
             <Trash className="h-4 w-4" />
           </Button>
         </div>
-        {fieldValue !== "null" && fieldValue !== "boolean" && (
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <ChevronsUpDown className="h-4 w-4" />
-              <span className="sr-only">Toggle</span>
-            </Button>
-          </CollapsibleTrigger>
-        )}
       </div>
-      {fieldValue !== "null" && fieldValue !== "boolean" && (
-        <CollapsibleContent>{renderForm()}</CollapsibleContent>
-      )}
+      <CollapsibleContent className="space-y-4">
+        <FormField
+          control={control}
+          name={requiredPath}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="flex items-center justify-between">
+                  <FormLabel htmlFor={requiredPath}>
+                    {t("form.content.required.label")}
+                  </FormLabel>
+                  <Switch
+                    id={requiredPath}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {renderForm()}
+      </CollapsibleContent>
     </Collapsible>
   );
 }

@@ -75,7 +75,7 @@ export default function ContentForm({
             <div className="block grow shrink-0 basis-auto">
               <div className="flex">
                 <span className="border-l-2 border-l-neutral-300 inline-block"></span>
-                <ul className="w-full space-y-6">
+                <ul className="w-full space-y-4">
                   {fields.map((field, index) => (
                     <li className="flex items-start" key={field.id}>
                       <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
