@@ -10,87 +10,20 @@ import {
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
 import { useTranslation } from "@i18n/client";
-import { TemplateSchema } from "@schemas/template";
-import { Control, FieldPath, UseFormWatch } from "react-hook-form";
-import ObjectForm from "./object-form";
-import { useState } from "react";
-import NumberForm from "./number-form";
-import StringForm from "./string-form";
-import { Label } from "@components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@components/ui/select";
-import { JSONSchemaTypes } from "@stamp/domain";
+import { ContentSchema } from "@schemas/template";
+import { Control, FieldPath } from "react-hook-form";
 
-type Props = {
-  watch: UseFormWatch<TemplateSchema>;
-  control?: Control<TemplateSchema, any>;
+interface Props extends React.HTMLAttributes<HTMLElement> {
+  control?: Control<ContentSchema, any>;
   lang: string;
   prefix: string;
-};
+}
 
-export default function ArrayForm({ control, lang, prefix, watch }: Props) {
+export default function ArrayForm({ control, lang, prefix }: Props) {
   const { t } = useTranslation(lang, "template");
-  const itemsPath = `${prefix}.items` as FieldPath<TemplateSchema>;
-  const minItemsPath = `${prefix}.minItems` as FieldPath<TemplateSchema>;
-  const maxItemsPath = `${prefix}.maxItems` as FieldPath<TemplateSchema>;
-  const uniqueItemsPath = `${prefix}.uniqueItems` as FieldPath<TemplateSchema>;
-  const [type, setType] = useState<string>();
-
-  function renderForm() {
-    let form: JSX.Element;
-
-    switch (type) {
-      case "object":
-        form = (
-          <>
-            <span className="text-sm text-muted-foreground">
-              {t("form.content.array.contentProperties")}
-            </span>
-            <ObjectForm
-              control={control}
-              lang={lang}
-              watch={watch}
-              prefix={prefix}
-            />
-          </>
-        );
-        break;
-      case "array":
-        form = (
-          <>
-            <span className="text-sm text-muted-foreground">
-              {t("form.content.array.contentProperties")}
-            </span>
-            <ArrayForm
-              control={control}
-              lang={lang}
-              watch={watch}
-              prefix={prefix}
-            />
-          </>
-        );
-        break;
-      case "number":
-        form = <NumberForm control={control} lang={lang} prefix={itemsPath} />;
-        break;
-      case "integer":
-        form = <NumberForm control={control} lang={lang} prefix={itemsPath} />;
-        break;
-      case "string":
-        form = <StringForm control={control} lang={lang} prefix={itemsPath} />;
-        break;
-      default:
-        form = <></>;
-        break;
-    }
-
-    return form;
-  }
+  const minItemsPath = `${prefix}.minItems` as FieldPath<ContentSchema>;
+  const maxItemsPath = `${prefix}.maxItems` as FieldPath<ContentSchema>;
+  const uniqueItemsPath = `${prefix}.uniqueItems` as FieldPath<ContentSchema>;
 
   return (
     <>
@@ -155,22 +88,6 @@ export default function ArrayForm({ control, lang, prefix, watch }: Props) {
           </FormItem>
         )}
       />
-      <div className="flex items-center justify-between">
-        <Label>{t("form.content.array.type")}</Label>
-        <Select onValueChange={(value) => setType(value)}>
-          <SelectTrigger className="basis-2/3">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            {JSONSchemaTypes.map((type) => (
-              <SelectItem key={type} value={type}>
-                {t("form.content.types." + type)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      {renderForm()}
     </>
   );
 }

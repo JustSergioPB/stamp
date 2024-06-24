@@ -1,12 +1,11 @@
 import { ObjectId } from "mongodb";
-import { TemplateSchema } from "@schemas/template/template.schema";
 import { collections, connectToDatabase } from "../connect";
 import { Query, QueryResult } from "@models/query";
-import { TemplateMongo } from "@db/models";
+import { TemplateSchema } from "@schemas/template";
 
 export async function searchTemplate(
-  query: Query<TemplateMongo>
-): Promise<QueryResult<TemplateMongo>> {
+  query: Query<TemplateSchema>
+): Promise<QueryResult<Partial<TemplateSchema>>> {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 
@@ -49,7 +48,9 @@ export async function searchTemplate(
   };
 }
 
-export async function getTemplate(id: string): Promise<TemplateMongo> {
+export async function getTemplate(
+  id: string
+): Promise<Partial<TemplateSchema>> {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 
@@ -75,10 +76,10 @@ export async function getTemplate(id: string): Promise<TemplateMongo> {
     throw new Error("Schema not found");
   }
 
-  return { dbId: document._id.toString(), ...document };
+  return document;
 }
 
-export async function createTemplate(template: TemplateSchema): Promise<void> {
+export async function createTemplate(): Promise<string> {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 
@@ -96,5 +97,33 @@ export async function createTemplate(template: TemplateSchema): Promise<void> {
     throw new Error("'Templates' collection not found");
   }
 
-  await collections.templates.insertOne(template);
+  const documentRef = await collections.templates.insertOne({});
+  return documentRef.insertedId.toString();
+}
+
+export async function updateTemplate(
+  id: string,
+  data: Partial<TemplateSchema>
+) {
+  const mongoUri = process.env.MONGODB_URI;
+  const mongoName = process.env.MONGODB_NAME;
+
+  if (!mongoUri) {
+    throw new Error("MONGODB_URI is not defined");
+  }
+
+  if (!mongoName) {
+    throw new Error("MONGODB_NAME is not defined");
+  }
+
+  await connectToDatabase(mongoUri, mongoName);
+
+  if (!collections.templates) {
+    throw new Error("'Templates' collection not found");
+  }
+
+  await collections.templates.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: data }
+  );
 }

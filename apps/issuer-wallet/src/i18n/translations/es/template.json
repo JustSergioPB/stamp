@@ -5,21 +5,27 @@
   "create": "Crear plantilla",
   "props": {
     "name": "Nombre",
-    "type": "Tipos",
+    "type": "Palabras clave",
     "status": "Estado",
     "lang": "Idioma del contenido",
     "content": "Contenido"
   },
+  "overview": {
+    "title": "Vista general"
+  },
   "form": {
     "base": {
       "title": "Información básica",
+      "subtitle": "Configura los aspectos básicos de la plantilla como el nombre, los palabras clave asociadas a la credencial y el idioma del contenido.",
       "name": {
-        "placeholder": "Pasaporte"
+        "label": "Nombre",
+        "placeholder": "Código"
       },
       "lang": {
         "placeholder": "Selecciona un idioma"
       },
       "type": {
+        "label": "Tipo",
         "placeholder": "Pasaporte, identificación, etc.",
         "hint": "Dale a enter para añadir un nuevo tipo, haz click en el tipo para eliminarlo. Darle a la X eliminará todos."
       }
@@ -34,11 +40,14 @@
       "required": {
         "label": "Requerido"
       },
+      "property": {
+        "new": "Nueva propiedad"
+      },
       "number": {
         "minimum": "Mínimo",
         "maximum": "Máximo",
-        "exclusiveMinimum": "Mínimo incluido",
-        "exclusiveMaximum": "Máximo incluido",
+        "exclusiveMinimum": "Mínimo excluido",
+        "exclusiveMaximum": "Máximo excluido",
         "multipleOf": "Múltiplo de"
       },
       "string": {
@@ -117,7 +126,7 @@
       }
     },
     "validity": {
-      "title": "Perido de validez",
+      "title": "Periodo de validez",
       "subtitle": "Configura el periodo de validez de la credencial generada a partir de esta plantilla. Si no quieres establecer un periodo de validez, déjalo en blanco.",
       "years": {
         "label": "Años"

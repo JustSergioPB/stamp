@@ -1,7 +1,10 @@
 "use client";
 
+import { updateTemplateAction } from "@actions/template.action";
 import ChipInput from "@components/stamp/chip-input";
+import { Button } from "@components/ui/button";
 import {
+  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -17,25 +20,57 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { Switch } from "@components/ui/switch";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
-import { TemplateSchema } from "@schemas/template";
-import { Control, UseFormWatch } from "react-hook-form";
+import { cn } from "@lib/utils";
+import { StatusSchema, statusSchema } from "@schemas/template";
+import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-type Props = {
-  watch: UseFormWatch<TemplateSchema>;
-  control?: Control<TemplateSchema, any>;
+interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-};
-export default function StatusForm({ control, lang, watch }: Props) {
+  templateId: string;
+  statusValue?: StatusSchema;
+}
+
+export default function StatusForm({
+  lang,
+  className,
+  templateId,
+  statusValue,
+}: Props) {
   const { t } = useTranslation(lang, "template");
-  const statusList = watch("status.states");
+  const { t: tAction } = useTranslation(lang, "actions");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const form = useForm<StatusSchema>({
+    resolver: zodResolver(statusSchema),
+    defaultValues: statusValue,
+  });
+
+  const statusList = form.watch("states");
+
+  async function onSubmit(data: StatusSchema) {
+    try {
+      setLoading(true);
+      await updateTemplateAction(templateId, { status: data });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <div className="flex items-center gap-4 w-full">
-      <div className="space-y-4">
+    <Form {...form}>
+      <form
+        className={cn("space-y-4 overflow-y-auto", className)}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
-          control={control}
-          name="status.revocable"
+          control={form.control}
+          name="revocable"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -55,8 +90,8 @@ export default function StatusForm({ control, lang, watch }: Props) {
           )}
         />
         <FormField
-          control={control}
-          name="status.suspendable"
+          control={form.control}
+          name="suspendable"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -76,8 +111,8 @@ export default function StatusForm({ control, lang, watch }: Props) {
           )}
         />
         <FormField
-          control={control}
-          name="status.states"
+          control={form.control}
+          name="states"
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("form.status.states.label")}</FormLabel>
@@ -97,8 +132,8 @@ export default function StatusForm({ control, lang, watch }: Props) {
           )}
         />
         <FormField
-          control={control}
-          name="status.defaultState"
+          control={form.control}
+          name="defaultState"
           render={({ field }) => (
             <FormItem className="basis-5/12">
               <FormLabel>{t("form.status.default.label")}</FormLabel>
@@ -126,7 +161,11 @@ export default function StatusForm({ control, lang, watch }: Props) {
             </FormItem>
           )}
         />
-      </div>
-    </div>
+        <Button type="submit" disabled={loading}>
+          {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
+          {tAction("save")}
+        </Button>
+      </form>
+    </Form>
   );
 }

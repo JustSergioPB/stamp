@@ -3,11 +3,7 @@ import { jsonSchema } from "./json.schema";
 
 export const contentSchema = z.object({
   id: z.boolean().optional(),
-  type: z.literal("object"),
-  properties: z.object({
-    credentialSubject: z.array(jsonSchema),
-  }),
-  required: z.array(z.string()),
+  credentialSubject: z.array(jsonSchema),
 });
 
 export type ContentSchema = z.infer<typeof contentSchema>;

@@ -1,14 +1,28 @@
 "use server";
 
 import { TemplateSchema } from "@schemas/template/template.schema";
-import { revalidatePath } from "next/cache";
-import { createTemplate, searchTemplate } from "@db/repositories";
+import {
+  createTemplate,
+  searchTemplate,
+  updateTemplate,
+} from "@db/repositories";
 import { Query } from "@models/query";
 
-export const createTemplateAction = async (template: TemplateSchema) => {
+export const createTemplateAction = async (): Promise<string | null> => {
   try {
-    await createTemplate(template);
-    revalidatePath("/templates");
+    return createTemplate();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const updateTemplateAction = async (
+  id: string,
+  data: Partial<TemplateSchema>
+): Promise<void> => {
+  try {
+    updateTemplate(id, data);
   } catch (error) {
     console.error(error);
   }

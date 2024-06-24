@@ -11,11 +11,11 @@ import {
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
 import { useTranslation } from "@i18n/client";
-import { TemplateSchema } from "@schemas/template";
+import { ContentSchema } from "@schemas/template";
 import { Control, FieldPath } from "react-hook-form";
 
 type Props = {
-  control?: Control<TemplateSchema, any>;
+  control?: Control<ContentSchema, any>;
   lang: string;
   prefix: string;
   integer?: boolean;
@@ -23,13 +23,13 @@ type Props = {
 
 export default function NumberForm({ control, lang, prefix }: Props) {
   const { t } = useTranslation(lang, "template");
-  const minimumPath = `${prefix}.minimum` as FieldPath<TemplateSchema>;
+  const minimumPath = `${prefix}.minimum` as FieldPath<ContentSchema>;
   const exclusiveMinimumPath =
-    `${prefix}.exclusiveMinimum` as FieldPath<TemplateSchema>;
-  const maximumPath = `${prefix}.maximum` as FieldPath<TemplateSchema>;
+    `${prefix}.exclusiveMinimum` as FieldPath<ContentSchema>;
+  const maximumPath = `${prefix}.maximum` as FieldPath<ContentSchema>;
   const exclusiveMaximumPath =
-    `${prefix}.exclusiveMaximum` as FieldPath<TemplateSchema>;
-  const multipleOfPath = `${prefix}.multipleOf` as FieldPath<TemplateSchema>;
+    `${prefix}.exclusiveMaximum` as FieldPath<ContentSchema>;
+  const multipleOfPath = `${prefix}.multipleOf` as FieldPath<ContentSchema>;
 
   return (
     <>

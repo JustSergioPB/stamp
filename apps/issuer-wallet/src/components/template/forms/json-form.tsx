@@ -23,8 +23,18 @@ import {
 } from "@components/ui/select";
 import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";
-import { TemplateSchema } from "@schemas/template";
-import { ChevronsUpDown, Trash } from "lucide-react";
+import { ContentSchema, TemplateSchema } from "@schemas/template";
+import {
+  CaseSensitive,
+  ChevronsUpDown,
+  CircleAlert,
+  List,
+  ListTree,
+  Network,
+  Sigma,
+  SigmaSquare,
+  Trash,
+} from "lucide-react";
 import { useState } from "react";
 import { Control, FieldPath, UseFormWatch } from "react-hook-form";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
@@ -33,92 +43,129 @@ import ObjectForm from "./object-form";
 import ArrayForm from "./array-form";
 import NumberForm from "./number-form";
 import StringForm from "./string-form";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@components/ui/dialog";
+import ContentNode from "./content-node";
 
-type Props = {
-  className?: string;
-  control?: Control<TemplateSchema, any>;
-  watch: UseFormWatch<TemplateSchema>;
+interface Props extends React.HTMLAttributes<HTMLElement> {
+  control?: Control<ContentSchema, any>;
+  watch: UseFormWatch<ContentSchema>;
   lang: string;
   prefix: string;
   onRemove: () => void;
-};
+}
 
 export default function JsonForm({
-  className,
   control,
   lang,
   onRemove,
   prefix,
   watch,
 }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
   const { t } = useTranslation(lang, "template");
+  const { t: tAction } = useTranslation(lang, "actions");
 
-  const namePath = `${prefix}.name` as FieldPath<TemplateSchema>;
-  const typePath = `${prefix}.type` as FieldPath<TemplateSchema>;
-  const requiredPath = `${prefix}.required` as FieldPath<TemplateSchema>;
+  const namePath = `${prefix}.name` as FieldPath<ContentSchema>;
+  const typePath = `${prefix}.type` as FieldPath<ContentSchema>;
+  const requiredPath = `${prefix}.required` as FieldPath<ContentSchema>;
 
-  const fieldValue = watch(typePath) as JsonSchemaType;
+  const name = watch(namePath) as string | undefined;
+  const type = watch(typePath) as JsonSchemaType | undefined;
 
   function renderForm() {
-    let form: JSX.Element;
-
-    switch (fieldValue) {
+    switch (type) {
       case "object":
-        form = (
-          <ObjectForm
-            control={control}
-            lang={lang}
-            watch={watch}
-            prefix={prefix}
-          />
-        );
-        break;
+        return <ObjectForm control={control} lang={lang} prefix={prefix} />;
       case "array":
-        form = (
-          <ArrayForm
-            control={control}
-            lang={lang}
-            watch={watch}
-            prefix={prefix}
-          />
-        );
-        break;
+        return <ArrayForm control={control} lang={lang} prefix={prefix} />;
       case "number":
-        form = <NumberForm control={control} lang={lang} prefix={prefix} />;
-        break;
+        return <NumberForm control={control} lang={lang} prefix={prefix} />;
       case "integer":
-        form = <NumberForm control={control} lang={lang} prefix={prefix} />;
-        break;
+        return <NumberForm control={control} lang={lang} prefix={prefix} />;
       case "string":
-        form = <StringForm control={control} lang={lang} prefix={prefix} />;
-        break;
+        return <StringForm control={control} lang={lang} prefix={prefix} />;
       default:
-        form = <></>;
-        break;
+        return <></>;
     }
+  }
 
-    return form;
+  function getIcon() {
+    switch (type) {
+      case "object":
+        return <Network className="h-4 w-4 mr-2" />;
+      case "array":
+        return <List className="h-4 w-4 mr-2" />;
+      case "number":
+        return <Sigma className="h-4 w-4 mr-2" />;
+      case "integer":
+        return <SigmaSquare className="h-4 w-4 mr-2" />;
+      case "string":
+        return <CaseSensitive className="h-4 w-4 mr-2" />;
+      default:
+        return <CircleAlert className="h-4 w-4 mr-2" />;
+    }
   }
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className={cn(className, "space-y-4")}
-    >
-      <div className="flex items-center justify-between space-x-4">
-        <div className="flex items-center gap-4">
+    <Dialog>
+      <div>
+        <div className="flex items-center gap-2">
+          <DialogTrigger asChild>
+            <Button variant="secondary" size="sm" className="rounded-xl">
+              {getIcon()}
+              {name || t("form.content.property.new")}
+            </Button>
+          </DialogTrigger>
+          <Button size="icon" variant="ghost" onClick={onRemove}>
+            <Trash className="h-4 w-4" />
+          </Button>
+        </div>
+        {type === "object" && (
+          <ContentNode
+            className="ml-4"
+            lang={lang}
+            prefix={prefix}
+            watch={watch}
+            control={control}
+            recursive
+          />
+        )}
+        {type === "array" && (
+          <ContentNode
+            className="ml-4"
+            lang={lang}
+            prefix={`${prefix}.items`}
+            watch={watch}
+            control={control}
+          />
+        )}
+      </div>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{name || t("form.content.property.new")}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
           <FormField
             control={control}
             name={namePath}
             render={({ field }) => (
-              <FormItem className="w-56">
+              <FormItem>
                 <FormControl>
-                  <Input
-                    placeholder={t("form.base.name.placeholder")}
-                    {...field}
-                  />
+                  <div className="flex items-center justify-between">
+                    <FormLabel>{t("form.base.name.label")}</FormLabel>
+                    <Input
+                      className="basis-2/3"
+                      placeholder={t("form.base.name.placeholder")}
+                      {...field}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -128,12 +175,17 @@ export default function JsonForm({
             control={control}
             name={typePath}
             render={({ field }) => (
-              <FormItem className="w-32">
+              <FormItem>
                 <Select onValueChange={field.onChange}>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Type" />
-                    </SelectTrigger>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>{t("form.base.type.label")}</FormLabel>
+                      <SelectTrigger className="basis-2/3">
+                        <SelectValue
+                          placeholder={t("form.content.array.type")}
+                        />
+                      </SelectTrigger>
+                    </div>
                   </FormControl>
                   <SelectContent>
                     {JSONSchemaTypes.map((type) => (
@@ -147,46 +199,37 @@ export default function JsonForm({
               </FormItem>
             )}
           />
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <ChevronsUpDown className="h-4 w-4" />
-            </Button>
-          </CollapsibleTrigger>
-          <Button
-            className="shrink-0 basis-auto grow"
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onRemove}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+          <FormField
+            control={control}
+            name={requiredPath}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex items-center justify-between">
+                    <FormLabel htmlFor={requiredPath}>
+                      {t("form.content.required.label")}
+                    </FormLabel>
+                    <Switch
+                      id={requiredPath}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {renderForm()}
         </div>
-      </div>
-      <CollapsibleContent className="space-y-4">
-        <FormField
-          control={control}
-          name={requiredPath}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className="flex items-center justify-between">
-                  <FormLabel htmlFor={requiredPath}>
-                    {t("form.content.required.label")}
-                  </FormLabel>
-                  <Switch
-                    id={requiredPath}
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {renderForm()}
-      </CollapsibleContent>
-    </Collapsible>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" size="sm">
+              {tAction("save")}
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

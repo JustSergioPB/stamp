@@ -1,13 +1,12 @@
-import { TemplateSchema } from "@schemas/template";
-import { Control, UseFormWatch } from "react-hook-form";
+import { ContentSchema } from "@schemas/template";
+import { Control } from "react-hook-form";
 
-type Props = {
-  watch: UseFormWatch<TemplateSchema>;
-  control?: Control<TemplateSchema, any>;
+interface Props extends React.HTMLAttributes<HTMLElement> {
+  control?: Control<ContentSchema, any>;
   lang: string;
   prefix: string;
-};
+}
 
-export default function ObjectForm({ control, lang, watch }: Props) {
+export default function ObjectForm({ control, lang }: Props) {
   return <></>;
 }

@@ -14,11 +14,11 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { useTranslation } from "@i18n/client";
-import { TemplateSchema } from "@schemas/template";
+import { ContentSchema } from "@schemas/template";
 import { Control, FieldPath } from "react-hook-form";
 
 type Props = {
-  control?: Control<TemplateSchema, any>;
+  control?: Control<ContentSchema, any>;
   lang: string;
   prefix: string;
 };
@@ -26,10 +26,10 @@ type Props = {
 export default function StringForm({ control, lang, prefix }: Props) {
   const { t } = useTranslation(lang, "template");
 
-  const minLengthPath = `${prefix}.minLength` as FieldPath<TemplateSchema>;
-  const maxLengthPath = `${prefix}.maxLength` as FieldPath<TemplateSchema>;
-  const patternPath = `${prefix}.pattern` as FieldPath<TemplateSchema>;
-  const formatPath = `${prefix}.format` as FieldPath<TemplateSchema>;
+  const minLengthPath = `${prefix}.minLength` as FieldPath<ContentSchema>;
+  const maxLengthPath = `${prefix}.maxLength` as FieldPath<ContentSchema>;
+  const patternPath = `${prefix}.pattern` as FieldPath<ContentSchema>;
+  const formatPath = `${prefix}.format` as FieldPath<ContentSchema>;
 
   return (
     <>

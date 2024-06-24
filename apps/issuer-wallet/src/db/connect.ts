@@ -3,7 +3,7 @@ import * as mongodb from "mongodb";
 
 //TODO: Implement better type safety for collections
 export const collections: {
-  templates?: mongodb.Collection<TemplateSchema>;
+  templates?: mongodb.Collection<Partial<TemplateSchema>>;
 } = {};
 
 export async function connectToDatabase(

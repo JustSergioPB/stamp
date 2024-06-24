@@ -11,6 +11,7 @@ export const jsonSchema: ZodSchema = z.object({
     "array",
     "null",
   ]),
+  subtype: z.string().optional(),
   required: z.boolean().optional(),
   minLength: z.number().optional(),
   maxLength: z.number().optional(),
