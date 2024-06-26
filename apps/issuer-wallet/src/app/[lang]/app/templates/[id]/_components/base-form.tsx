@@ -129,6 +129,7 @@ export default function BaseForm({
               <FormLabel>{t("form.base.type.label")}</FormLabel>
               <FormControl>
                 <ChipInput
+                  defaultValue={field.value}
                   placeholder={t("form.base.type.placeholder")}
                   onRemove={(value: string[]) => field.onChange(value)}
                   onEnter={(value: string[]) => field.onChange(value)}

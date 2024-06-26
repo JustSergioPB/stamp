@@ -25,7 +25,7 @@ export async function updateTemplateCommand(
 ): Promise<CommandResult<void>> {
   try {
     updateTemplate(template.id, template);
-    revalidatePath(`templates/${template.id}`);
+    revalidatePath(`${template.id}`);
     return { data: null, errorCode: null };
   } catch (error) {
     console.error(error);

@@ -14,6 +14,12 @@ export type TemplateSummary = {
   status: "ready" | "not-ready";
   type?: string[];
   lang?: string;
+  hasContent: boolean;
+  hasCredentialId: boolean;
+  hasSecurityAssertion: boolean;
+  hasRevocation: boolean;
+  hasName: boolean;
+  hasType: boolean;
   createdAt: string;
   modifiedAt: string;
 };

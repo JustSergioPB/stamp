@@ -126,6 +126,7 @@ export default function StatusForm({
               <FormLabel>{t("form.status.states.label")}</FormLabel>
               <FormControl className="w-full">
                 <ChipInput
+                  defaultValue={field.value}
                   placeholder={t("form.status.states.placeholder")}
                   onRemove={(value: string[]) => field.onChange(value)}
                   onEnter={(value: string[]) => field.onChange(value)}

@@ -9,5 +9,13 @@ export function templateToSummary(template: Template): TemplateSummary {
     status: isReady ? "ready" : "not-ready",
     type: template.base?.type,
     lang: template.base?.lang,
+    createdAt: template.createdAt,
+    modifiedAt: template.modifiedAt,
+    hasContent: isReady,
+    hasCredentialId: !!template.base?.id,
+    hasSecurityAssertion: !!template.security?.assertion,
+    hasRevocation: !!template.status?.revocable,
+    hasName: !!template.base?.name,
+    hasType: !!template.base?.type,
   };
 }

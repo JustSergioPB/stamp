@@ -6,24 +6,26 @@ import { Input } from "@components/ui/input";
 import { X } from "lucide-react";
 import { useState } from "react";
 
-type Props = {
-  placeholder: string; //t("form.base.type.placeholder")
+interface Props extends React.HtmlHTMLAttributes<HTMLElement> {
+  placeholder: string;
+  defaultValue?: string[];
   onRemove: (value: string[]) => void;
   onEnter: (value: string[]) => void;
   onReset: () => void;
-};
+}
 
 export default function ChipInput({
+  defaultValue,
   placeholder,
   onRemove,
   onEnter,
   onReset,
 }: Props) {
   const [value, setValue] = useState("");
-  const [chips, setChips] = useState<string[]>([]);
+  const [chips, setChips] = useState<string[]>(defaultValue || []);
 
   return (
-    <div className="max-w-full">
+    <div className="max-w-full space-y-4">
       <div className="flex items-center gap-2 mb-2">
         <Input
           value={value}
@@ -56,10 +58,11 @@ export default function ChipInput({
           <X className="h-4 w-4" />
         </Button>
       </div>
-      <div className="flex flex-wrap items-center gap-2 bg-neutral-100 rounded-lg p-2 min-h-10">
+      <div className="flex flex-wrap items-center gap-2">
         {chips.map((chip, index) => (
           <Badge
             key={`${chip}-${index}`}
+            className="hover:cursor-pointer"
             onClick={() => {
               const removed = chips.filter((_, i) => i !== index);
               setChips(removed);

@@ -16,7 +16,7 @@ export default function ChipListCell({ value }: Props) {
   return (
     <div className="flex space-x-2">
       <span className="max-w-[500px] flex gap-1">
-        <Badge>{displayed[0]}</Badge>
+        {displayed[0] && <Badge>{displayed[0]}</Badge>}
         {displayed[1] && <Badge>{displayed[1]}</Badge>}
         {hidden.length > 0 && (
           <TooltipProvider delayDuration={0}>

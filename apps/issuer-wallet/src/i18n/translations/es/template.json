@@ -11,9 +11,25 @@
     "status": "Estado",
     "lang": "Idioma del contenido",
     "content": "Contenido",
-    "createdAt": "Creado",
-    "modifiedAt": "Actualizado",
-    "createdBy": "Creado por"
+    "createdAt": {
+      "label": "Creado",
+      "value": "{{val, datetime}}"
+    },
+    "modifiedAt": {
+      "label": "Modificado",
+      "value": "{{val, datetime}}"
+    },
+    "createdBy": "Creado por",
+    "hasContent": "El contenido de la credencial está definido",
+    "hasCredentialId": "Cada credencial generada tendrá un identificador único",
+    "hasSecurityAssertion": "Las credenciales han de ser verificables",
+    "hasRevocation": "Las credenciales se pueden revocar",
+    "hasName": "El nombre de la credencial está definido",
+    "hasType": "Las palabras clave de la credencial están definidas",
+    "alert": {
+      "title": "Importante",
+      "description": "Para que una plantilla esté lista para emitir credenciales, debes completar la información obligatoria"
+    }
   },
   "form": {
     "base": {
@@ -177,6 +193,6 @@
   },
   "status": {
     "ready": "Listo",
-    "notReady": "Por completar"
+    "notReady": "Borrador"
   }
 }
