@@ -11,7 +11,7 @@
       "@schemas/*": ["./src/schemas/*"],
       "@db/*": ["./src/db/*"],
       "@utils/*": ["./src/utils/*"],
-      "@actions/*": ["./src/actions/*"]
+      "@commands/*": ["src/commands/*"]
     },
     "plugins": [
       {

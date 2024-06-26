@@ -1,11 +1,11 @@
 import { ObjectId } from "mongodb";
 import { collections, connectToDatabase } from "../connect";
-import { Query, QueryResult } from "@models/query";
-import { TemplateSchema } from "@schemas/template";
+import { PaginatedList, Query } from "@models/query";
+import { Template, TemplateUpdate } from "@models/domain/template";
 
 export async function searchTemplate(
-  query: Query<TemplateSchema>
-): Promise<QueryResult<Partial<TemplateSchema>>> {
+  query: Query<Template>
+): Promise<PaginatedList<Template>> {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 
@@ -38,8 +38,10 @@ export async function searchTemplate(
 
   return {
     items: documents.map(({ _id, ...document }) => ({
-      dbId: _id.toString(),
+      id: _id.toString(),
       ...document,
+      createdAt: _id.getTimestamp().toISOString(),
+      modifiedAt: _id.getTimestamp().toISOString(),
     })),
     count,
     currentPage: query.page,
@@ -48,9 +50,7 @@ export async function searchTemplate(
   };
 }
 
-export async function getTemplate(
-  id: string
-): Promise<Partial<TemplateSchema>> {
+export async function getTemplateById(id: string): Promise<Template> {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 
@@ -76,10 +76,15 @@ export async function getTemplate(
     throw new Error("Schema not found");
   }
 
-  return document;
+  return {
+    id: document._id.toString(),
+    ...document,
+    createdAt: document._id.getTimestamp().toISOString(),
+    modifiedAt: document._id.getTimestamp().toISOString(),
+  };
 }
 
-export async function createTemplate(): Promise<string> {
+export async function createTemplate(): Promise<Template> {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 
@@ -98,13 +103,15 @@ export async function createTemplate(): Promise<string> {
   }
 
   const documentRef = await collections.templates.insertOne({});
-  return documentRef.insertedId.toString();
+
+  return {
+    id: documentRef.insertedId.toString(),
+    createdAt: documentRef.insertedId.getTimestamp().toISOString(),
+    modifiedAt: documentRef.insertedId.getTimestamp().toISOString(),
+  };
 }
 
-export async function updateTemplate(
-  id: string,
-  data: Partial<TemplateSchema>
-) {
+export async function updateTemplate(id: string, data: TemplateUpdate) {
   const mongoUri = process.env.MONGODB_URI;
   const mongoName = process.env.MONGODB_NAME;
 

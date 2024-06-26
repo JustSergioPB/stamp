@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateAction } from "@actions/template.action";
+import { updateTemplateCommand } from "@commands/template.commands";
 import { Button } from "@components/ui/button";
 import {
   Form,
@@ -19,37 +19,45 @@ import { SecuritySchema, securitySchema } from "@schemas/template";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  securityValue?: SecuritySchema;
+  formValue?: SecuritySchema;
 }
 
 export default function SecurityForm({
   lang,
   className,
   templateId,
-  securityValue,
+  formValue,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
+  const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<SecuritySchema>({
     resolver: zodResolver(securitySchema),
-    defaultValues: securityValue,
+    defaultValues: formValue,
   });
 
   async function onSubmit(data: SecuritySchema) {
-    try {
-      setLoading(true);
-      await updateTemplateAction(templateId, { security: data });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    setLoading(true);
+
+    const result = await updateTemplateCommand({
+      id: templateId,
+      security: data,
+    });
+
+    if (result.errorCode) {
+      toast.error(tError(result.errorCode));
+    } else {
+      toast.success(tAction("success"));
     }
+
+    setLoading(false);
   }
 
   return (
@@ -189,7 +197,7 @@ export default function SecurityForm({
           )}
         />
         <Button type="submit" disabled={loading}>
-          {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
+          {loading && <LoaderCircle className="animate-spin h-4 w-4 mr-2" />}
           {tAction("save")}
         </Button>
       </form>

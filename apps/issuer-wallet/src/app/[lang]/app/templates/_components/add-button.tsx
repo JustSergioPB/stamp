@@ -1,6 +1,6 @@
 "use client";
 
-import { createTemplateAction } from "@actions/template.action";
+import { createTemplateCommand } from "@commands/template.commands";
 import { Button } from "@components/ui/button";
 import { useTranslation } from "@i18n/client";
 import { CirclePlus, LoaderCircle } from "lucide-react";
@@ -19,7 +19,7 @@ export default function AddButton({ lang }: Props) {
   async function onClick() {
     setLoading(true);
     try {
-      const id = await createTemplateAction();
+      const id = await createTemplateCommand();
       setLoading(false);
       router.push(`/${lang}/app/templates/${id}`);
     } catch (error) {

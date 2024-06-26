@@ -1,1 +1,1 @@
-export * from "./fromUrl";
+export * from "./searchParamsToQuery";

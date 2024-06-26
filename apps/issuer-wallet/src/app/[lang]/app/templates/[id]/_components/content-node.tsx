@@ -31,9 +31,6 @@ export default function ContentNode({
   recursive,
 }: Props) {
   const { t } = useTranslation(lang, "template");
-
-  console.log("ContentNode", prefix);
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: prefix as "credentialSubject" | `credentialSubject.${string}`,

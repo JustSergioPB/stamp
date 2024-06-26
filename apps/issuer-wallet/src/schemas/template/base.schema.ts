@@ -3,7 +3,7 @@ import { z } from "zod";
 export const baseSchema = z.object({
   id: z.object({
     present: z.boolean().optional(),
-    type: z.string().optional(),
+    type: z.enum(["URL", "DID", "UUID"]).optional(),
   }),
   type: z.array(z.string()).optional(),
   name: z.string().optional(),
@@ -12,3 +12,14 @@ export const baseSchema = z.object({
 });
 
 export type BaseSchema = z.infer<typeof baseSchema>;
+
+export const DefaultBaseSchema: BaseSchema = {
+  id: {
+    present: false,
+    type: "URL",
+  },
+  type: [],
+  name: "",
+  description: "",
+  lang: "",
+};

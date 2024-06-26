@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateAction } from "@actions/template.action";
+import { updateTemplateCommand } from "@commands/template.commands";
 import ChipInput from "@components/stamp/chip-input";
 import { Button } from "@components/ui/button";
 import {
@@ -27,39 +27,47 @@ import { StatusSchema, statusSchema } from "@schemas/template";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  statusValue?: StatusSchema;
+  formValue?: StatusSchema;
 }
 
 export default function StatusForm({
   lang,
   className,
   templateId,
-  statusValue,
+  formValue,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
+  const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<StatusSchema>({
     resolver: zodResolver(statusSchema),
-    defaultValues: statusValue,
+    defaultValues: formValue,
   });
 
   const statusList = form.watch("states");
 
   async function onSubmit(data: StatusSchema) {
-    try {
-      setLoading(true);
-      await updateTemplateAction(templateId, { status: data });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    setLoading(true);
+
+    const result = await updateTemplateCommand({
+      id: templateId,
+      status: data,
+    });
+
+    if (result.errorCode) {
+      toast.error(tError(result.errorCode));
+    } else {
+      toast.success(tAction("success"));
     }
+
+    setLoading(false);
   }
 
   return (
@@ -162,7 +170,7 @@ export default function StatusForm({
           )}
         />
         <Button type="submit" disabled={loading}>
-          {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
+          {loading && <LoaderCircle className="animate-spin h-4 w-4 mr-2" />}
           {tAction("save")}
         </Button>
       </form>

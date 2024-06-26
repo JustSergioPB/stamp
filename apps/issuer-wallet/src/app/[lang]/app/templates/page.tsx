@@ -1,25 +1,26 @@
-import { TemplateSchema } from "@schemas/template/template.schema";
-import { Query } from "@models/query";
 import { useTranslation } from "@i18n/server";
-import { searchTemplate } from "@db/repositories";
-import { fromUrl } from "@utils/query";
 import EmptyScreen from "@components/stamp/empty-screen";
 import AddButton from "./_components/add-button";
 import TemplateTable from "./_components/table";
+import { searchTemplate } from "@db/repositories";
+import { templateToSummary } from "@utils/template";
+import { SearchParams } from "@models/query";
+import { searchParamsToQuery } from "@utils/query";
 
-type SchemasProps = {
-  searchParams: {
-    mode: string;
-  } & Record<keyof Query<TemplateSchema>, string | undefined>;
+type Props = {
+  searchParams: SearchParams;
   params: { lang: string };
 };
 
-export default async function Page({
-  searchParams,
-  params: { lang },
-}: SchemasProps) {
+export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "template");
-  const queryResult = await searchTemplate(fromUrl(searchParams));
+  const query = searchParamsToQuery(searchParams);
+  const paginatedList = await searchTemplate(query);
+  const { items, ...rest } = paginatedList;
+  const summaryPaginatedList = {
+    items: items.map((item) => templateToSummary(item)),
+    ...rest,
+  };
 
   return (
     <div className="h-full flex flex-col gap-4 p-10">
@@ -30,8 +31,8 @@ export default async function Page({
         </div>
         <AddButton lang={lang} />
       </div>
-      {queryResult.items.length > 0 ? (
-        <TemplateTable lang={lang} result={queryResult} />
+      {paginatedList.items.length > 0 ? (
+        <TemplateTable lang={lang} result={summaryPaginatedList} />
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
           <AddButton lang={lang} />

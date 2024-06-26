@@ -20,38 +20,46 @@ import { ContentSchema, contentSchema } from "@schemas/template";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import ContentNode from "./content-node";
-import { updateTemplateAction } from "@actions/template.action";
+import { updateTemplateCommand } from "@commands/template.commands";
+import { toast } from "sonner";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  contentValue?: ContentSchema;
+  formValue?: ContentSchema;
 }
 
 export default function ContentForm({
   className,
   lang,
   templateId,
-  contentValue,
+  formValue,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
+  const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<ContentSchema>({
     resolver: zodResolver(contentSchema),
-    defaultValues: contentValue,
+    defaultValues: formValue,
   });
 
   async function onSubmit(data: ContentSchema) {
-    try {
-      setLoading(true);
-      await updateTemplateAction(templateId, { content: data });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    setLoading(true);
+
+    const result = await updateTemplateCommand({
+      id: templateId,
+      content: data,
+    });
+
+    if (result.errorCode) {
+      toast.error(tError(result.errorCode));
+    } else {
+      toast.success(tAction("success"));
     }
+
+    setLoading(false);
   }
 
   return (
@@ -110,7 +118,7 @@ export default function ContentForm({
           )}
         />
         <Button type="submit" disabled={loading}>
-          {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
+          {loading && <LoaderCircle className="animate-spin h-4 w-4 mr-2" />}
           {tAction("save")}
         </Button>
       </form>

@@ -1,4 +1,4 @@
-export type QueryResult<T> = {
+export type PaginatedList<T> = {
   items: T[];
   count: number;
   pageSize: number;

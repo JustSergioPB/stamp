@@ -20,46 +20,52 @@ import {
 import { useForm } from "react-hook-form";
 import { useTranslation } from "@i18n/client";
 import ChipInput from "@components/stamp/chip-input";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@lib/utils";
-import { BaseSchema, baseSchema } from "@schemas/template";
-import { updateTemplateAction } from "@actions/template.action";
+import { BaseSchema, DefaultBaseSchema, baseSchema } from "@schemas/template";
+import { updateTemplateCommand } from "@commands/template.commands";
+import { Switch } from "@components/ui/switch";
+import { Textarea } from "@components/ui/textarea";
+import { toast } from "sonner";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  baseValue?: BaseSchema;
+  formValue?: BaseSchema;
 }
 
 export default function BaseForm({
   lang,
   className,
   templateId,
-  baseValue,
+  formValue,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tLang } = useTranslation(lang, "langs");
   const { t: tAction } = useTranslation(lang, "actions");
+  const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<BaseSchema>({
     resolver: zodResolver(baseSchema),
-    defaultValues: baseValue,
+    defaultValues: formValue ?? DefaultBaseSchema,
   });
 
   async function onSubmit(data: BaseSchema) {
-    try {
-      setLoading(true);
-      await updateTemplateAction(templateId, { base: data });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    setLoading(true);
+
+    const result = await updateTemplateCommand({ id: templateId, base: data });
+
+    if (result.errorCode) {
+      toast.error(tError(result.errorCode));
+    } else {
+      toast.success(tAction("success"));
     }
+
+    setLoading(false);
   }
 
   return (
@@ -74,7 +80,7 @@ export default function BaseForm({
             name="name"
             render={({ field }) => (
               <FormItem className="basis-7/12">
-                <FormLabel>{t("props.name")}</FormLabel>
+                <FormLabel>{t("form.base.name.label")}</FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("form.base.name.placeholder")}
@@ -90,7 +96,7 @@ export default function BaseForm({
             name="lang"
             render={({ field }) => (
               <FormItem className="basis-5/12">
-                <FormLabel>{t("props.lang")}</FormLabel>
+                <FormLabel>{t("form.base.lang.label")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -120,7 +126,7 @@ export default function BaseForm({
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("props.type")}</FormLabel>
+              <FormLabel>{t("form.base.type.label")}</FormLabel>
               <FormControl>
                 <ChipInput
                   placeholder={t("form.base.type.placeholder")}
@@ -136,8 +142,82 @@ export default function BaseForm({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.base.description.label")}</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder={t("form.base.description.placeholder")}
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                {t("form.base.description.hint")}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="id.present"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="flex items-center justify-between space-x-2">
+                  <div className="basis-5/6">
+                    <FormLabel htmlFor="present">
+                      {t("form.base.id.present.label")}
+                    </FormLabel>
+                    <FormDescription>
+                      {t("form.base.id.present.description")}
+                    </FormDescription>
+                  </div>
+                  <Switch
+                    id="present"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="id.type"
+          render={({ field }) => (
+            <FormItem className="basis-2/3">
+              <FormLabel>{t("form.base.id.type.label")}</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={"URL"}
+                disabled
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("form.base.id.type.label")} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {["URL", "did", "uuid"].map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {tLang(type)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit" disabled={loading}>
-          {loading && <LoaderCircle className="animate-spin h-4 w-4" />}
+          {loading && <LoaderCircle className="animate-spin h-4 w-4 mr-2" />}
           {tAction("save")}
         </Button>
       </form>

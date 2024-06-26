@@ -34,7 +34,7 @@ export default function Sidebar({
             key={index}
             href={link.href}
             className={cn(
-              pathname === link.href
+              pathname.includes(link.href)
                 ? buttonVariants({ variant: "default", size: "sm" })
                 : buttonVariants({ variant: "ghost", size: "sm" }),
               "justify-start"

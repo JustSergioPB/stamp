@@ -5,17 +5,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@components/ui/tooltip";
-import { TemplateSchema } from "@schemas/template";
 
-type Props = {
-  item: TemplateSchema;
-};
+interface Props extends React.HtmlHTMLAttributes<HTMLElement> {
+  value: string[];
+}
 
-export default function TypeCell({ item }: Props) {
-  const types = item.type ?? [];
-  const displayed = types.slice(0, 2);
-  const hidden = types.slice(2);
-
+export default function ChipListCell({ value }: Props) {
+  const displayed = value.slice(0, 2);
+  const hidden = value.slice(2);
   return (
     <div className="flex space-x-2">
       <span className="max-w-[500px] flex gap-1">

@@ -1,33 +1,50 @@
 {
   "title": "Plantillas",
-  "cta": "Crea, edita y gestiona tus esquemas aquí",
+  "cta": "Crea, edita y gestiona tus plantillas aquí",
   "add": "Añadir plantilla",
   "create": "Crear plantilla",
-  "props": {
+  "summary": {
+    "id": "Id",
     "name": "Nombre",
+    "description": "Descripción",
     "type": "Palabras clave",
     "status": "Estado",
     "lang": "Idioma del contenido",
-    "content": "Contenido"
-  },
-  "overview": {
-    "title": "Vista general"
+    "content": "Contenido",
+    "createdAt": "Creado",
+    "modifiedAt": "Actualizado",
+    "createdBy": "Creado por"
   },
   "form": {
     "base": {
       "title": "Información básica",
-      "subtitle": "Configura los aspectos básicos de la plantilla como el nombre, los palabras clave asociadas a la credencial y el idioma del contenido.",
+      "subtitle": "Configura los aspectos básicos de una credencial como el nombre, descripción, palabras clave asociadas y el idioma del contenido.",
+      "id": {
+        "present": {
+          "label": "Identificador",
+          "description": "Cada credencial generada a partir de esta plantilla tendrá un identificador único"
+        },
+        "type": {
+          "label": "Tipo de identificador"
+        }
+      },
       "name": {
         "label": "Nombre",
-        "placeholder": "Código"
+        "placeholder": "Carnet de conducir"
       },
       "lang": {
+        "label": "Idioma del contenido",
         "placeholder": "Selecciona un idioma"
       },
       "type": {
-        "label": "Tipo",
-        "placeholder": "Pasaporte, identificación, etc.",
+        "label": "Palabras clave",
+        "placeholder": "Identificación, licencia, etc.",
         "hint": "Dale a enter para añadir un nuevo tipo, haz click en el tipo para eliminarlo. Darle a la X eliminará todos."
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "El carnet de conducir es un documento que acredita que el titular está habilitado para conducir vehículos a motor en España.",
+        "hint": "Max 150 caracteres"
       }
     },
     "content": {
@@ -154,5 +171,12 @@
   "empty": {
     "title": "No hay plantillas",
     "subtitle": "Parece que no tienes ninguna plantilla creada. ¿Por qué no creas una ahora?"
+  },
+  "actions": {
+    "backToTemplates": "Volver a plantillas"
+  },
+  "status": {
+    "ready": "Listo",
+    "notReady": "Por completar"
   }
 }

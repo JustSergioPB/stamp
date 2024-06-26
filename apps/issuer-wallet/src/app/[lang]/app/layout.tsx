@@ -4,6 +4,7 @@ import Sidebar from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import { Braces, PenTool } from "lucide-react";
 import { NavLink } from "@models/ui/nav-link";
+import { Toaster } from "@components/ui/sonner";
 
 type Props = {
   children: ReactNode;
@@ -38,6 +39,7 @@ export default function Layout({ children, params: { lang } }: Props) {
         }
       />
       <div className="h-full basis-auto grow shrink-0">{children}</div>
+      <Toaster richColors/>
     </main>
   );
 }
