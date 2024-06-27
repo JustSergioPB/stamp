@@ -155,7 +155,7 @@ export default function JsonForm({
                 name={typePath}
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <div className="flex items-center justify-between">
                           <FormLabel>{t("form.content.type.label")}</FormLabel>

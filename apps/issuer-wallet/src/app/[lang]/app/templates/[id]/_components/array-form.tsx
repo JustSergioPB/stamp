@@ -138,7 +138,7 @@ export default function ArrayForm({ control, lang, prefix, watch }: Props) {
         name={subtypePath}
         render={({ field }) => (
           <FormItem>
-            <Select onValueChange={field.onChange}>
+            <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <div className="flex items-center justify-between">
                   <FormLabel>{t("form.content.array.subtype.label")}</FormLabel>

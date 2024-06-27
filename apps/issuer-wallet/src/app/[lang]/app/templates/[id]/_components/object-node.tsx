@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentSchema } from "@schemas/template";
+import { ContentSchema, defaultJsonSchema } from "@schemas/template";
 import {
   Control,
   FieldPath,
@@ -30,9 +30,10 @@ export default function ObjectNode({
   className,
 }: Props) {
   const { t } = useTranslation(lang, "template");
+
   const { fields, append, remove } = useFieldArray({
     control,
-    name: prefix as "credentialSubject" | `credentialSubject.${string}`,
+    name: prefix as "credentialSubject" | `credentialSubject.${number}`,
   });
 
   return (
@@ -55,7 +56,12 @@ export default function ObjectNode({
         </ul>
       </div>
       <TreeAngle>
-        <Button variant="secondary" size="sm" type="button" onClick={append}>
+        <Button
+          variant="secondary"
+          size="sm"
+          type="button"
+          onClick={() => append(defaultJsonSchema)}
+        >
           <CirclePlus className="h-4 w-4 mr-2" />
           {t("form.actions.addField")}
         </Button>

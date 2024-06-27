@@ -101,7 +101,7 @@ export default function StringForm({ control, lang, prefix }: Props) {
           <FormItem>
             <div className="flex items-center justify-between">
               <FormLabel>{t("form.content.string.format")}</FormLabel>
-              <Select onValueChange={field.onChange}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="basis-2/3">
                     <SelectValue

@@ -1,16 +1,9 @@
+import { JSONSchemaTypes } from "@stamp/domain";
 import { ZodSchema, z } from "zod";
 
 export const jsonSchema: ZodSchema = z.object({
   name: z.string(),
-  type: z.enum([
-    "string",
-    "number",
-    "integer",
-    "boolean",
-    "object",
-    "array",
-    "null",
-  ]),
+  type: z.enum(JSONSchemaTypes),
   subtype: z.string().optional(),
   required: z.boolean().optional(),
   minLength: z.number().optional(),
@@ -28,10 +21,14 @@ export const jsonSchema: ZodSchema = z.object({
   minItems: z.number().optional(),
   maxItems: z.number().optional(),
   uniqueItems: z.boolean().optional(),
-  properties: z.lazy(() => z.array(jsonSchema)),
-  patternProperties: z.record(z.lazy(() => jsonSchema)).optional(),
+  properties: z.lazy(() => z.array(jsonSchema)).optional(),
   minProperties: z.number().optional(),
   maxProperties: z.number().optional(),
 });
 
 export type JsonSchema = z.infer<typeof jsonSchema>;
+
+export const defaultJsonSchema: JsonSchema = {
+  name: "",
+  type: "",
+};

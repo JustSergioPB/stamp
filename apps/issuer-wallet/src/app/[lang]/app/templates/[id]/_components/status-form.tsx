@@ -148,7 +148,7 @@ export default function StatusForm({
               <FormLabel>{t("form.status.default.label")}</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={field.value}
                 disabled={!statusList?.length}
               >
                 <FormControl>

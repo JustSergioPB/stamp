@@ -6,7 +6,7 @@ export const JSONSchemaTypes = [
   "object",
   "array",
   "null",
-];
+] as const;
 
 export type JsonSchemaType = (typeof JSONSchemaTypes)[number];
 

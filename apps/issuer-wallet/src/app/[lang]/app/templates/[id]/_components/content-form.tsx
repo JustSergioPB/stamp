@@ -1,7 +1,6 @@
 "use client";
 
-import { useFieldArray, useForm } from "react-hook-form";
-import TreeAngle from "@components/stamp/tree-angle";
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -16,12 +15,17 @@ import { LoaderCircle } from "lucide-react";
 import { cn } from "@lib/utils";
 import { useTranslation } from "@i18n/client";
 import { Switch } from "@components/ui/switch";
-import { ContentSchema, contentSchema } from "@schemas/template";
+import {
+  ContentSchema,
+  contentSchema,
+  defaultContentSchema,
+} from "@schemas/template";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { updateTemplateCommand } from "@commands/template.commands";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
+import { error } from "console";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -42,7 +46,7 @@ export default function ContentForm({
 
   const form = useForm<ContentSchema>({
     resolver: zodResolver(contentSchema),
-    defaultValues: formValue,
+    defaultValues: formValue ?? defaultContentSchema,
   });
 
   async function onSubmit(data: ContentSchema) {
@@ -66,7 +70,10 @@ export default function ContentForm({
     <Form {...form}>
       <form
         className={cn("space-y-4", className)}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, () => {
+          console.log(form.getValues());
+          console.log(form.formState);
+        })}
       >
         <FormField
           control={form.control}

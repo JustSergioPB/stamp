@@ -99,7 +99,7 @@ export default function BaseForm({
                 <FormLabel>{t("form.base.lang.label")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -197,7 +197,7 @@ export default function BaseForm({
               <FormLabel>{t("form.base.id.type.label")}</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={"URL"}
+                value={"URL"}
                 disabled
               >
                 <FormControl>
