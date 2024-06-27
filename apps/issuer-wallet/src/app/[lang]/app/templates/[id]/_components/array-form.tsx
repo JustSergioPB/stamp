@@ -11,19 +11,64 @@ import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
 import { useTranslation } from "@i18n/client";
 import { ContentSchema } from "@schemas/template";
-import { Control, FieldPath } from "react-hook-form";
+import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
+import { Control, FieldPath, UseFormWatch } from "react-hook-form";
+import NumberForm from "./number-form";
+import ObjectForm from "./object-form";
+import StringForm from "./string-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   control?: Control<ContentSchema, any>;
   lang: string;
   prefix: string;
+  watch: UseFormWatch<ContentSchema>;
 }
 
-export default function ArrayForm({ control, lang, prefix }: Props) {
+export default function ArrayForm({ control, lang, prefix, watch }: Props) {
   const { t } = useTranslation(lang, "template");
   const minItemsPath = `${prefix}.minItems` as FieldPath<ContentSchema>;
   const maxItemsPath = `${prefix}.maxItems` as FieldPath<ContentSchema>;
   const uniqueItemsPath = `${prefix}.uniqueItems` as FieldPath<ContentSchema>;
+  const subtypePath = `${prefix}.subtype` as FieldPath<ContentSchema>;
+
+  const subtype = watch(subtypePath) as JsonSchemaType | undefined;
+
+  function renderForm() {
+    switch (subtype) {
+      case "object":
+        return (
+          <ObjectForm
+            control={control}
+            lang={lang}
+            prefix={`${prefix}.properties`}
+          />
+        );
+      case "array":
+        return (
+          <ArrayForm
+            control={control}
+            lang={lang}
+            prefix={`${prefix}.items`}
+            watch={watch}
+          />
+        );
+      case "number":
+        return <NumberForm control={control} lang={lang} prefix={prefix} />;
+      case "integer":
+        return <NumberForm control={control} lang={lang} prefix={prefix} />;
+      case "string":
+        return <StringForm control={control} lang={lang} prefix={prefix} />;
+      default:
+        return <></>;
+    }
+  }
 
   return (
     <>
@@ -88,6 +133,43 @@ export default function ArrayForm({ control, lang, prefix }: Props) {
           </FormItem>
         )}
       />
+      <FormField
+        control={control}
+        name={subtypePath}
+        render={({ field }) => (
+          <FormItem>
+            <Select onValueChange={field.onChange}>
+              <FormControl>
+                <div className="flex items-center justify-between">
+                  <FormLabel>{t("form.content.array.subtype.label")}</FormLabel>
+                  <SelectTrigger className="basis-2/3">
+                    <SelectValue
+                      placeholder={t("form.content.array.subtype.label")}
+                    />
+                  </SelectTrigger>
+                </div>
+              </FormControl>
+              <SelectContent>
+                {JSONSchemaTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {t("form.content.types." + type)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      {(subtype === "string" ||
+        subtype === "number" ||
+        subtype === "integer" ||
+        subtype === "array") && (
+        <div>
+          <h5 className="my-4">{t("form.content.array.subtype.properties")}</h5>
+          <div className="space-y-2">{renderForm()}</div>
+        </div>
+      )}
     </>
   );
 }

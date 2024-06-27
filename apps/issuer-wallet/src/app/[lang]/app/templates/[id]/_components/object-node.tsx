@@ -22,13 +22,12 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   recursive?: boolean;
 }
 
-export default function ContentNode({
+export default function ObjectNode({
   control,
   lang,
   prefix,
   watch,
   className,
-  recursive,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { fields, append, remove } = useFieldArray({

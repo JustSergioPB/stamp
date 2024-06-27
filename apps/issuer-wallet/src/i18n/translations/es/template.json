@@ -74,7 +74,10 @@
         "label": "Requerido"
       },
       "property": {
-        "new": "Nueva propiedad"
+        "new": "Configura la propiedad"
+      },
+      "type": {
+        "label": "Tipo de propiedad"
       },
       "number": {
         "minimum": "Mínimo",
@@ -94,7 +97,7 @@
         "number": "Número",
         "integer": "Entero",
         "boolean": "Booleano",
-        "object": "Mapa",
+        "object": "Objeto",
         "array": "Lista",
         "null": "Nulo"
       },
@@ -111,8 +114,10 @@
         "minItems": "Mín. elementos",
         "maxItems": "Máx. elementos",
         "unique": "Elementos únicos",
-        "type": "Tipo de contenido",
-        "contentProperties": "Propiedades del contenido"
+        "subtype": {
+          "label": "Tipo de contenido",
+          "properties": "Propiedades del contenido"
+        }
       }
     },
     "security": {

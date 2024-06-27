@@ -19,9 +19,9 @@ import { Switch } from "@components/ui/switch";
 import { ContentSchema, contentSchema } from "@schemas/template";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import ContentNode from "./content-node";
 import { updateTemplateCommand } from "@commands/template.commands";
 import { toast } from "sonner";
+import ObjectNode from "./object-node";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -106,7 +106,7 @@ export default function ContentForm({
             >
               <FormLabel>{t("form.content.title")}</FormLabel>
               <FormControl>
-                <ContentNode
+                <ObjectNode
                   prefix="credentialSubject"
                   watch={form.watch}
                   lang={lang}
