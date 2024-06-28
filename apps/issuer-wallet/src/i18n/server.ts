@@ -21,6 +21,7 @@ export async function useTranslation(
   lang: string,
   namespace: string,
   options: { [key: string]: any } = { keyPrefix: "" }
+  // eslint-disable-next-line no-unused-vars
 ): Promise<{ t: (key: string) => string; i18n: any }> {
   const i18nextInstance = await initI18next(lang, namespace);
   return {

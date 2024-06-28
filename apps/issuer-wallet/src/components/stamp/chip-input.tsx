@@ -9,7 +9,9 @@ import { useState } from "react";
 interface Props extends React.HtmlHTMLAttributes<HTMLElement> {
   placeholder: string;
   defaultValue?: string[];
+  // eslint-disable-next-line no-unused-vars
   onRemove: (value: string[]) => void;
+  // eslint-disable-next-line no-unused-vars
   onEnter: (value: string[]) => void;
   onReset: () => void;
 }

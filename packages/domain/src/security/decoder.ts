@@ -13,7 +13,7 @@ export class Decoder {
     // build the base-alphabet to integer value map
     const baseMap: { [key: string]: number } = {};
     for (let i = 0; i < this._baseAlphabet.length; i++) {
-      baseMap[this._baseAlphabet[i]] = i;
+      baseMap[this._baseAlphabet[i]!] = i;
     }
 
     // skip and count zero-byte values in the sourceEncoded
@@ -35,7 +35,7 @@ export class Decoder {
     // perform base-conversion on the source encoding
     while (sourceEncoded[sourceOffset]) {
       // process each base-encoded number
-      let carry = baseMap[sourceEncoded[sourceOffset]];
+      let carry = baseMap[sourceEncoded[sourceOffset]!] ?? 0;
 
       // convert the base-encoded number by performing base-expansion
       let i = 0;
@@ -44,7 +44,7 @@ export class Decoder {
         (carry !== 0 || i < decodedLength) && byteOffset !== -1;
         byteOffset--, i++
       ) {
-        carry += Math.floor(this._sourceBase * decodedBytes[byteOffset]);
+        carry += Math.floor(this._sourceBase * (decodedBytes[byteOffset] ?? 0));
         decodedBytes[byteOffset] = Math.floor(carry % 256);
         carry = Math.floor(carry / 256);
       }
@@ -63,7 +63,7 @@ export class Decoder {
     const finalBytes = new Uint8Array(zeroes + (decodedSize - decodedOffset));
     let j = zeroes;
     while (decodedOffset !== decodedSize) {
-      finalBytes[j++] = decodedBytes[decodedOffset++];
+      finalBytes[j++] = decodedBytes[decodedOffset++] ?? 0;
     }
 
     return finalBytes;

@@ -1,4 +1,4 @@
-import { Type } from "./types";
+import { Type } from "typescript";
 
 export type CredentialSchema = {
   id: string; //It must be a dereferenceable URL

@@ -8,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@components/ui/breadcrumb";
 import { useTranslation } from "@i18n/client";
-import { usePathname } from "next/navigation";
 
 export type BreadCrumbItem = {
   title: string;
@@ -28,13 +27,11 @@ export default function BreadcrumbW({
   dictionary,
 }: Props) {
   const { t } = useTranslation(lang, dictionary);
-  const pathname = usePathname();
-  const last = pathname.split("/").pop();
 
   return (
     <Breadcrumb className={className}>
       <BreadcrumbList>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <>
             <BreadcrumbItem>
               <BreadcrumbLink href={item.href}>

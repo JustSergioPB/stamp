@@ -26,7 +26,7 @@ export class Encoder {
 
     // process the entire input byte array
     while (begin !== end) {
-      let carry = bytes[begin];
+      let carry = bytes[begin] ?? 0;
 
       // for each byte in the array, perform base-expansion
       let i = 0;
@@ -35,7 +35,7 @@ export class Encoder {
         (carry !== 0 || i < length) && basePosition !== -1;
         basePosition--, i++
       ) {
-        carry += Math.floor(256 * baseValue[basePosition]);
+        carry += Math.floor(256 * (baseValue[basePosition] ?? 0));
         baseValue[basePosition] = Math.floor(carry % this._targetBase);
         carry = Math.floor(carry / this._targetBase);
       }
@@ -57,7 +57,7 @@ export class Encoder {
     let baseEncoding = this._baseAlphabet.charAt(0).repeat(zeroes);
     for (; baseEncodingPosition < size; ++baseEncodingPosition) {
       baseEncoding += this._baseAlphabet.charAt(
-        baseValue[baseEncodingPosition]
+        baseValue[baseEncodingPosition] ?? 0
       );
     }
 
