@@ -2,8 +2,12 @@ import { JSONSchemaTypes } from "@stamp/domain";
 import { ZodSchema, z } from "zod";
 
 export const jsonSchemaZod: ZodSchema = z.object({
-  name: z.string(),
-  type: z.enum(JSONSchemaTypes),
+  name: z
+    .string()
+    .min(1, { message: "form.content.errors.jsonSchema.required" }),
+  type: z.enum(JSONSchemaTypes, {
+    message: "form.content.errors.jsonSchema.required",
+  }),
   subtype: z.string().optional(),
   required: z.boolean().optional(),
   minLength: z.number().optional(),

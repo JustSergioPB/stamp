@@ -1,6 +1,6 @@
 "use client";
 import { Control, UseFormWatch, useFieldArray } from "react-hook-form";
-import JsonForm from "./json-form";
+import JsonSchemaForm from "./json-schema-form";
 import { useTranslation } from "@i18n/client";
 import TreeAngle from "@components/stamp/tree-angle";
 import { Button } from "@components/ui/button";
@@ -36,9 +36,9 @@ export default function ObjectNode({
         <span className="border-l-2 border-l-neutral-300 inline-block"></span>
         <ul className="w-full space-y-2">
           {fields.map((field, index) => (
-            <li className="flex items-start" key={field.id}>
+            <li className="flex items-start first:mt-2" key={field.id}>
               <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
-              <JsonForm
+              <JsonSchemaForm
                 lang={lang}
                 watch={watch}
                 className="grow shrink-0 basis-auto"

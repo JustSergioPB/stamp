@@ -102,7 +102,7 @@ export default function ContentForm({
         <FormField
           control={form.control}
           name="credentialSubject"
-          render={() => (
+          render={({ fieldState }) => (
             <FormItem
               className={cn(
                 className,
@@ -118,7 +118,14 @@ export default function ContentForm({
                   control={form.control}
                 />
               </FormControl>
-              <FormMessage />
+              {fieldState.error && (
+                <FormMessage>
+                  {t(
+                    fieldState.error.message ??
+                      "form.content.errors.credentialSubject.min"
+                  )}
+                </FormMessage>
+              )}
             </FormItem>
           )}
         />

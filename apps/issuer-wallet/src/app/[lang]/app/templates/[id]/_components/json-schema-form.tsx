@@ -18,15 +18,22 @@ import {
 } from "@components/ui/select";
 import { useTranslation } from "@i18n/client";
 import {
+  Binary,
   CaseSensitive,
   CircleAlert,
+  CircleSlash2,
   List,
   Network,
   Sigma,
   SigmaSquare,
   Trash,
 } from "lucide-react";
-import { Control, FieldPath, UseFormWatch } from "react-hook-form";
+import {
+  Control,
+  FieldPath,
+  UseFormWatch,
+  useController,
+} from "react-hook-form";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
 import { Switch } from "@components/ui/switch";
 import ArrayForm from "./array-form";
@@ -52,7 +59,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   onRemove: () => void;
 }
 
-export default function JsonForm({
+export default function JsonSchemaForm({
   control,
   lang,
   onRemove,
@@ -71,6 +78,18 @@ export default function JsonForm({
   const name = watch(namePath) as string | undefined;
   const type = watch(typePath) as JsonSchemaType | undefined;
   const subtype = watch(subtypePath) as JsonSchemaType | undefined;
+  const {
+    fieldState: { error: nameError },
+  } = useController({
+    control,
+    name: namePath,
+  });
+  const {
+    fieldState: { error: typeError },
+  } = useController({
+    control,
+    name: typePath,
+  });
 
   function renderForm() {
     switch (type) {
@@ -96,6 +115,10 @@ export default function JsonForm({
 
   function getIcon() {
     switch (type) {
+      case "null":
+        return <CircleSlash2 className="h-4 w-4 mr-2" />;
+      case "boolean":
+        return <Binary className="h-4 w-4 mr-2" />;
       case "object":
         return <Network className="h-4 w-4 mr-2" />;
       case "array":
@@ -116,7 +139,11 @@ export default function JsonForm({
       <div className="flex items-center gap-2">
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="secondary" size="sm" className="rounded-xl">
+            <Button
+              variant={nameError || typeError ? "destructive" : "secondary"}
+              size="sm"
+              className="rounded-xl"
+            >
               {getIcon()}
               {name || t("form.content.property.new")}
             </Button>
@@ -131,7 +158,7 @@ export default function JsonForm({
               <FormField
                 control={control}
                 name={namePath}
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormControl>
                       <div className="flex items-center justify-between">
@@ -143,14 +170,16 @@ export default function JsonForm({
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    {fieldState.error?.message && (
+                      <FormMessage>{t(fieldState.error.message)}</FormMessage>
+                    )}
                   </FormItem>
                 )}
               />
               <FormField
                 control={control}
                 name={typePath}
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
@@ -171,7 +200,9 @@ export default function JsonForm({
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    {fieldState.error?.message && (
+                      <FormMessage>{t(fieldState.error.message)}</FormMessage>
+                    )}
                   </FormItem>
                 )}
               />

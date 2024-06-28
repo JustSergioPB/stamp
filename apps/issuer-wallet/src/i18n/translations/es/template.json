@@ -118,6 +118,16 @@
           "label": "Tipo de contenido",
           "properties": "Propiedades del contenido"
         }
+      },
+      "errors": {
+        "credentialSubject": {
+          "min": "El contenido debe tener al menos una propiedad",
+          "invalid": "Alguna de las propiedades no es válida",
+          "duplicatedName": "Hay propiedades con el mismo nombre"
+        },
+        "jsonSchema": {
+          "required": "Este campo es obligatorio"
+        }
       }
     },
     "security": {
@@ -183,6 +193,10 @@
       },
       "secs": {
         "label": "Segs."
+      },
+      "errors": {
+        "min": "El valor debe ser al menos 1",
+        "max": "El valor debe ser como máximo {{max}}"
       }
     },
     "actions": {
