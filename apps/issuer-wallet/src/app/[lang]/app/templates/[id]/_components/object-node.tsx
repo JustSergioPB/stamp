@@ -1,22 +1,16 @@
 "use client";
-
-import { ContentSchema, defaultJsonSchema } from "@schemas/template";
-import {
-  Control,
-  FieldPath,
-  UseFormWatch,
-  useFieldArray,
-} from "react-hook-form";
+import { Control, UseFormWatch, useFieldArray } from "react-hook-form";
 import JsonForm from "./json-form";
 import { useTranslation } from "@i18n/client";
 import TreeAngle from "@components/stamp/tree-angle";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { cn } from "@lib/utils";
+import { ContentZod, defaultJsonSchemaZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  control?: Control<ContentSchema, any>;
-  watch: UseFormWatch<ContentSchema>;
+  control?: Control<ContentZod, any>;
+  watch: UseFormWatch<ContentZod>;
   lang: string;
   prefix: string;
   recursive?: boolean;
@@ -60,7 +54,7 @@ export default function ObjectNode({
           variant="secondary"
           size="sm"
           type="button"
-          onClick={() => append(defaultJsonSchema)}
+          onClick={() => append(defaultJsonSchemaZod)}
         >
           <CirclePlus className="h-4 w-4 mr-2" />
           {t("form.actions.addField")}

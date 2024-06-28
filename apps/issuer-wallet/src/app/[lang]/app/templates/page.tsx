@@ -2,10 +2,12 @@ import { useTranslation } from "@i18n/server";
 import EmptyScreen from "@components/stamp/empty-screen";
 import AddButton from "./_components/add-button";
 import TemplateTable from "./_components/table";
-import { searchTemplate } from "@db/repositories";
-import { templateToSummary } from "@utils/template";
-import { SearchParams } from "@models/query";
-import { searchParamsToQuery } from "@utils/query";
+import { SearchParams, QueryMapper } from "@lib/query";
+import {
+  SummaryMapper,
+  Template,
+  TemplateMongoRepository,
+} from "@features/template";
 
 type Props = {
   searchParams: SearchParams;
@@ -14,11 +16,11 @@ type Props = {
 
 export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "template");
-  const query = searchParamsToQuery(searchParams);
-  const paginatedList = await searchTemplate(query);
+  const query = QueryMapper.fromURL<Template>(searchParams);
+  const paginatedList = await new TemplateMongoRepository().search(query);
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {
-    items: items.map((item) => templateToSummary(item)),
+    items: items.map((item) => SummaryMapper.fromTemplate(item)),
     ...rest,
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateCommand } from "@commands/template.commands";
+import { updateTemplateCommand } from "src/features/template/commands/template.commands";
 import { Button } from "@components/ui/button";
 import {
   Form,
@@ -15,16 +15,16 @@ import { Switch } from "@components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";
-import { SecuritySchema, securitySchema } from "@schemas/template";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { SecurityZod, securityZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  formValue?: SecuritySchema;
+  formValue?: SecurityZod;
 }
 
 export default function SecurityForm({
@@ -38,16 +38,15 @@ export default function SecurityForm({
   const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<SecuritySchema>({
-    resolver: zodResolver(securitySchema),
+  const form = useForm<SecurityZod>({
+    resolver: zodResolver(securityZod),
     defaultValues: formValue,
   });
 
-  async function onSubmit(data: SecuritySchema) {
+  async function onSubmit(data: SecurityZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand({
-      id: templateId,
+    const result = await updateTemplateCommand(templateId, {
       security: data,
     });
 

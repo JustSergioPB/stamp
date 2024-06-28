@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateCommand } from "@commands/template.commands";
+import { updateTemplateCommand } from "src/features/template/commands/template.commands";
 import ChipInput from "@components/stamp/chip-input";
 import { Button } from "@components/ui/button";
 import {
@@ -23,16 +23,16 @@ import { Switch } from "@components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";
-import { StatusSchema, statusSchema } from "@schemas/template";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { StatusZod, statusZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  formValue?: StatusSchema;
+  formValue?: StatusZod;
 }
 
 export default function StatusForm({
@@ -46,18 +46,17 @@ export default function StatusForm({
   const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<StatusSchema>({
-    resolver: zodResolver(statusSchema),
+  const form = useForm<StatusZod>({
+    resolver: zodResolver(statusZod),
     defaultValues: formValue,
   });
 
   const statusList = form.watch("states");
 
-  async function onSubmit(data: StatusSchema) {
+  async function onSubmit(data: StatusZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand({
-      id: templateId,
+    const result = await updateTemplateCommand(templateId, {
       status: data,
     });
 

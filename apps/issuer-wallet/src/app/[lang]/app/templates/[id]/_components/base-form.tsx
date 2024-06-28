@@ -25,8 +25,8 @@ import { Button } from "@components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@lib/utils";
-import { BaseSchema, DefaultBaseSchema, baseSchema } from "@schemas/template";
-import { updateTemplateCommand } from "@commands/template.commands";
+import { BaseZod, defaultBaseZod, baseZod } from "@features/template";
+import { updateTemplateCommand } from "src/features/template/commands/template.commands";
 import { Switch } from "@components/ui/switch";
 import { Textarea } from "@components/ui/textarea";
 import { toast } from "sonner";
@@ -34,7 +34,7 @@ import { toast } from "sonner";
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  formValue?: BaseSchema;
+  formValue?: BaseZod;
 }
 
 export default function BaseForm({
@@ -49,15 +49,15 @@ export default function BaseForm({
   const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<BaseSchema>({
-    resolver: zodResolver(baseSchema),
-    defaultValues: formValue ?? DefaultBaseSchema,
+  const form = useForm<BaseZod>({
+    resolver: zodResolver(baseZod),
+    defaultValues: formValue ?? defaultBaseZod,
   });
 
-  async function onSubmit(data: BaseSchema) {
+  async function onSubmit(data: BaseZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand({ id: templateId, base: data });
+    const result = await updateTemplateCommand(templateId, { base: data });
 
     if (result.errorCode) {
       toast.error(tError(result.errorCode));
@@ -97,10 +97,7 @@ export default function BaseForm({
             render={({ field }) => (
               <FormItem className="basis-5/12">
                 <FormLabel>{t("form.base.lang.label")}</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue
@@ -195,11 +192,7 @@ export default function BaseForm({
           render={({ field }) => (
             <FormItem className="basis-2/3">
               <FormLabel>{t("form.base.id.type.label")}</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                value={"URL"}
-                disabled
-              >
+              <Select onValueChange={field.onChange} value={"URL"} disabled>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder={t("form.base.id.type.label")} />

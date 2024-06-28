@@ -1,6 +1,6 @@
 "use client";
 
-import { createTemplateCommand } from "@commands/template.commands";
+import { createTemplateCommand } from "src/features/template/commands/template.commands";
 import { Button } from "@components/ui/button";
 import { useTranslation } from "@i18n/client";
 import { CirclePlus, LoaderCircle } from "lucide-react";

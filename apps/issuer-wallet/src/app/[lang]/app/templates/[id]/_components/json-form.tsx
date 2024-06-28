@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { useTranslation } from "@i18n/client";
-import { ContentSchema } from "@schemas/template";
 import {
   CaseSensitive,
   CircleAlert,
@@ -30,7 +29,6 @@ import {
 import { Control, FieldPath, UseFormWatch } from "react-hook-form";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
 import { Switch } from "@components/ui/switch";
-import ObjectForm from "./object-form";
 import ArrayForm from "./array-form";
 import NumberForm from "./number-form";
 import StringForm from "./string-form";
@@ -44,10 +42,11 @@ import {
   DialogTrigger,
 } from "@components/ui/dialog";
 import ObjectNode from "./object-node";
+import { ContentZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  control?: Control<ContentSchema, any>;
-  watch: UseFormWatch<ContentSchema>;
+  control?: Control<ContentZod, any>;
+  watch: UseFormWatch<ContentZod>;
   lang: string;
   prefix: string;
   onRemove: () => void;
@@ -64,10 +63,10 @@ export default function JsonForm({
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
 
-  const namePath = `${prefix}.name` as FieldPath<ContentSchema>;
-  const typePath = `${prefix}.type` as FieldPath<ContentSchema>;
-  const requiredPath = `${prefix}.required` as FieldPath<ContentSchema>;
-  const subtypePath = `${prefix}.subtype` as FieldPath<ContentSchema>;
+  const namePath = `${prefix}.name` as FieldPath<ContentZod>;
+  const typePath = `${prefix}.type` as FieldPath<ContentZod>;
+  const requiredPath = `${prefix}.required` as FieldPath<ContentZod>;
+  const subtypePath = `${prefix}.subtype` as FieldPath<ContentZod>;
 
   const name = watch(namePath) as string | undefined;
   const type = watch(typePath) as JsonSchemaType | undefined;
@@ -75,8 +74,6 @@ export default function JsonForm({
 
   function renderForm() {
     switch (type) {
-      case "object":
-        return <ObjectForm control={control} lang={lang} prefix={prefix} />;
       case "array":
         return (
           <ArrayForm

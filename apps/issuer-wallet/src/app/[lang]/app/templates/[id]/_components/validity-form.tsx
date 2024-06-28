@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateCommand } from "@commands/template.commands";
+import { updateTemplateCommand } from "src/features/template/commands/template.commands";
 import { Button } from "@components/ui/button";
 import {
   Form,
@@ -14,16 +14,16 @@ import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";
-import { ValiditySchema, validitySchema } from "@schemas/template";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { ValidityZod, validityZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  formValue?: ValiditySchema;
+  formValue?: ValidityZod;
 }
 
 export default function ValdityForm({
@@ -37,16 +37,15 @@ export default function ValdityForm({
   const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<ValiditySchema>({
-    resolver: zodResolver(validitySchema),
+  const form = useForm<ValidityZod>({
+    resolver: zodResolver(validityZod),
     defaultValues: formValue,
   });
 
-  async function onSubmit(data: ValiditySchema) {
+  async function onSubmit(data: ValidityZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand({
-      id: templateId,
+    const result = await updateTemplateCommand(templateId, {
       validity: data,
     });
 

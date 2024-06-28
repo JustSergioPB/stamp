@@ -5,8 +5,8 @@ import StatusBadge from "@components/stamp/status-badge";
 import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert";
 import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
+import { TemplateSummaryView } from "@features/template";
 import { useTranslation } from "@i18n/server";
-import { TemplateSummary } from "@models/domain/template";
 import {
   Calendar,
   Database,
@@ -18,7 +18,7 @@ import {
 
 type Props = {
   lang: string;
-  summary: TemplateSummary;
+  summary: TemplateSummaryView;
 };
 
 export default async function Summary({ lang, summary }: Props) {

@@ -1,9 +1,8 @@
 "use client";
 
-import Sidebar from "@components/stamp/sidebar";
+import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import { Braces, PenTool } from "lucide-react";
-import { NavLink } from "@models/ui/nav-link";
 import { Toaster } from "@components/ui/sonner";
 
 type Props = {

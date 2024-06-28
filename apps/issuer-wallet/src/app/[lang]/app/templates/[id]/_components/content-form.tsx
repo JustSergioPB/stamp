@@ -15,22 +15,17 @@ import { LoaderCircle } from "lucide-react";
 import { cn } from "@lib/utils";
 import { useTranslation } from "@i18n/client";
 import { Switch } from "@components/ui/switch";
-import {
-  ContentSchema,
-  contentSchema,
-  defaultContentSchema,
-} from "@schemas/template";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { updateTemplateCommand } from "@commands/template.commands";
+import { updateTemplateCommand } from "src/features/template/commands/template.commands";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
-import { error } from "console";
+import { ContentZod, contentZod, defaultContentZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   templateId: string;
-  formValue?: ContentSchema;
+  formValue?: ContentZod;
 }
 
 export default function ContentForm({
@@ -44,16 +39,15 @@ export default function ContentForm({
   const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<ContentSchema>({
-    resolver: zodResolver(contentSchema),
-    defaultValues: formValue ?? defaultContentSchema,
+  const form = useForm<ContentZod>({
+    resolver: zodResolver(contentZod),
+    defaultValues: formValue ?? defaultContentZod,
   });
 
-  async function onSubmit(data: ContentSchema) {
+  async function onSubmit(data: ContentZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand({
-      id: templateId,
+    const result = await updateTemplateCommand(templateId, {
       content: data,
     });
 

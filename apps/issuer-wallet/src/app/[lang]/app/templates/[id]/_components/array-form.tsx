@@ -10,11 +10,9 @@ import {
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
 import { useTranslation } from "@i18n/client";
-import { ContentSchema } from "@schemas/template";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
 import { Control, FieldPath, UseFormWatch } from "react-hook-form";
 import NumberForm from "./number-form";
-import ObjectForm from "./object-form";
 import StringForm from "./string-form";
 import {
   Select,
@@ -23,33 +21,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
+import { ContentZod } from "@features/template";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  control?: Control<ContentSchema, any>;
+  control?: Control<ContentZod, any>;
   lang: string;
   prefix: string;
-  watch: UseFormWatch<ContentSchema>;
+  watch: UseFormWatch<ContentZod>;
 }
 
 export default function ArrayForm({ control, lang, prefix, watch }: Props) {
   const { t } = useTranslation(lang, "template");
-  const minItemsPath = `${prefix}.minItems` as FieldPath<ContentSchema>;
-  const maxItemsPath = `${prefix}.maxItems` as FieldPath<ContentSchema>;
-  const uniqueItemsPath = `${prefix}.uniqueItems` as FieldPath<ContentSchema>;
-  const subtypePath = `${prefix}.subtype` as FieldPath<ContentSchema>;
+  const minItemsPath = `${prefix}.minItems` as FieldPath<ContentZod>;
+  const maxItemsPath = `${prefix}.maxItems` as FieldPath<ContentZod>;
+  const uniqueItemsPath = `${prefix}.uniqueItems` as FieldPath<ContentZod>;
+  const subtypePath = `${prefix}.subtype` as FieldPath<ContentZod>;
 
   const subtype = watch(subtypePath) as JsonSchemaType | undefined;
 
   function renderForm() {
     switch (subtype) {
-      case "object":
-        return (
-          <ObjectForm
-            control={control}
-            lang={lang}
-            prefix={`${prefix}.properties`}
-          />
-        );
       case "array":
         return (
           <ArrayForm

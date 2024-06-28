@@ -1,6 +1,5 @@
 "use client";
 
-import { Checkbox } from "@components/ui/checkbox";
 import {
   FormField,
   FormItem,
@@ -10,12 +9,12 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
+import { ContentZod } from "@features/template";
 import { useTranslation } from "@i18n/client";
-import { ContentSchema } from "@schemas/template";
 import { Control, FieldPath } from "react-hook-form";
 
 type Props = {
-  control?: Control<ContentSchema, any>;
+  control?: Control<ContentZod, any>;
   lang: string;
   prefix: string;
   integer?: boolean;
@@ -23,13 +22,13 @@ type Props = {
 
 export default function NumberForm({ control, lang, prefix }: Props) {
   const { t } = useTranslation(lang, "template");
-  const minimumPath = `${prefix}.minimum` as FieldPath<ContentSchema>;
+  const minimumPath = `${prefix}.minimum` as FieldPath<ContentZod>;
   const exclusiveMinimumPath =
-    `${prefix}.exclusiveMinimum` as FieldPath<ContentSchema>;
-  const maximumPath = `${prefix}.maximum` as FieldPath<ContentSchema>;
+    `${prefix}.exclusiveMinimum` as FieldPath<ContentZod>;
+  const maximumPath = `${prefix}.maximum` as FieldPath<ContentZod>;
   const exclusiveMaximumPath =
-    `${prefix}.exclusiveMaximum` as FieldPath<ContentSchema>;
-  const multipleOfPath = `${prefix}.multipleOf` as FieldPath<ContentSchema>;
+    `${prefix}.exclusiveMaximum` as FieldPath<ContentZod>;
+  const multipleOfPath = `${prefix}.multipleOf` as FieldPath<ContentZod>;
 
   return (
     <>

@@ -13,12 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
+import { ContentZod } from "@features/template";
 import { useTranslation } from "@i18n/client";
-import { ContentSchema } from "@schemas/template";
 import { Control, FieldPath } from "react-hook-form";
 
 type Props = {
-  control?: Control<ContentSchema, any>;
+  control?: Control<ContentZod, any>;
   lang: string;
   prefix: string;
 };
@@ -26,10 +26,10 @@ type Props = {
 export default function StringForm({ control, lang, prefix }: Props) {
   const { t } = useTranslation(lang, "template");
 
-  const minLengthPath = `${prefix}.minLength` as FieldPath<ContentSchema>;
-  const maxLengthPath = `${prefix}.maxLength` as FieldPath<ContentSchema>;
-  const patternPath = `${prefix}.pattern` as FieldPath<ContentSchema>;
-  const formatPath = `${prefix}.format` as FieldPath<ContentSchema>;
+  const minLengthPath = `${prefix}.minLength` as FieldPath<ContentZod>;
+  const maxLengthPath = `${prefix}.maxLength` as FieldPath<ContentZod>;
+  const patternPath = `${prefix}.pattern` as FieldPath<ContentZod>;
+  const formatPath = `${prefix}.format` as FieldPath<ContentZod>;
 
   return (
     <>

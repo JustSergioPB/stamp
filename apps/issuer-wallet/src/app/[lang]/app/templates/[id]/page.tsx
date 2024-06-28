@@ -1,10 +1,8 @@
 import { buttonVariants } from "@components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { getTemplateById } from "@db/repositories";
 import { useTranslation } from "@i18n/server";
 import { cn } from "@lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { templateToSummary } from "@utils/template";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Summary from "./_components/summary";
@@ -13,6 +11,7 @@ import ContentForm from "./_components/content-form";
 import SecurityForm from "./_components/security-form";
 import StatusForm from "./_components/status-form";
 import ValdityForm from "./_components/validity-form";
+import { SummaryMapper, TemplateMongoRepository } from "@features/template";
 
 type Props = {
   params: { lang: string; id: string };
@@ -20,8 +19,8 @@ type Props = {
 
 export default async function Page({ params: { lang, id } }: Props) {
   const { t } = await useTranslation(lang, "template");
-  const template = await getTemplateById(id);
-  const summary = templateToSummary(template);
+  const detailedView = await new TemplateMongoRepository().getById(id);
+  const summary = SummaryMapper.fromDetailedView(detailedView);
 
   return (
     <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">
@@ -46,7 +45,7 @@ export default async function Page({ params: { lang, id } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.base.subtitle")}
           </h3>
-          <BaseForm lang={lang} templateId={id} formValue={template.base} />
+          <BaseForm lang={lang} templateId={id} formValue={detailedView.base} />
         </TabsContent>
         <TabsContent value="content" className="mt-8 w-2/3">
           <h2 className="text-lg font-semibold mb-2">
@@ -58,7 +57,7 @@ export default async function Page({ params: { lang, id } }: Props) {
           <ContentForm
             lang={lang}
             templateId={id}
-            formValue={template.content}
+            formValue={detailedView.content}
           />
         </TabsContent>
         <TabsContent value="security" className="mt-8 w-2/3">
@@ -71,7 +70,7 @@ export default async function Page({ params: { lang, id } }: Props) {
           <SecurityForm
             lang={lang}
             templateId={id}
-            formValue={template.security}
+            formValue={detailedView.security}
           />
         </TabsContent>
         <TabsContent value="status" className="mt-8 w-2/3">
@@ -81,7 +80,11 @@ export default async function Page({ params: { lang, id } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.status.subtitle")}
           </h3>
-          <StatusForm lang={lang} templateId={id} formValue={template.status} />
+          <StatusForm
+            lang={lang}
+            templateId={id}
+            formValue={detailedView.status}
+          />
         </TabsContent>
         <TabsContent value="validity" className="mt-8 w-2/3">
           <h2 className="text-lg font-semibold mb-2">
@@ -93,7 +96,7 @@ export default async function Page({ params: { lang, id } }: Props) {
           <ValdityForm
             lang={lang}
             templateId={id}
-            formValue={template.validity}
+            formValue={detailedView.validity}
           />
         </TabsContent>
       </Tabs>

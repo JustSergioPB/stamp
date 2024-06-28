@@ -6,7 +6,14 @@ import { buttonVariants } from "@components/ui/button";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@i18n/client";
 import { ReactNode } from "react";
-import { NavLink } from "@models/ui/nav-link";
+import { LucideIcon } from "lucide-react";
+
+export type NavLink = {
+  title: string;
+  label?: string;
+  href: string;
+  icon?: LucideIcon;
+};
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   links: NavLink[];

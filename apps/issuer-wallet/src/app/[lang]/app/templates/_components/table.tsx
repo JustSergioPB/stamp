@@ -7,21 +7,25 @@ import {
   TableRow,
 } from "@components/ui/table";
 import Paginator from "@components/stamp/paginator";
-import { Column } from "@models/ui/column";
 import { useTranslation } from "@i18n/server";
-import { PaginatedList } from "@models/query";
-import { TemplateSummary } from "@models/domain/template";
 import TextCell from "@components/stamp/text-cell";
 import LinkCell from "@components/stamp/link-cell";
 import ChipListCell from "@components/stamp/chip-list-cell";
 import StatusCell from "@components/stamp/status-cell";
+import { PaginatedList } from "@lib/query";
+import { TemplateSummaryView } from "@features/template";
+
+export type Column<T> = {
+  key: keyof T;
+  name: string;
+};
 
 type Props = {
   lang: string;
-  result: PaginatedList<TemplateSummary>;
+  result: PaginatedList<TemplateSummaryView>;
 };
 
-const columns: Column<TemplateSummary>[] = [
+const columns: Column<TemplateSummaryView>[] = [
   {
     key: "id",
     name: "summary.id",
@@ -48,7 +52,7 @@ export default async function TemplateTable({ lang, result }: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tLang } = await useTranslation(lang, "langs");
 
-  function getCell(item: TemplateSummary, key: keyof TemplateSummary) {
+  function getCell(item: TemplateSummaryView, key: keyof TemplateSummaryView) {
     switch (key) {
       case "id":
         return <LinkCell value={item.id} href={`templates/${item.id}`} />;

@@ -5,13 +5,16 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@components/ui/breadcrumb";
 import { useTranslation } from "@i18n/client";
-import { BreadCrumbItem } from "@models/ui/breadcrumb-item";
 import { usePathname } from "next/navigation";
 
+export type BreadCrumbItem = {
+  title: string;
+  translate: boolean;
+  href: string;
+};
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   items: BreadCrumbItem[];
