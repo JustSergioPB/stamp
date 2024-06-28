@@ -13,7 +13,7 @@ import LinkCell from "@components/stamp/link-cell";
 import ChipListCell from "@components/stamp/chip-list-cell";
 import StatusCell from "@components/stamp/status-cell";
 import { PaginatedList } from "@lib/query";
-import { TemplateSummaryView } from "@features/template";
+import { TemplateSummaryView } from "@features/template/models";
 
 export type Column<T> = {
   key: keyof T;

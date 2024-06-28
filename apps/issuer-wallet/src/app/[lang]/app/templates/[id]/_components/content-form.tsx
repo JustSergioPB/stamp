@@ -17,10 +17,14 @@ import { useTranslation } from "@i18n/client";
 import { Switch } from "@components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { updateTemplateCommand } from "src/features/template/commands/template.commands";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
-import { ContentZod, contentZod, defaultContentZod } from "@features/template";
+import { updateTemplateCommand } from "@features/template/commands";
+import {
+  ContentZod,
+  contentZod,
+  defaultContentZod,
+} from "@features/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;

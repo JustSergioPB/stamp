@@ -18,7 +18,7 @@ import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ValidityZod, validityZod } from "@features/template";
+import { ValidityZod, validityZod } from "@features/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;

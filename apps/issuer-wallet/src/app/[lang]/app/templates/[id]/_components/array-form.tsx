@@ -21,7 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
-import { ContentZod } from "@features/template";
+import { ContentZod } from "@features/template/models";
+
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   control?: Control<ContentZod, any>;

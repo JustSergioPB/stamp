@@ -2,7 +2,7 @@ import { Template, TemplateDetailedView, TemplateSummaryView } from "../models";
 
 export class SummaryMapper {
   static fromTemplate(data: Template): TemplateSummaryView {
-    return SummaryMapper.map(data, !!data.credentialSchema);
+    return SummaryMapper.map(data, !!data.content);
   }
 
   static fromDetailedView(data: TemplateDetailedView): TemplateSummaryView {

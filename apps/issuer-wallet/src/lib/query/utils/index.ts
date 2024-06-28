@@ -1,1 +1,1 @@
-export * from "./url-to-query.mapper";
+export * from "./query.mapper";

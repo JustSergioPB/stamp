@@ -3,11 +3,9 @@ import EmptyScreen from "@components/stamp/empty-screen";
 import AddButton from "./_components/add-button";
 import TemplateTable from "./_components/table";
 import { SearchParams, QueryMapper } from "@lib/query";
-import {
-  SummaryMapper,
-  Template,
-  TemplateMongoRepository,
-} from "@features/template";
+import { TemplateMongoRepository } from "@features/template/repositories";
+import { Template } from "@features/template/models";
+import { SummaryMapper } from "@features/template/utils";
 
 type Props = {
   searchParams: SearchParams;
@@ -17,7 +15,8 @@ type Props = {
 export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "template");
   const query = QueryMapper.fromURL<Template>(searchParams);
-  const paginatedList = await new TemplateMongoRepository().search(query);
+  const repo = new TemplateMongoRepository();
+  const paginatedList = await repo.search(query);
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {
     items: items.map((item) => SummaryMapper.fromTemplate(item)),
