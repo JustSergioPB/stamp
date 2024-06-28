@@ -17,17 +17,17 @@ import {
 } from "@components/ui/select";
 import React from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { Translatable } from "@i18n/types/translatable";
-import { DICTIONARIES } from "@i18n/constants/dictionaries.const";
+import { useTranslation } from "@i18n/client";
 
 type Props = {
   pageSize: number;
   currentPage: number;
   totalPages: number;
   children?: React.ReactNode;
-} & Translatable;
+  lang: string;
+};
 
-export function Paginator({
+export default function Paginator({
   pageSize,
   currentPage,
   totalPages,
@@ -37,6 +37,7 @@ export function Paginator({
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
+  const { t } = useTranslation(lang, "paginator");
 
   function onPageSizeChange(value: string) {
     const params = new URLSearchParams(searchParams);
@@ -70,9 +71,7 @@ export function Paginator({
       {children}
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">
-            {DICTIONARIES[lang]?.paginator.rowsPerPage}
-          </p>
+          <p className="text-sm font-medium">{t("rowsPerPage")}</p>
           <Select value={`${pageSize}`} onValueChange={onPageSizeChange}>
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={pageSize} />
@@ -87,8 +86,7 @@ export function Paginator({
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          {DICTIONARIES[lang]?.paginator.page} {currentPage + 1}{" "}
-          {DICTIONARIES[lang]?.paginator.of} {totalPages}
+          {t("page")} {currentPage + 1} {t("of")} {totalPages}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -97,9 +95,7 @@ export function Paginator({
             onClick={onFirstPage}
             disabled={currentPage === 0}
           >
-            <span className="sr-only">
-              {DICTIONARIES[lang]?.paginator.goToFirst}
-            </span>
+            <span className="sr-only">{t("goToFirst")}</span>
             <ChevronsLeft className="h-4 w-4" />
           </Button>
           <Button
@@ -108,9 +104,7 @@ export function Paginator({
             onClick={onPreviousPage}
             disabled={currentPage === 0}
           >
-            <span className="sr-only">
-              {DICTIONARIES[lang]?.paginator.goToPrevious}
-            </span>
+            <span className="sr-only">{t("goToPrevious")}</span>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
@@ -119,9 +113,7 @@ export function Paginator({
             onClick={onNextPage}
             disabled={currentPage === totalPages - 1}
           >
-            <span className="sr-only">
-              {DICTIONARIES[lang]?.paginator.goToNext}
-            </span>
+            <span className="sr-only">{t("goToNext")}</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
           <Button
@@ -130,9 +122,7 @@ export function Paginator({
             onClick={onLastPage}
             disabled={currentPage === totalPages - 1}
           >
-            <span className="sr-only">
-              {DICTIONARIES[lang]?.paginator.goToLast}
-            </span>
+            <span className="sr-only">{t("goToLast")}</span>
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>

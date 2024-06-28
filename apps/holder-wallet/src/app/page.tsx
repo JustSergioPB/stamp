@@ -1,5 +1,4 @@
 import { Button } from "@components/ui/button";
-import { connectToDatabase } from "@stamp/database";
 
 export default function Home() {
   connectToDatabase();

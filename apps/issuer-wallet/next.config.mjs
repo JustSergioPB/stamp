@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  transpilePackages: ["@stamp/domain", "@stamp/database"]
-};
+const nextConfig = {};
 
 export default nextConfig;

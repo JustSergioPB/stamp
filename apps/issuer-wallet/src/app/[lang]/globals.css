@@ -5,6 +5,7 @@
 @layer components {
   .sidepanel {
     height: calc(100% - 2rem);
+    width: calc(100% - 2rem);
   }
 }
 

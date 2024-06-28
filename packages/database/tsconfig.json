@@ -1,4 +1,0 @@
-{
-  "extends": "../typescript-config/tslib.json",
-  "exclude": ["node_modules"]
-}

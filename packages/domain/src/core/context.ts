@@ -1,0 +1,2 @@
+export type Context = (string | object)[]; // String are dereferencable URLs to JSON-LD contexts, objects are inline JSON-LDs
+export type V2Context = ["https://www.w3.org/ns/credentials/v2", ...Context];

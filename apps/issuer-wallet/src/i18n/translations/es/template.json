@@ -1,0 +1,217 @@
+{
+  "title": "Plantillas",
+  "cta": "Crea, edita y gestiona tus plantillas aquí",
+  "add": "Añadir plantilla",
+  "create": "Crear plantilla",
+  "summary": {
+    "id": "Id",
+    "name": "Nombre",
+    "description": "Descripción",
+    "type": "Palabras clave",
+    "status": "Estado",
+    "lang": "Idioma del contenido",
+    "content": "Contenido",
+    "createdAt": {
+      "label": "Creado",
+      "value": "{{val, datetime}}"
+    },
+    "modifiedAt": {
+      "label": "Modificado",
+      "value": "{{val, datetime}}"
+    },
+    "createdBy": "Creado por",
+    "hasContent": "El contenido de la credencial está definido",
+    "hasCredentialId": "Cada credencial generada tendrá un identificador único",
+    "hasSecurityAssertion": "Las credenciales han de ser verificables",
+    "hasRevocation": "Las credenciales se pueden revocar",
+    "hasName": "El nombre de la credencial está definido",
+    "hasType": "Las palabras clave de la credencial están definidas",
+    "alert": {
+      "title": "Importante",
+      "description": "Para que una plantilla esté lista para emitir credenciales, debes completar la información obligatoria"
+    }
+  },
+  "form": {
+    "base": {
+      "title": "Información básica",
+      "subtitle": "Configura los aspectos básicos de una credencial como el nombre, descripción, palabras clave asociadas y el idioma del contenido.",
+      "id": {
+        "present": {
+          "label": "Identificador",
+          "description": "Cada credencial generada a partir de esta plantilla tendrá un identificador único"
+        },
+        "type": {
+          "label": "Tipo de identificador"
+        }
+      },
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Carnet de conducir"
+      },
+      "lang": {
+        "label": "Idioma del contenido",
+        "placeholder": "Selecciona un idioma"
+      },
+      "type": {
+        "label": "Palabras clave",
+        "placeholder": "Identificación, licencia, etc.",
+        "hint": "Dale a enter para añadir un nuevo tipo, haz click en el tipo para eliminarlo. Darle a la X eliminará todos."
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "El carnet de conducir es un documento que acredita que el titular está habilitado para conducir vehículos a motor en España.",
+        "hint": "Max 150 caracteres"
+      }
+    },
+    "content": {
+      "title": "Contenido",
+      "subtitle": "Indica que información contendrá la credencial generada a partir de esta plantilla como nombre, apellidos, fecha de nacimiento, etc.",
+      "id": {
+        "label": "Identificador",
+        "description": "El contenido tendrá un identificador único"
+      },
+      "required": {
+        "label": "Requerido"
+      },
+      "property": {
+        "new": "Configura la propiedad"
+      },
+      "type": {
+        "label": "Tipo de propiedad"
+      },
+      "number": {
+        "minimum": "Mínimo",
+        "maximum": "Máximo",
+        "exclusiveMinimum": "Mínimo excluido",
+        "exclusiveMaximum": "Máximo excluido",
+        "multipleOf": "Múltiplo de"
+      },
+      "string": {
+        "minimum": "Mín. caracteres",
+        "maximum": "Máx. carecteres",
+        "pattern": "Patrón",
+        "format": "Formato"
+      },
+      "types": {
+        "string": "Texto",
+        "number": "Número",
+        "integer": "Entero",
+        "boolean": "Booleano",
+        "object": "Objeto",
+        "array": "Lista",
+        "null": "Nulo"
+      },
+      "format": {
+        "date": "Fecha",
+        "time": "Hora",
+        "date-time": "Fecha y hora",
+        "email": "Email",
+        "uri": "URL",
+        "did": "DID"
+      },
+      "array": {
+        "items": "Tipo de contenido",
+        "minItems": "Mín. elementos",
+        "maxItems": "Máx. elementos",
+        "unique": "Elementos únicos",
+        "subtype": {
+          "label": "Tipo de contenido",
+          "properties": "Propiedades del contenido"
+        }
+      },
+      "errors": {
+        "credentialSubject": {
+          "min": "El contenido debe tener al menos una propiedad",
+          "invalid": "Alguna de las propiedades no es válida",
+          "duplicatedName": "Hay propiedades con el mismo nombre"
+        },
+        "jsonSchema": {
+          "required": "Este campo es obligatorio"
+        }
+      }
+    },
+    "security": {
+      "title": "Seguridad",
+      "subtitle": "Configura si al emitir la credencial generada a partir de esta plantilla tiene que ser firmada y que funciones tienen dichas firmas.",
+      "authorization": {
+        "label": "Autorización",
+        "description": "Indica si se utiliza para acceder a recursos, sitios, etc."
+      },
+      "assertion": {
+        "label": "Verificación",
+        "description": "Indica que necesita ser firmada para demostrar su autenticidad y que no ha sido modificada."
+      },
+      "keyAgreement": {
+        "label": "Acuerdo de claves",
+        "description": "Indica que se han de establecer ciertos protocolos para compartir la información de forma segura."
+      },
+      "capabilityInvocation": {
+        "label": "Capacidad de invocación",
+        "description": "Permite definir cuales permisos tiene quien sobre la información que contiene la credencial."
+      },
+      "capabilityDelegation": {
+        "label": "Capacidad de delegación",
+        "description": "Permite al poseedor de la credencial otorgar ciertos permisos a terceros sobre esta."
+      }
+    },
+    "status": {
+      "title": "Estado",
+      "subtitle": "Establece si una credencial generada a partir de esta plantilla puede tener distintos estados, es revocable o se puede suspender. El estado por defecto será 'Activo'.",
+      "revocable": {
+        "label": "Revocable"
+      },
+      "suspendable": {
+        "label": "Suspendible"
+      },
+      "states": {
+        "label": "Estados adicionales",
+        "placeholder": "Pendiente, En proceso, etc.",
+        "hint": "Dale a enter para añadir un nuevo estado, haz click en el tipo para eliminarlo. Darle a la X eliminará todos."
+      },
+      "default": {
+        "label": "Estado por defecto",
+        "placeholder": "Selecciona un estado..."
+      }
+    },
+    "validity": {
+      "title": "Periodo de validez",
+      "subtitle": "Configura el periodo de validez de la credencial generada a partir de esta plantilla. Si no quieres establecer un periodo de validez, déjalo en blanco.",
+      "years": {
+        "label": "Años"
+      },
+      "months": {
+        "label": "Meses"
+      },
+      "days": {
+        "label": "Días"
+      },
+      "hours": {
+        "label": "Horas"
+      },
+      "mins": {
+        "label": "Mins."
+      },
+      "secs": {
+        "label": "Segs."
+      },
+      "errors": {
+        "min": "El valor debe ser al menos 1",
+        "max": "El valor debe ser como máximo {{max}}"
+      }
+    },
+    "actions": {
+      "addField": "Añadir campo"
+    }
+  },
+  "empty": {
+    "title": "No hay plantillas",
+    "subtitle": "Parece que no tienes ninguna plantilla creada. ¿Por qué no creas una ahora?"
+  },
+  "actions": {
+    "backToTemplates": "Volver a plantillas"
+  },
+  "status": {
+    "ready": "Listo",
+    "notReady": "Borrador"
+  }
+}
