@@ -1,15 +1,22 @@
-import { ObjectId } from "mongodb";
 import { MongoRepository } from "@lib/mongo";
+import { Org } from "../models/domain/org";
 import { PaginatedList, Query } from "@lib/query";
-import { Template, TemplateDetailedView, TemplateUpdateDTO } from "../models";
+import { ObjectId, WithId } from "mongodb";
+import { CreateOrgDTO, CreateUserDTO } from "../models/dtos";
+import { User } from "../models";
 
-export type MongoTemplate = Omit<Template, "id" | "createdAt">;
-export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
+export type MongoUser = WithId<Omit<User, "id" | "createdAt">>;
+
+export type MongoOrg = Omit<Org, "id" | "createdAt" | "users"> & {
+  users: MongoUser[];
+};
+
+export class OrgMongoRepository extends MongoRepository<MongoOrg> {
   constructor() {
-    super("templates");
+    super("orgs");
   }
 
-  async search(query: Query<Template>): Promise<PaginatedList<Template>> {
+  async search(query: Query<Org>): Promise<PaginatedList<Org>> {
     const collection = await this.connect();
 
     if (!collection) {
@@ -28,10 +35,11 @@ export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
     const count = await collection.countDocuments();
 
     return {
-      items: documents.map(({ _id, ...document }) => ({
-        ...document,
+      items: documents.map(({ _id, users, ...document }) => ({
         id: _id.toString(),
         createdAt: _id.getTimestamp().toISOString(),
+        users: users.map((user) => this.mapUser(user)),
+        ...document,
       })),
       count,
       currentPage: page,
@@ -40,7 +48,7 @@ export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
     };
   }
 
-  async getById(id: string): Promise<TemplateDetailedView> {
+  async getById(id: string): Promise<Org> {
     const collection = await this.connect();
 
     if (!collection) {
@@ -52,49 +60,67 @@ export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
     });
 
     if (!document) {
-      throw new Error("Template not found");
+      throw new Error("Org not found");
     }
 
+    const { users, ...org } = document;
+
     return {
-      ...document,
+      ...org,
       id: document._id.toString(),
       createdAt: document._id.getTimestamp().toISOString(),
-      modifiedAt: document._id.getTimestamp().toISOString(),
+      users: users.map((user) => this.mapUser(user)),
     };
   }
 
-  async create(): Promise<Template> {
+  async create(create: CreateOrgDTO): Promise<Org> {
     const collection = await this.connect();
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documentRef = await collection.insertOne({
+    const newDocument = {
+      ...create,
       modifiedAt: new Date().toISOString(),
-    });
+      users: [],
+    };
+
+    const documentRef = await collection.insertOne(newDocument);
 
     return {
+      ...newDocument,
       id: documentRef.insertedId.toString(),
       createdAt: documentRef.insertedId.getTimestamp().toISOString(),
-      modifiedAt: documentRef.insertedId.getTimestamp().toISOString(),
     };
   }
 
-  async update(id: string, template: TemplateUpdateDTO): Promise<void> {
+  async addUser(orgId: string, user: CreateUserDTO): Promise<void> {
     const collection = await this.connect();
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documentRef = await collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: { ...template, modifiedAt: new Date().toISOString() } }
+    await collection.updateOne(
+      { _id: new ObjectId(orgId) },
+      {
+        $push: {
+          users: {
+            _id: new ObjectId(),
+            ...user,
+            modifiedAt: new Date().toISOString(),
+          },
+        },
+      }
     );
+  }
 
-    if (!documentRef.matchedCount) {
-      throw new Error("Template not found");
-    }
+  private mapUser(user: MongoUser): User {
+    return {
+      ...user,
+      id: user._id.toString(),
+      createdAt: user._id.getTimestamp().toISOString(),
+    };
   }
 }

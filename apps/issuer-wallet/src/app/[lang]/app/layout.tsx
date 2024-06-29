@@ -2,7 +2,7 @@
 
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
-import { Braces, PenTool } from "lucide-react";
+import { Braces, Building, PenTool, Shield, User } from "lucide-react";
 import Banner from "@components/stamp/banner";
 
 type Props = {
@@ -18,6 +18,16 @@ export default function Layout({ children, params: { lang } }: Props) {
       title: "templates",
       icon: Braces,
       href: `${BASE_ROUTE}/templates`,
+    },
+    {
+      title: "users",
+      icon: User,
+      href: `${BASE_ROUTE}/users`,
+    },
+    {
+      title: "orgs",
+      icon: Building,
+      href: `${BASE_ROUTE}/orgs`,
     },
   ];
 
