@@ -9,6 +9,7 @@ import { TemplateSummaryView } from "@features/template/models";
 import { useTranslation } from "@i18n/server";
 import {
   Calendar,
+  CirclePlus,
   Database,
   Info,
   Languages,
@@ -51,6 +52,7 @@ export default async function Summary({ lang, summary }: Props) {
           <ChipList items={type ?? []} />
         </div>
         <Button size="sm" disabled={status !== "ready"}>
+          <CirclePlus className="h-4 w-4 mr-2" />
           {tCredential("actions.create")}
         </Button>
       </section>

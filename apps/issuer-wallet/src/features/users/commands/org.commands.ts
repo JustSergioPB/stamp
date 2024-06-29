@@ -4,6 +4,7 @@ import { CommandResult } from "@lib/command";
 import { CreateOrgDTO, CreateUserDTO } from "../models";
 import { OrgMongoRepository } from "../repositories";
 import { revalidatePath } from "next/cache";
+import { UserMongoRepository } from "../repositories/user-mongo.repository";
 
 export async function createOrgCommand(
   create: CreateOrgDTO
@@ -26,13 +27,12 @@ export async function createOrgCommand(
 }
 
 export async function addUserToOrgCommand(
-  orgId: string,
   create: CreateUserDTO
 ): Promise<CommandResult<null>> {
   try {
-    const repo = new OrgMongoRepository();
-    await repo.addUser(orgId, create);
-    revalidatePath("/orgs");
+    const repo = new UserMongoRepository();
+    await repo.create(create);
+    revalidatePath("/users");
     return {
       data: null,
       errorCode: null,

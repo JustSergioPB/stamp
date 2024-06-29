@@ -24,10 +24,13 @@
   },
   "props": {
     "id": "Id",
-    "users": "Usuarios"
+    "users": "Usuarios",
+    "overview": "Resumen"
   },
   "actions": {
     "edit": "Editar organización",
-    "addUser": "Añadir usuario"
+    "addUser": "Añadir usuario",
+    "seeUsers": "Ver usuarios",
+    "backToOrgs": "Volver a organizaciones"
   }
 }

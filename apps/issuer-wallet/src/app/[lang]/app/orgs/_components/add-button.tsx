@@ -133,6 +133,14 @@ export default function AddButton({ lang }: Props) {
               )}
             />
             <DialogFooter>
+              <Button
+                variant="ghost"
+                type="reset"
+                onClick={() => setOpen(false)}
+                disabled={loading}
+              >
+                {tAction("cancel")}
+              </Button>
               <Button type="submit" disabled={loading}>
                 {tAction("save")}
               </Button>

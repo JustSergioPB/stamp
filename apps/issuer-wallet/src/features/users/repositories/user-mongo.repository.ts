@@ -1,16 +1,16 @@
 import { MongoRepository } from "@lib/mongo";
-import { Org } from "../models/domain/org";
+import { CreateUserDTO, User } from "../models";
 import { PaginatedList, Query } from "@lib/query";
 import { ObjectId } from "mongodb";
-import { CreateOrgDTO } from "../models/dtos";
 
-export type MongoOrg = Omit<Org, "id" | "createdAt">;
-export class OrgMongoRepository extends MongoRepository<MongoOrg> {
+export type MongoUser = Omit<User, "id" | "createdAt">;
+
+export class UserMongoRepository extends MongoRepository<MongoUser> {
   constructor() {
-    super("orgs");
+    super("users");
   }
 
-  async search(query: Query<Org>): Promise<PaginatedList<Org>> {
+  async search(query: Query<User>): Promise<PaginatedList<User>> {
     const collection = await this.connect();
 
     if (!collection) {
@@ -41,7 +41,7 @@ export class OrgMongoRepository extends MongoRepository<MongoOrg> {
     };
   }
 
-  async getById(id: string): Promise<Org> {
+  async getById(id: string): Promise<User> {
     const collection = await this.connect();
 
     if (!collection) {
@@ -53,7 +53,7 @@ export class OrgMongoRepository extends MongoRepository<MongoOrg> {
     });
 
     if (!document) {
-      throw new Error("Org not found");
+      throw new Error("User not found");
     }
 
     return {
@@ -63,25 +63,38 @@ export class OrgMongoRepository extends MongoRepository<MongoOrg> {
     };
   }
 
-  async create(create: CreateOrgDTO): Promise<Org> {
+  async getByEmail(email: string): Promise<User> {
     const collection = await this.connect();
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
     }
 
-    const newDocument = {
+    const document = await collection.findOne({
+      email,
+    });
+
+    if (!document) {
+      throw new Error("User not found");
+    }
+    
+    return {
+      ...document,
+      id: document._id.toString(),
+      createdAt: document._id.getTimestamp().toISOString(),
+    };
+  }
+
+  async create(create: CreateUserDTO): Promise<void> {
+    const collection = await this.connect();
+
+    if (!collection) {
+      throw new Error("Failed to retrieve collection");
+    }
+
+    await collection.insertOne({
       ...create,
       modifiedAt: new Date().toISOString(),
-      users: [],
-    };
-
-    const documentRef = await collection.insertOne(newDocument);
-
-    return {
-      ...newDocument,
-      id: documentRef.insertedId.toString(),
-      createdAt: documentRef.insertedId.getTimestamp().toISOString(),
-    };
+    });
   }
 }
