@@ -3,7 +3,7 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import { Braces, PenTool } from "lucide-react";
-import { Toaster } from "@components/ui/sonner";
+import Banner from "@components/stamp/banner";
 
 type Props = {
   children: ReactNode;
@@ -28,17 +28,9 @@ export default function Layout({ children, params: { lang } }: Props) {
         lang={lang}
         links={NAV_LINKS}
         dictionary="sidebar"
-        header={
-          <div className="flex items-center gap-2 mt-4 mb-10">
-            <PenTool className="h-7 w-7" />
-            <h1 className="text-xl font-semibold leading-tight">
-              IssuerWallet
-            </h1>
-          </div>
-        }
+        header={<Banner className="mt-4 mb-10" />}
       />
       <div className="h-full basis-auto grow shrink-0">{children}</div>
-      <Toaster richColors/>
     </main>
   );
 }

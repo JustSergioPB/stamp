@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ValidityZod, validityZod } from "@features/template/models";
 
-interface Props extends React.HTMLAttributes<HTMLElement> {
+interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
   templateId: string;
   formValue?: ValidityZod;

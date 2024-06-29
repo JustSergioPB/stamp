@@ -26,7 +26,7 @@ import {
   defaultContentZod,
 } from "@features/template/models";
 
-interface Props extends React.HTMLAttributes<HTMLElement> {
+interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
   templateId: string;
   formValue?: ContentZod;
