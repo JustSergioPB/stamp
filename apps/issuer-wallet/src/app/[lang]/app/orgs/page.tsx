@@ -4,7 +4,10 @@ import { OrgMongoRepository } from "@features/users/repositories";
 import { useTranslation } from "@i18n/server";
 import { QueryMapper, SearchParams } from "@lib/query";
 import AddButton from "./_components/add-button";
-import OrgTable from "./_components/table";
+import StampTable, { Column } from "@components/stamp/table";
+import LinkCell from "@components/stamp/link-cell";
+import TextCell from "@components/stamp/text-cell";
+import { Badge } from "@components/ui/badge";
 
 type Props = {
   searchParams: SearchParams;
@@ -17,6 +20,28 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
   const repo = new OrgMongoRepository();
   const paginatedList = await repo.search(query);
 
+  const columns: Column<Org>[] = [
+    {
+      key: "id",
+      name: t("props.id"),
+      cell: (item) => <LinkCell value={item.id} href={`orgs/${item.id}`} />,
+    },
+    {
+      key: "name",
+      name: t("form.name.label"),
+      cell: (item) => <TextCell value={item.name} />,
+    },
+    {
+      key: "type",
+      name: t("form.type.label"),
+      cell: (item) => (
+        <div className="flex space-x-2">
+          <Badge variant="outline">{t(`types.${item.type}`)}</Badge>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="h-full flex flex-col gap-4 p-10">
       <div className="flex items-center justify-between gap-2">
@@ -27,7 +52,12 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
         <AddButton lang={lang} />
       </div>
       {paginatedList.items.length > 0 ? (
-        <OrgTable lang={lang} result={paginatedList} />
+        <StampTable
+          lang={lang}
+          result={paginatedList}
+          columns={columns}
+          className="grow shrink-0 basis-auto"
+        />
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
           <AddButton lang={lang} />

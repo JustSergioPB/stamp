@@ -1,6 +1,9 @@
 import AddUserButton from "@components/features/user-form";
-import UserTable from "@components/features/user-table";
 import EmptyScreen from "@components/stamp/empty-screen";
+import LinkCell from "@components/stamp/link-cell";
+import StampTable, { Column } from "@components/stamp/table";
+import TextCell from "@components/stamp/text-cell";
+import { Badge } from "@components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -31,6 +34,35 @@ export default async function Page({
   const paginatedList = await new UserMongoRepository().search(query);
   const org = await new OrgMongoRepository().getById(id);
 
+  const columns: Column<User>[] = [
+    {
+      key: "id",
+      name: t("props.id"),
+      cell: (item) => (
+        <LinkCell value={item.id} href={`orgs/${id}/users/${item.id}`} />
+      ),
+    },
+    {
+      key: "name",
+      name: t("form.name.label"),
+      cell: (item) => <TextCell value={`${item.name} ${item.lastName}`} />,
+    },
+    {
+      key: "email",
+      name: t("form.email.label"),
+      cell: (item) => <TextCell value={item.email} />,
+    },
+    {
+      key: "role",
+      name: t("form.role.label"),
+      cell: (item) => (
+        <div className="flex space-x-2">
+          <Badge variant="outline">{t(`roles.${item.role}`)}</Badge>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="h-full flex flex-col gap-4 p-10">
       <Breadcrumb>
@@ -60,7 +92,12 @@ export default async function Page({
         <AddUserButton lang={lang} orgId={id} />
       </div>
       {paginatedList.items.length > 0 ? (
-        <UserTable lang={lang} result={paginatedList} />
+        <StampTable
+          lang={lang}
+          result={paginatedList}
+          columns={columns}
+          className="grow shrink-0 basis-auto"
+        />
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
           <AddUserButton lang={lang} orgId={id} />
