@@ -6,13 +6,12 @@ import { buttonVariants } from "@components/ui/button";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@i18n/client";
 import { ReactNode } from "react";
-import { LucideIcon } from "lucide-react";
 
 export type NavLink = {
   title: string;
   label?: string;
   href: string;
-  icon?: LucideIcon;
+  icon?: ReactNode;
 };
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
@@ -47,7 +46,7 @@ export default function Sidebar({
               "justify-start"
             )}
           >
-            {link.icon && <link.icon className="mr-2 h-4 w-4" />}
+            {link.icon}
             {t(link.title)}
             {link.label && (
               <span

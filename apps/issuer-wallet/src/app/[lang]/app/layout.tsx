@@ -1,32 +1,37 @@
-"use client";
-
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
-import { Braces, Building, PenTool, Shield, User } from "lucide-react";
 import Banner from "@components/stamp/banner";
+import { Building, Braces, User } from "lucide-react";
+import { Session } from "@features/users/utils/session";
 
 type Props = {
   children: ReactNode;
   params: { lang: string };
 };
 
-export default function Layout({ children, params: { lang } }: Props) {
+export default async function Layout({ children, params: { lang } }: Props) {
+  const currentSession = await Session.getCurrent();
+
+  if (!currentSession) {
+    throw new Error("No session found");
+  }
+
   const BASE_ROUTE = `/${lang}/app`;
 
   const NAV_LINKS: NavLink[] = [
     {
       title: "templates",
-      icon: Braces,
+      icon: <Braces className="h-4 w-4 mr-2" />,
       href: `${BASE_ROUTE}/templates`,
     },
     {
       title: "users",
-      icon: User,
+      icon: <User className="h-4 w-4 mr-2" />,
       href: `${BASE_ROUTE}/users`,
     },
     {
       title: "orgs",
-      icon: Building,
+      icon: <Building className="h-4 w-4 mr-2" />,
       href: `${BASE_ROUTE}/orgs`,
     },
   ];
