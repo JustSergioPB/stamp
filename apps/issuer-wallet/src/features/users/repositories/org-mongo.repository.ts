@@ -5,13 +5,13 @@ import { ObjectId } from "mongodb";
 import { CreateOrgDTO } from "../models/dtos";
 
 export type MongoOrg = Omit<Org, "id" | "createdAt">;
-export class OrgMongoRepository extends MongoRepository<MongoOrg> {
-  constructor() {
-    super("orgs");
-  }
+export class OrgMongoRepository extends MongoRepository {
+  private static collectionName = "orgs";
 
-  async search(query: Query<Org>): Promise<PaginatedList<Org>> {
-    const collection = await this.connect();
+  static async search(query: Query<Org>): Promise<PaginatedList<Org>> {
+    const collection = await this.connect<MongoOrg>(
+      OrgMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -41,8 +41,10 @@ export class OrgMongoRepository extends MongoRepository<MongoOrg> {
     };
   }
 
-  async getById(id: string): Promise<Org> {
-    const collection = await this.connect();
+  static async getById(id: string): Promise<Org> {
+    const collection = await this.connect<MongoOrg>(
+      OrgMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -63,8 +65,10 @@ export class OrgMongoRepository extends MongoRepository<MongoOrg> {
     };
   }
 
-  async create(create: CreateOrgDTO): Promise<Org> {
-    const collection = await this.connect();
+  static async create(create: CreateOrgDTO): Promise<Org> {
+    const collection = await this.connect<MongoOrg>(
+      OrgMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");

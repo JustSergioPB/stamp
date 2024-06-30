@@ -5,13 +5,13 @@ import { ObjectId } from "mongodb";
 
 export type MongoUser = Omit<User, "id" | "createdAt">;
 
-export class UserMongoRepository extends MongoRepository<MongoUser> {
-  constructor() {
-    super("users");
-  }
+export class UserMongoRepository extends MongoRepository {
+  private static collectionName = "users";
 
-  async search(query: Query<User>): Promise<PaginatedList<User>> {
-    const collection = await this.connect();
+  static async search(query: Query<User>): Promise<PaginatedList<User>> {
+    const collection = await this.connect<MongoUser>(
+      UserMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -41,8 +41,10 @@ export class UserMongoRepository extends MongoRepository<MongoUser> {
     };
   }
 
-  async getById(id: string): Promise<User> {
-    const collection = await this.connect();
+  static async getById(id: string): Promise<User> {
+    const collection = await this.connect<MongoUser>(
+      UserMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -63,8 +65,10 @@ export class UserMongoRepository extends MongoRepository<MongoUser> {
     };
   }
 
-  async getByEmail(email: string): Promise<User> {
-    const collection = await this.connect();
+  static async getByEmail(email: string): Promise<User> {
+    const collection = await this.connect<MongoUser>(
+      UserMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -77,7 +81,7 @@ export class UserMongoRepository extends MongoRepository<MongoUser> {
     if (!document) {
       throw new Error("User not found");
     }
-    
+
     return {
       ...document,
       id: document._id.toString(),
@@ -85,8 +89,10 @@ export class UserMongoRepository extends MongoRepository<MongoUser> {
     };
   }
 
-  async create(create: CreateUserDTO): Promise<void> {
-    const collection = await this.connect();
+  static async create(create: CreateUserDTO): Promise<void> {
+    const collection = await this.connect<MongoUser>(
+      UserMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");

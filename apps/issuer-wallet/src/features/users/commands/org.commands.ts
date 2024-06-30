@@ -10,8 +10,7 @@ export async function createOrgCommand(
   create: CreateOrgDTO
 ): Promise<CommandResult<null>> {
   try {
-    const repo = new OrgMongoRepository();
-    await repo.create(create);
+    await OrgMongoRepository.create(create);
     revalidatePath("/orgs");
     return {
       data: null,
@@ -30,8 +29,7 @@ export async function addUserToOrgCommand(
   create: CreateUserDTO
 ): Promise<CommandResult<null>> {
   try {
-    const repo = new UserMongoRepository();
-    await repo.create(create);
+    await UserMongoRepository.create(create);
     revalidatePath("/users");
     return {
       data: null,

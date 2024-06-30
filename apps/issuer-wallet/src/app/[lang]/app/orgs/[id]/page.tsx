@@ -7,17 +7,14 @@ import { cn } from "@lib/utils";
 import { Separator } from "@components/ui/separator";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { ReactNode } from "react";
 
 type Props = {
   params: { lang: string; id: string };
-  children?: ReactNode;
 };
 
 export default async function Page({ params: { lang, id } }: Props) {
   const { t } = await useTranslation(lang, "orgs");
-  const repo = new OrgMongoRepository();
-  const org = await repo.getById(id);
+  const org = await OrgMongoRepository.getById(id);
 
   return (
     <section className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">

@@ -1,11 +1,9 @@
 import * as mongodb from "mongodb";
 
-export abstract class MongoRepository<T extends mongodb.Document> {
-  protected uri: string;
-  protected name: string;
-  protected collectionName: string;
-
-  constructor(collectionName: string) {
+export abstract class MongoRepository {
+  protected static async connect<T extends mongodb.Document>(
+    collectionName: string
+  ): Promise<mongodb.Collection<T> | null> {
     const uri = process.env.MONGODB_URI;
     const name = process.env.MONGODB_NAME;
 
@@ -17,25 +15,19 @@ export abstract class MongoRepository<T extends mongodb.Document> {
       throw new Error("MONGODB_NAME is not defined");
     }
 
-    this.name = name;
-    this.uri = uri;
-    this.collectionName = collectionName;
-  }
-
-  protected async connect(): Promise<mongodb.Collection<T> | null> {
-    const client = new mongodb.MongoClient(this.uri);
+    const client = new mongodb.MongoClient(uri);
 
     try {
       await client.connect();
-      const db = client.db(this.name);
+      const db = client.db(name);
       await db
-        .command({ collMod: this.collectionName })
+        .command({ collMod: collectionName })
         .catch(async (error: mongodb.MongoServerError) => {
           if (error.codeName === "NamespaceNotFound") {
-            await db.createCollection(this.collectionName);
+            await db.createCollection(collectionName);
           }
         });
-      return db.collection(this.collectionName);
+      return db.collection(collectionName);
     } catch (error) {
       //TODO: Should retry
       await client.close();

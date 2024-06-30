@@ -21,8 +21,7 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t: tLang } = await useTranslation(lang, "langs");
 
   const query = QueryMapper.fromURL<Template>(searchParams);
-  const repo = new TemplateMongoRepository();
-  const paginatedList = await repo.search(query);
+  const paginatedList = await TemplateMongoRepository.search(query);
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {
     items: items.map((item) => SummaryMapper.fromTemplate(item)),

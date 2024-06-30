@@ -9,8 +9,7 @@ export async function createTemplateCommand(): Promise<
   CommandResult<Template>
 > {
   try {
-    const repo = new TemplateMongoRepository();
-    const template = await repo.create();
+    const template = await TemplateMongoRepository.create();
     return { data: template, errorCode: null };
   } catch (error) {
     console.error(error);
@@ -26,8 +25,7 @@ export async function updateTemplateCommand(
   template: TemplateUpdateDTO
 ): Promise<CommandResult<void>> {
   try {
-    const repo = new TemplateMongoRepository();
-    await repo.update(id, template);
+    await TemplateMongoRepository.update(id, template);
     revalidatePath(`${id}`);
     return { data: null, errorCode: null };
   } catch (error) {

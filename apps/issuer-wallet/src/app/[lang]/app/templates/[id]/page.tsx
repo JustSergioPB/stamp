@@ -20,7 +20,7 @@ type Props = {
 
 export default async function Page({ params: { lang, id } }: Props) {
   const { t } = await useTranslation(lang, "template");
-  const detailedView = await new TemplateMongoRepository().getById(id);
+  const detailedView = await TemplateMongoRepository.getById(id);
   const summary = SummaryMapper.fromDetailedView(detailedView);
 
   return (

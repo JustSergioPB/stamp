@@ -4,13 +4,15 @@ import { PaginatedList, Query } from "@lib/query";
 import { Template, TemplateDetailedView, TemplateUpdateDTO } from "../models";
 
 export type MongoTemplate = Omit<Template, "id" | "createdAt">;
-export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
-  constructor() {
-    super("templates");
-  }
+export class TemplateMongoRepository extends MongoRepository {
+  private static collectionName = "templates";
 
-  async search(query: Query<Template>): Promise<PaginatedList<Template>> {
-    const collection = await this.connect();
+  static async search(
+    query: Query<Template>
+  ): Promise<PaginatedList<Template>> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -40,8 +42,10 @@ export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
     };
   }
 
-  async getById(id: string): Promise<TemplateDetailedView> {
-    const collection = await this.connect();
+  static async getById(id: string): Promise<TemplateDetailedView> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -63,8 +67,10 @@ export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
     };
   }
 
-  async create(): Promise<Template> {
-    const collection = await this.connect();
+  static async create(): Promise<Template> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -81,8 +87,10 @@ export class TemplateMongoRepository extends MongoRepository<MongoTemplate> {
     };
   }
 
-  async update(id: string, template: TemplateUpdateDTO): Promise<void> {
-    const collection = await this.connect();
+  static async update(id: string, template: TemplateUpdateDTO): Promise<void> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");

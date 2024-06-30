@@ -17,8 +17,7 @@ type Props = {
 export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "orgs");
   const query = QueryMapper.fromURL<Org>(searchParams);
-  const repo = new OrgMongoRepository();
-  const paginatedList = await repo.search(query);
+  const paginatedList = await OrgMongoRepository.search(query);
 
   const columns: Column<Org>[] = [
     {

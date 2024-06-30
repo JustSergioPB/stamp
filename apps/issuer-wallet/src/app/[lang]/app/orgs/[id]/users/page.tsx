@@ -31,8 +31,8 @@ export default async function Page({
   const { t } = await useTranslation(lang, "users");
   const { t: tOrgs } = await useTranslation(lang, "orgs");
   const query = QueryMapper.fromURL<User>(searchParams);
-  const paginatedList = await new UserMongoRepository().search(query);
-  const org = await new OrgMongoRepository().getById(id);
+  const paginatedList = await UserMongoRepository.search(query);
+  const org = await OrgMongoRepository.getById(id);
 
   const columns: Column<User>[] = [
     {
