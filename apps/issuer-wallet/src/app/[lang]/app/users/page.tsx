@@ -5,10 +5,10 @@ import LinkCell from "@components/stamp/link-cell";
 import StampTable, { Column } from "@components/stamp/table";
 import TextCell from "@components/stamp/text-cell";
 import { Badge } from "@components/ui/badge";
-import { User } from "@features/users/models";
-import { OrgMongoRepository } from "@features/users/repositories";
-import { UserMongoRepository } from "@features/users/repositories/user-mongo.repository";
-import { Session } from "@features/users/utils/session";
+import { User } from "@features/auth/models";
+import { OrgMongoRepository } from "@features/auth/repositories";
+import { UserMongoRepository } from "@features/auth/repositories/user-mongo.repository";
+import { Session } from "@features/auth/utils/session";
 import { useTranslation } from "@i18n/server";
 import { QueryMapper, SearchParams } from "@lib/query";
 
@@ -27,6 +27,7 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "users");
   const query = QueryMapper.fromURL<User>(searchParams);
   const paginatedList = await UserMongoRepository.search(query);
+  console.log("org", session);
   const org = await OrgMongoRepository.getById(session.orgId);
 
   const columns: Column<User>[] = [

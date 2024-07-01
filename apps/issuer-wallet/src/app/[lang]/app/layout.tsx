@@ -2,7 +2,7 @@ import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
 import { Building, Braces, User } from "lucide-react";
-import { Session } from "@features/users/utils/session";
+import { Session } from "@features/auth/utils/session";
 import ForbiddenScreen from "@components/stamp/forbidden-screen";
 import UserProfile from "@components/stamp/user-profile";
 

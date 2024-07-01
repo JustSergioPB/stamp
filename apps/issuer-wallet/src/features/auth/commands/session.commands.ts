@@ -9,7 +9,6 @@ import { Session } from "../utils/session";
 import { EncryptionTools } from "../utils/encryption-tools";
 import { MagicLink, User } from "../models";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function sendMagicLinkCommand(
   email: string,
@@ -108,7 +107,8 @@ export async function verifyMagicLinkCommand(
       throw new Error("Invalid nonce");
     }
 
-    await UserMongoRepository.rotateNonce(email, nonce);
+    const newNonce = Math.floor(Math.random() * 1000000);
+    await UserMongoRepository.rotateNonce(email, newNonce);
     const userWithoutNonce = { ...user, nonce: undefined };
     const encrypted = await EncryptionTools.encrypt(
       userWithoutNonce,
@@ -154,7 +154,8 @@ export async function logoutCommand(): Promise<CommandResult<void>> {
       throw new Error("No user found");
     }
 
-    await UserMongoRepository.rotateNonce(user.email, user.nonce);
+    const newNonce = Math.floor(Math.random() * 1000000);
+    await UserMongoRepository.rotateNonce(user.email, newNonce);
     cookies().set("session", "", { expires: new Date(0) });
 
     return {

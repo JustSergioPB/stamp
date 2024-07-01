@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@components/ui/form";
-import { UserZod, defaultUserZod, userZod } from "@features/users/models/zod";
+import { UserZod, defaultUserZod, userZod } from "@features/auth/models/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import {
@@ -30,9 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
-import { userRoles } from "@features/users/models";
+import { userRoles } from "@features/auth/models";
 import { useState } from "react";
-import { addUserToOrgCommand } from "@features/users/commands";
+import { addUserToOrgCommand } from "@features/auth/commands";
 import { toast } from "sonner";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {

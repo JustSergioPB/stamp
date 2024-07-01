@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { useForm } from "react-hook-form";
-import { OrgZod, defaultOrgZod, orgZod } from "@features/users/models/zod";
+import { OrgZod, defaultOrgZod, orgZod } from "@features/auth/models/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@components/ui/input";
 import {
@@ -32,8 +32,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
-import { orgTypes } from "@features/users/models";
-import { createOrgCommand } from "@features/users/commands";
+import { orgTypes } from "@features/auth/models";
+import { createOrgCommand } from "@features/auth/commands";
 
 type Props = {
   lang: string;

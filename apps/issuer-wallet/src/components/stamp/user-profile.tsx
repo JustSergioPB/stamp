@@ -2,8 +2,8 @@
 
 import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
 import { Button } from "@components/ui/button";
-import { logoutCommand } from "@features/users/commands";
-import { User } from "@features/users/models";
+import { logoutCommand } from "@features/auth/commands";
+import { User } from "@features/auth/models";
 import { cn } from "@lib/utils";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";

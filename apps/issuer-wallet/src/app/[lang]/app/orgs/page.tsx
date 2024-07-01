@@ -1,6 +1,6 @@
 import EmptyScreen from "@components/stamp/empty-screen";
-import { Org } from "@features/users/models";
-import { OrgMongoRepository } from "@features/users/repositories";
+import { Org } from "@features/auth/models";
+import { OrgMongoRepository } from "@features/auth/repositories";
 import { useTranslation } from "@i18n/server";
 import { QueryMapper, SearchParams } from "@lib/query";
 import AddButton from "./_components/add-button";
@@ -9,7 +9,7 @@ import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import { Badge } from "@components/ui/badge";
 import ForbiddenScreen from "@components/stamp/forbidden-screen";
-import { Session } from "@features/users/utils/session";
+import { Session } from "@features/auth/utils/session";
 
 type Props = {
   searchParams: SearchParams;

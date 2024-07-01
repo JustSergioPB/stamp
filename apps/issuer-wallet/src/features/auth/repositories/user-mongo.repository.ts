@@ -3,7 +3,9 @@ import { CreateUserDTO, User } from "../models";
 import { PaginatedList, Query } from "@lib/query";
 import { ObjectId } from "mongodb";
 
-export type MongoUser = Omit<User, "id" | "createdAt">;
+export type MongoUser = Omit<User, "id" | "orgId"> & {
+  _orgId: ObjectId;
+};
 
 export class UserMongoRepository extends MongoRepository {
   private static collectionName = "users";
@@ -29,8 +31,9 @@ export class UserMongoRepository extends MongoRepository {
     const count = await collection.countDocuments();
 
     return {
-      items: documents.map(({ _id, ...document }) => ({
+      items: documents.map(({ _id, _orgId, ...document }) => ({
         ...document,
+        orgId: _orgId.toString(),
         id: _id.toString(),
         createdAt: _id.getTimestamp().toISOString(),
       })),
@@ -58,10 +61,12 @@ export class UserMongoRepository extends MongoRepository {
       throw new Error("User not found");
     }
 
+    const { _id, _orgId, ...rest } = document;
+
     return {
-      ...document,
-      id: document._id.toString(),
-      createdAt: document._id.getTimestamp().toISOString(),
+      ...rest,
+      orgId: _orgId.toString(),
+      id: _id.toString(),
     };
   }
 
@@ -82,10 +87,12 @@ export class UserMongoRepository extends MongoRepository {
       throw new Error("User not found");
     }
 
+    const { _id, _orgId, ...rest } = document;
+
     return {
-      ...document,
-      id: document._id.toString(),
-      createdAt: document._id.getTimestamp().toISOString(),
+      ...rest,
+      orgId: _orgId.toString(),
+      id: _id.toString(),
     };
   }
 
@@ -101,7 +108,7 @@ export class UserMongoRepository extends MongoRepository {
     return !!(await collection.findOne({ email }));
   }
 
-  static async create(create: CreateUserDTO): Promise<void> {
+  static async create(create: CreateUserDTO): Promise<string> {
     const collection = await this.connect<MongoUser>(
       UserMongoRepository.collectionName
     );
@@ -110,11 +117,15 @@ export class UserMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    await collection.insertOne({
-      ...create,
-      modifiedAt: new Date().toISOString(),
+    const { orgId, ...rest } = create;
+
+    const documentRef = await collection.insertOne({
+      _orgId: new ObjectId(orgId),
+      ...rest,
       nonce: Math.floor(Math.random() * 1000000),
     });
+
+    return documentRef.insertedId.toString();
   }
 
   static async rotateNonce(email: string, nonce: number): Promise<void> {

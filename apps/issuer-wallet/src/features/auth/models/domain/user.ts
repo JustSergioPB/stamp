@@ -8,6 +8,4 @@ export type User = UserZod & {
   orgId: string;
   nonce: number;
   profilePic: string;
-  createdAt: string;
-  modifiedAt: string;
 };

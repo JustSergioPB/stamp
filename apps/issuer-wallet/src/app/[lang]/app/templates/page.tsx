@@ -31,19 +31,19 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
   const columns: Column<TemplateSummaryView>[] = [
     {
       key: "id",
-      name: "summary.id",
+      name: t("summary.id"),
       cell: (item) => (
         <LinkCell value={item.id} href={`templates/${item.id}`} />
       ),
     },
     {
       key: "name",
-      name: "summary.name",
+      name: t("summary.name"),
       cell: (item) => <TextCell value={item.name ?? ""} />,
     },
     {
       key: "status",
-      name: "summary.status",
+      name: t("summary.status"),
       cell: (item) => (
         <StatusCell
           value={t(
@@ -55,18 +55,18 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
     },
     {
       key: "type",
-      name: "summary.type",
+      name: t("summary.type"),
       cell: (item) => <ChipListCell value={item.type ?? []} />,
     },
     {
       key: "lang",
-      name: "summary.lang",
+      name: t("summary.lang"),
       cell: (item) => <TextCell value={item.lang ? tLang(item.lang) : ""} />,
     },
   ];
 
   return (
-    <div className="h-full flex flex-col gap-4 p-10">
+    <div className="h-full flex flex-col gap-8 p-8">
       <div className="flex items-center justify-between gap-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>

@@ -12,9 +12,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@components/ui/breadcrumb";
-import { User } from "@features/users/models";
-import { OrgMongoRepository } from "@features/users/repositories";
-import { UserMongoRepository } from "@features/users/repositories/user-mongo.repository";
+import { User } from "@features/auth/models";
+import { OrgMongoRepository } from "@features/auth/repositories";
+import { UserMongoRepository } from "@features/auth/repositories/user-mongo.repository";
 import { useTranslation } from "@i18n/server";
 import { QueryMapper, SearchParams } from "@lib/query";
 import { ArrowLeft } from "lucide-react";

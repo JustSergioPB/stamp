@@ -61,11 +61,10 @@ export class OrgMongoRepository extends MongoRepository {
     return {
       ...document,
       id: document._id.toString(),
-      createdAt: document._id.getTimestamp().toISOString(),
     };
   }
 
-  static async create(create: CreateOrgDTO): Promise<Org> {
+  static async create(create: CreateOrgDTO): Promise<string> {
     const collection = await this.connect<MongoOrg>(
       OrgMongoRepository.collectionName
     );
@@ -82,10 +81,6 @@ export class OrgMongoRepository extends MongoRepository {
 
     const documentRef = await collection.insertOne(newDocument);
 
-    return {
-      ...newDocument,
-      id: documentRef.insertedId.toString(),
-      createdAt: documentRef.insertedId.getTimestamp().toISOString(),
-    };
+    return documentRef.insertedId.toString();
   }
 }

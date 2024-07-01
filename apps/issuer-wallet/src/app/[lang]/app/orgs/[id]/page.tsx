@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
 import { Badge } from "@components/ui/badge";
 import { buttonVariants } from "@components/ui/button";
-import { OrgMongoRepository } from "@features/users/repositories";
+import { OrgMongoRepository } from "@features/auth/repositories";
 import { useTranslation } from "@i18n/server";
 import { cn } from "@lib/utils";
 import { Separator } from "@components/ui/separator";

@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { sendMagicLinkCommand } from "@features/users/commands";
+import { sendMagicLinkCommand } from "@features/auth/commands";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";

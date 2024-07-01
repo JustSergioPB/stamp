@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonVariants } from "@components/ui/button";
-import { verifyMagicLinkCommand } from "@features/users/commands";
+import { verifyMagicLinkCommand } from "@features/auth/commands";
 import { useTranslation } from "@i18n/client";
 import { SearchParams } from "@lib/query";
 import { cn } from "@lib/utils";
@@ -44,7 +44,7 @@ export default function Page({ params: { lang }, searchParams }: Props) {
         {loading ? (
           <>
             <Loader className="h-16 w-16 mb-4 animate-spin" />
-            <h1 className="text-2xl font-semibold mb-2">Verifying</h1>
+            <h1 className="text-2xl font-semibold mb-2">{t('expired.loading')}</h1>
           </>
         ) : errorCode ? (
           <>
