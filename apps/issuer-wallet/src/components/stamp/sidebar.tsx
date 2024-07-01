@@ -18,6 +18,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   links: NavLink[];
   lang: string;
   header?: ReactNode;
+  footer?: ReactNode;
   dictionary: string;
 }
 
@@ -26,15 +27,21 @@ export default function Sidebar({
   className,
   lang,
   header,
+  footer,
   dictionary,
 }: Props) {
   const pathname = usePathname();
   const { t } = useTranslation(lang, dictionary);
 
   return (
-    <div className={cn("h-full border-r shadow-sm p-4", className)}>
+    <div
+      className={cn(
+        "h-full border-r shadow-sm space-y-4 flex flex-col",
+        className
+      )}
+    >
       {header}
-      <nav className="grid gap-2">
+      <nav className="grid content-start gap-2 grow shrink-0 basis-auto p-4">
         {links.map((link, index) => (
           <Link
             key={index}
@@ -62,6 +69,7 @@ export default function Sidebar({
           </Link>
         ))}
       </nav>
+      {footer}
     </div>
   );
 }

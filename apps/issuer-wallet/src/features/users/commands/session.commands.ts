@@ -9,6 +9,7 @@ import { Session } from "../utils/session";
 import { EncryptionTools } from "../utils/encryption-tools";
 import { MagicLink, User } from "../models";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function sendMagicLinkCommand(
   email: string,
@@ -145,7 +146,7 @@ export async function getCurrent(): Promise<User | null> {
   return (await EncryptionTools.decrypt(token)) as User;
 }
 
-export async function logout(): Promise<CommandResult<void>> {
+export async function logoutCommand(): Promise<CommandResult<void>> {
   try {
     const user = await Session.getCurrent();
 
