@@ -8,6 +8,8 @@ import StampTable, { Column } from "@components/stamp/table";
 import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import { Badge } from "@components/ui/badge";
+import ForbiddenScreen from "@components/stamp/forbidden-screen";
+import { Session } from "@features/users/utils/session";
 
 type Props = {
   searchParams: SearchParams;
@@ -15,6 +17,12 @@ type Props = {
 };
 
 export default async function Page({ searchParams, params: { lang } }: Props) {
+  const session = await Session.getCurrent();
+
+  if (!session || session.role !== "superAdmin") {
+    return <ForbiddenScreen lang={lang} />;
+  }
+
   const { t } = await useTranslation(lang, "orgs");
   const query = QueryMapper.fromURL<Org>(searchParams);
   const paginatedList = await OrgMongoRepository.search(query);

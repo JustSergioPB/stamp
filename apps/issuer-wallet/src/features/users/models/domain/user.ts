@@ -6,6 +6,7 @@ export type UserRole = (typeof userRoles)[number];
 export type User = UserZod & {
   id: string;
   orgId: string;
+  nonce: number;
   profilePic: string;
   createdAt: string;
   modifiedAt: string;

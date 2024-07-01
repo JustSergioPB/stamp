@@ -89,6 +89,18 @@ export class UserMongoRepository extends MongoRepository {
     };
   }
 
+  static async userExistsByEmail(email: string): Promise<boolean> {
+    const collection = await this.connect<MongoUser>(
+      UserMongoRepository.collectionName
+    );
+
+    if (!collection) {
+      throw new Error("Failed to retrieve collection");
+    }
+
+    return !!(await collection.findOne({ email }));
+  }
+
   static async create(create: CreateUserDTO): Promise<void> {
     const collection = await this.connect<MongoUser>(
       UserMongoRepository.collectionName
@@ -101,6 +113,26 @@ export class UserMongoRepository extends MongoRepository {
     await collection.insertOne({
       ...create,
       modifiedAt: new Date().toISOString(),
+      nonce: Math.floor(Math.random() * 1000000),
     });
+  }
+
+  static async rotateNonce(email: string, nonce: number): Promise<void> {
+    const collection = await this.connect<MongoUser>(
+      UserMongoRepository.collectionName
+    );
+
+    if (!collection) {
+      throw new Error("Failed to retrieve collection");
+    }
+
+    await collection.updateOne(
+      { email },
+      {
+        $set: {
+          nonce,
+        },
+      }
+    );
   }
 }

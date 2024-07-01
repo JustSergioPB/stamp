@@ -42,19 +42,14 @@ export default function MagicLinkForm({ lang, className }: Props) {
 
   async function handleSubmit(formData: MagicLinkZod) {
     setLoading(true);
-    const { data, errorCode } = await sendMagicLinkCommand(formData.email);
+
+    const { errorCode } = await sendMagicLinkCommand(formData.email, lang);
 
     if (errorCode) {
-      toast.error(t(`magicLink.errors.${errorCode}.title`), {
-        description: t(`magicLink.errors.${errorCode}.description`),
-      });
-    }
-
-    if (data) {
+      toast.error(t(`magicLink.errors.${errorCode}`));
+    } else {
       startCountDown();
-      toast.success(t("magicLink.success.title"), {
-        description: t("magicLink.success.description"),
-      });
+      toast.success(t("magicLink.success"));
     }
 
     setLoading(false);
@@ -98,9 +93,12 @@ export default function MagicLinkForm({ lang, className }: Props) {
             </FormItem>
           )}
         />
-        <Button className="w-full" disabled={loading || countDown !== defaultCountDown}>
+        <Button
+          className="w-full"
+          disabled={loading || countDown !== defaultCountDown}
+        >
           {countDown !== defaultCountDown && (
-            <span className="mr-2">(${countDown})</span>
+            <span className="mr-2">({countDown})</span>
           )}
           {loading && <LoaderCircle className="animate-spin h-4 w-4 mr-2" />}
           {t("magicLink.form.button")}

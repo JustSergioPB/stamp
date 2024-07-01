@@ -1,5 +1,6 @@
 import AddUserButton from "@components/features/user-form";
 import EmptyScreen from "@components/stamp/empty-screen";
+import ForbiddenScreen from "@components/stamp/forbidden-screen";
 import LinkCell from "@components/stamp/link-cell";
 import StampTable, { Column } from "@components/stamp/table";
 import TextCell from "@components/stamp/text-cell";
@@ -20,7 +21,7 @@ export default async function Page({ searchParams, params: { lang } }: Props) {
   const session = await Session.getCurrent();
 
   if (!session) {
-    throw new Error("No session found");
+    return <ForbiddenScreen lang={lang} />;
   }
 
   const { t } = await useTranslation(lang, "users");

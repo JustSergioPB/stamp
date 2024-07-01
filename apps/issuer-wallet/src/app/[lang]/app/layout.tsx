@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
 import { Building, Braces, User } from "lucide-react";
 import { Session } from "@features/users/utils/session";
+import ForbiddenScreen from "@components/stamp/forbidden-screen";
 
 type Props = {
   children: ReactNode;
@@ -13,7 +14,7 @@ export default async function Layout({ children, params: { lang } }: Props) {
   const currentSession = await Session.getCurrent();
 
   if (!currentSession) {
-    throw new Error("No session found");
+    return <ForbiddenScreen lang={lang} />;
   }
 
   const BASE_ROUTE = `/${lang}/app`;
