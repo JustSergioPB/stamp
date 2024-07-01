@@ -15,6 +15,7 @@ export type Column<T> = {
   key: keyof T;
   name: string;
   className?: string;
+  // eslint-disable-next-line no-unused-vars
   cell: (item: T) => React.ReactNode;
 };
 

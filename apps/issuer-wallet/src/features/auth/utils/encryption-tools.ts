@@ -14,13 +14,7 @@ export class EncryptionTools {
       .sign(key);
   }
 
-  static async decrypt(token: string): Promise<JWTPayload> {
-    const secret = process.env.JWT_SECRET;
-
-    if (!secret) {
-      throw new Error("No secret found");
-    }
-
+  static async decrypt(token: string, secret: string): Promise<JWTPayload> {
     const key = new TextEncoder().encode(secret);
 
     const { payload } = await jwtVerify(token, key, {

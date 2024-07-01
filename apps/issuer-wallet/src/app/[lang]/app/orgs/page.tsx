@@ -8,8 +8,7 @@ import StampTable, { Column } from "@components/stamp/table";
 import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import { Badge } from "@components/ui/badge";
-import ForbiddenScreen from "@components/stamp/forbidden-screen";
-import { Session } from "@features/auth/utils/session";
+import { CookieSession } from "@features/auth/utils";
 
 type Props = {
   searchParams: SearchParams;
@@ -17,10 +16,14 @@ type Props = {
 };
 
 export default async function Page({ searchParams, params: { lang } }: Props) {
-  const session = await Session.getCurrent();
+  if (!process.env.JWT_SECRET) {
+    throw new Error("No secret found");
+  }
+
+  const session = await CookieSession.getCurrent(process.env.JWT_SECRET);
 
   if (!session || session.role !== "superAdmin") {
-    return <ForbiddenScreen lang={lang} />;
+    throw new Error("Forbidden");
   }
 
   const { t } = await useTranslation(lang, "orgs");

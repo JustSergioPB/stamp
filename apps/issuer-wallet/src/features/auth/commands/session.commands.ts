@@ -2,70 +2,51 @@
 
 import { CommandResult } from "@lib/command";
 import { UserMongoRepository } from "../repositories";
-import { Resend } from "resend";
-import MagicLinkEmail from "@components/email/magic-link-email";
-import { useTranslation } from "@i18n/server";
-import { Session } from "../utils/session";
-import { EncryptionTools } from "../utils/encryption-tools";
-import { MagicLink, User } from "../models";
-import { cookies } from "next/headers";
+import { MagicLink, Nonce, ResendMailer, CookieSession } from "../utils";
 
 export async function sendMagicLinkCommand(
   email: string,
   lang: string
 ): Promise<CommandResult<void>> {
   try {
-    const resendKey = process.env.RESEND_TOKEN;
-    const emailFrom = process.env.EMAIL_FROM;
-    const domain = process.env.DOMAIN;
-    const secret = process.env.JWT_SECRET;
-
-    if (!resendKey) {
+    if (!process.env.RESEND_TOKEN) {
       throw new Error("No resend key found");
     }
 
-    if (!emailFrom) {
+    if (!process.env.EMAIL_FROM) {
       throw new Error("No email from found");
     }
 
-    if (!domain) {
+    if (!process.env.DOMAIN) {
       throw new Error("No domain found");
     }
 
-    if (!secret) {
+    if (!process.env.JWT_SECRET) {
       throw new Error("No secret found");
     }
 
     const userExists = await UserMongoRepository.userExistsByEmail(email);
-    const nonce = Math.floor(Math.random() * 1000000);
-    await UserMongoRepository.rotateNonce(email, nonce);
 
     if (!userExists) {
       throw new Error("User not found");
     }
 
-    const magicLink = await EncryptionTools.encrypt(
-      { email, nonce },
-      "1m",
-      secret
+    const nonce = Nonce.generate();
+    await UserMongoRepository.rotateNonce(email, nonce);
+    const magicUrl = await MagicLink.generate(
+      process.env.DOMAIN,
+      lang,
+      email,
+      process.env.JWT_SECRET
     );
-    const resend = new Resend(resendKey);
-    const url = `${domain}/${lang}/auth/magic-link?token=${magicLink}`;
-
-    const { t } = await useTranslation(lang, "auth");
-
-    await resend.emails.send({
-      from: emailFrom,
-      to: email,
-      subject: "Magic link",
-      react: MagicLinkEmail({
-        magicUrl: url,
-        domainUrl: domain,
-        ignoreText: t("ignoreText"),
-        redirectText: t("redirectText"),
-        promoText: t("promoText"),
-      }),
-    });
+    await ResendMailer.sendMagicLink(
+      process.env.EMAIL_FROM,
+      email,
+      lang,
+      process.env.DOMAIN,
+      magicUrl,
+      process.env.RESEND_TOKEN
+    );
 
     return {
       data: null,
@@ -98,30 +79,16 @@ export async function verifyMagicLinkCommand(
       throw new Error("No secret found");
     }
 
-    const { nonce, email } = (await EncryptionTools.decrypt(
-      token
-    )) as MagicLink;
+    const { nonce, email } = await MagicLink.verify(token, secret);
     const user = await UserMongoRepository.getByEmail(email);
 
     if (user.nonce !== nonce) {
       throw new Error("Invalid nonce");
     }
 
-    const newNonce = Math.floor(Math.random() * 1000000);
+    const newNonce = Nonce.generate();
     await UserMongoRepository.rotateNonce(email, newNonce);
-    const userWithoutNonce = { ...user, nonce: undefined };
-    const encrypted = await EncryptionTools.encrypt(
-      userWithoutNonce,
-      "1h",
-      secret
-    );
-
-    cookies().set("session", encrypted, {
-      expires: new Date(Date.now() + 3600000),
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    });
+    await CookieSession.login({ ...user, nonce: newNonce }, secret);
 
     return {
       data: null,
@@ -136,27 +103,16 @@ export async function verifyMagicLinkCommand(
   }
 }
 
-export async function getCurrent(): Promise<User | null> {
-  const token = cookies().get("session")?.value;
-
-  if (!token) {
-    return null;
-  }
-
-  return (await EncryptionTools.decrypt(token)) as User;
-}
-
 export async function logoutCommand(): Promise<CommandResult<void>> {
   try {
-    const user = await Session.getCurrent();
-
-    if (!user) {
-      throw new Error("No user found");
+    if (!process.env.JWT_SECRET) {
+      throw new Error("No secret found");
     }
 
-    const newNonce = Math.floor(Math.random() * 1000000);
+    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
+    const newNonce = Nonce.generate();
     await UserMongoRepository.rotateNonce(user.email, newNonce);
-    cookies().set("session", "", { expires: new Date(0) });
+    await CookieSession.logout();
 
     return {
       data: null,

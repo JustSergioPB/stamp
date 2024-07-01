@@ -5,14 +5,25 @@ import { CreateUserDTO } from "../models";
 import { UserMongoRepository } from "../repositories";
 import { revalidatePath } from "next/cache";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
+import { CookieSession } from "../utils";
 
 export async function createUserCommand(
   create: CreateUserDTO
 ): Promise<CommandResult<void>> {
   try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error("No secret found");
+    }
+
+    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
+
+    if (create.orgId !== user.orgId) {
+      throw new Error("Forbidden");
+    }
+
     const userId = await UserMongoRepository.create(create);
     await AuditLogMongoRepository.create({
-      userId: "",
+      userId: user.id,
       operation: "create",
       collection: "user",
       documentId: userId,

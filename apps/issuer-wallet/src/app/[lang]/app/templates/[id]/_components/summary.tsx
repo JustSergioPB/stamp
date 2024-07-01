@@ -32,8 +32,6 @@ export default async function Summary({ lang, summary }: Props) {
     name,
     id,
     type,
-    modifiedAt,
-    createdAt,
     status,
     hasContent,
     hasCredentialId,
@@ -68,12 +66,6 @@ export default async function Summary({ lang, summary }: Props) {
         <div className="space-y-4 basis-1/4">
           <Field label={t("summary.id")} Icon={Database}>
             <p className="text-sm">{id}</p>
-          </Field>
-          <Field label={t("summary.createdAt.label")} Icon={Calendar}>
-            <p className="text-sm">{createdAt}</p>
-          </Field>
-          <Field label={t("summary.modifiedAt.label")} Icon={Calendar}>
-            <p className="text-sm">{modifiedAt}</p>
           </Field>
           <Field label={t("summary.status")} Icon={Loader}>
             <StatusBadge

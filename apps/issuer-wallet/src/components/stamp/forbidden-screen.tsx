@@ -1,5 +1,4 @@
 import { buttonVariants } from "@components/ui/button";
-import { Separator } from "@components/ui/separator";
 import { useTranslation } from "@i18n/server";
 import { cn } from "@lib/utils";
 import { ArrowRight, Ban, Lock, TimerOff } from "lucide-react";

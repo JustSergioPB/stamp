@@ -19,8 +19,6 @@ export class SummaryMapper {
       status: isReady ? "ready" : "not-ready",
       type: data.base?.type,
       lang: data.base?.lang,
-      createdAt: data.createdAt,
-      modifiedAt: data.modifiedAt,
       hasContent: isReady,
       hasCredentialId: !!data.base?.id,
       hasSecurityAssertion: !!data.security?.assertion,

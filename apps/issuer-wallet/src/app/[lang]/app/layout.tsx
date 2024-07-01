@@ -2,9 +2,9 @@ import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
 import { Building, Braces, User } from "lucide-react";
-import { Session } from "@features/auth/utils/session";
 import ForbiddenScreen from "@components/stamp/forbidden-screen";
 import UserProfile from "@components/stamp/user-profile";
+import { CookieSession } from "@features/auth/utils";
 
 type Props = {
   children: ReactNode;
@@ -12,10 +12,14 @@ type Props = {
 };
 
 export default async function Layout({ children, params: { lang } }: Props) {
-  const currentSession = await Session.getCurrent();
+  if (!process.env.JWT_SECRET) {
+    throw new Error("No secret found");
+  }
 
-  if (!currentSession) {
-    return <ForbiddenScreen lang={lang} />;
+  const session = await CookieSession.getCurrent(process.env.JWT_SECRET);
+
+  if (!session) {
+    throw new Error("Forbidden");
   }
 
   const BASE_ROUTE = `/${lang}/app`;
@@ -33,7 +37,7 @@ export default async function Layout({ children, params: { lang } }: Props) {
     },
   ];
 
-  if (currentSession.role === "superAdmin") {
+  if (session.role === "superAdmin") {
     navLinks.push({
       title: "orgs",
       icon: <Building className="h-4 w-4 mr-2" />,
@@ -49,9 +53,7 @@ export default async function Layout({ children, params: { lang } }: Props) {
         links={navLinks}
         dictionary="sidebar"
         header={<Banner className="p-4" />}
-        footer={
-          <UserProfile className="p-4" user={currentSession} lang={lang} />
-        }
+        footer={<UserProfile className="p-4" user={session} lang={lang} />}
       />
       <div className="h-full basis-auto grow shrink-0">{children}</div>
     </main>

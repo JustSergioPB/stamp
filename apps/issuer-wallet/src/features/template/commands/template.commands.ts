@@ -5,10 +5,18 @@ import { revalidatePath } from "next/cache";
 import { TemplateMongoRepository } from "../repositories";
 import { UpdateTemplateDTO } from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
+import { CookieSession } from "@features/auth/utils";
 
 export async function createTemplateCommand(): Promise<CommandResult<string>> {
   try {
-    const create = { orgId: "orgId" };
+    if (!process.env.JWT_SECRET) {
+      throw new Error("No secret found");
+    }
+
+    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
+
+    const create = { orgId: user.orgId };
+
     const templateId = await TemplateMongoRepository.create(create);
     await AuditLogMongoRepository.create({
       userId: "",
@@ -32,9 +40,15 @@ export async function updateTemplateCommand(
   template: UpdateTemplateDTO
 ): Promise<CommandResult<string>> {
   try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error("No secret found");
+    }
+
+    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
+
     const templateId = await TemplateMongoRepository.update(id, template);
     await AuditLogMongoRepository.create({
-      userId: "",
+      userId: user.id,
       operation: "update",
       collection: "template",
       documentId: templateId,
