@@ -29,7 +29,7 @@ import { BaseZod, defaultBaseZod, baseZod } from "@features/template/models";
 import { Switch } from "@components/ui/switch";
 import { Textarea } from "@components/ui/textarea";
 import { toast } from "sonner";
-import { updateTemplateCommand } from "@features/template/commands";
+import { updateTemplateAction } from "@features/template/commands";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -57,7 +57,7 @@ export default function BaseForm({
   async function onSubmit(data: BaseZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand(templateId, { base: data });
+    const result = await updateTemplateAction(templateId, { base: data });
 
     if (result.errorCode) {
       toast.error(tError(result.errorCode));

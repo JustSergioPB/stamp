@@ -8,30 +8,22 @@ import { Badge } from "@components/ui/badge";
 import { User } from "@features/auth/models";
 import { OrgMongoRepository } from "@features/auth/repositories";
 import { UserMongoRepository } from "@features/auth/repositories/user-mongo.repository";
-import { CookieSession } from "@features/auth/utils";
 import { useTranslation } from "@i18n/server";
 import { QueryMapper, SearchParams } from "@lib/query";
 
 type Props = {
   searchParams: SearchParams;
-  params: { lang: string };
+  params: { lang: string; orgId: string };
 };
 
-export default async function Page({ searchParams, params: { lang } }: Props) {
-  if (!process.env.JWT_SECRET) {
-    throw new Error("No secret found");
-  }
-
-  const session = await CookieSession.getCurrent(process.env.JWT_SECRET);
-
-  if (!session) {
-    return <ForbiddenScreen lang={lang} />;
-  }
-
+export default async function Page({
+  searchParams,
+  params: { lang, orgId },
+}: Props) {
   const { t } = await useTranslation(lang, "users");
   const query = QueryMapper.fromURL<User>(searchParams);
   const paginatedList = await UserMongoRepository.search(query);
-  const org = await OrgMongoRepository.getById(session.orgId);
+  const org = await OrgMongoRepository.getById(orgId);
 
   const columns: Column<User>[] = [
     {

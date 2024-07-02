@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { sendMagicLinkCommand } from "@features/auth/commands";
+import { sendMagicLinkAction } from "@features/auth/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { cn } from "@lib/utils";
@@ -43,7 +43,7 @@ export default function MagicLinkForm({ lang, className }: Props) {
   async function handleSubmit(formData: MagicLinkZod) {
     setLoading(true);
 
-    const { errorCode } = await sendMagicLinkCommand(formData.email, lang);
+    const { errorCode } = await sendMagicLinkAction(formData.email, lang);
 
     if (errorCode) {
       toast.error(t(`magicLink.errors.${errorCode}`));

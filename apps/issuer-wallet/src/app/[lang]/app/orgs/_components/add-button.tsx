@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { orgTypes } from "@features/auth/models";
-import { createOrgCommand } from "@features/auth/commands";
+import { createOrgAction } from "@features/auth/actions";
 
 type Props = {
   lang: string;
@@ -54,7 +54,7 @@ export default function AddButton({ lang }: Props) {
   async function handleSubmit(formData: OrgZod) {
     setLoading(true);
 
-    const result = await createOrgCommand(formData);
+    const result = await createOrgAction(formData);
 
     if (result.errorCode) {
       toast.error(tError(result.errorCode));

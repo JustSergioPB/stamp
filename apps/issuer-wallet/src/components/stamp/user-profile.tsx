@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
 import { Button } from "@components/ui/button";
-import { logoutCommand } from "@features/auth/commands";
+import { logoutAction } from "@features/auth/actions";
 import { User } from "@features/auth/models";
 import { cn } from "@lib/utils";
 import { LogOut } from "lucide-react";
@@ -31,7 +31,7 @@ export default function UserProfile({ user, className, lang }: Props) {
         variant="ghost"
         size="icon"
         onClick={() => {
-          logoutCommand();
+          logoutAction();
           router.push(`/${lang}/auth`);
         }}
       >

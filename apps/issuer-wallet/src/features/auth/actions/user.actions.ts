@@ -1,35 +1,37 @@
 "use server";
 
-import { CommandResult } from "@lib/command";
+import { ActionResult } from "@lib/action";
 import { CreateUserDTO } from "../models";
 import { UserMongoRepository } from "../repositories";
 import { revalidatePath } from "next/cache";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
-import { CookieSession } from "../utils";
+import { verifySession } from "../server";
 
-export async function createUserCommand(
+export async function createUserAction(
   create: CreateUserDTO
-): Promise<CommandResult<void>> {
+): Promise<ActionResult<void>> {
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("No secret found");
-    }
+    const session = await verifySession();
 
-    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
-
-    if (create.orgId !== user.orgId) {
+    if (!session) {
       throw new Error("Forbidden");
     }
 
-    const userId = await UserMongoRepository.create(create);
+    const userId = await UserMongoRepository.create({
+      ...create,
+      orgId: session.orgId,
+    });
+
     await AuditLogMongoRepository.create({
-      userId: user.id,
+      userId: session.id,
       operation: "create",
       collection: "user",
       documentId: userId,
       changes: create,
     });
+
     revalidatePath("/users");
+
     return {
       data: null,
       errorCode: null,

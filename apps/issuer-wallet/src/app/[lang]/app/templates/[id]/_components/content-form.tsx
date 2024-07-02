@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
-import { updateTemplateCommand } from "@features/template/commands";
+import { updateTemplateAction } from "@features/template/commands";
 import {
   ContentZod,
   contentZod,
@@ -51,7 +51,7 @@ export default function ContentForm({
   async function onSubmit(data: ContentZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand(templateId, {
+    const result = await updateTemplateAction(templateId, {
       content: data,
     });
 

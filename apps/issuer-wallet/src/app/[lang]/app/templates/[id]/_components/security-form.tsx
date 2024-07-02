@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateCommand } from "src/features/template/commands/template.commands";
+import { updateTemplateAction } from "src/features/template/commands/template.commands";
 import { Button } from "@components/ui/button";
 import {
   Form,
@@ -46,7 +46,7 @@ export default function SecurityForm({
   async function onSubmit(data: SecurityZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand(templateId, {
+    const result = await updateTemplateAction(templateId, {
       security: data,
     });
 

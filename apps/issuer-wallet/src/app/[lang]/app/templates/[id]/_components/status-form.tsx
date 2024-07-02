@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateCommand } from "src/features/template/commands/template.commands";
+import { updateTemplateAction } from "src/features/template/commands/template.commands";
 import ChipInput from "@components/stamp/chip-input";
 import { Button } from "@components/ui/button";
 import {
@@ -56,7 +56,7 @@ export default function StatusForm({
   async function onSubmit(data: StatusZod) {
     setLoading(true);
 
-    const result = await updateTemplateCommand(templateId, {
+    const result = await updateTemplateAction(templateId, {
       status: data,
     });
 

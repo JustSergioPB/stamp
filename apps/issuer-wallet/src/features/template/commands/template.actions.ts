@@ -1,21 +1,21 @@
 "use server";
 
-import { CommandResult } from "@lib/command/models/command-result";
+import { ActionResult } from "@lib/action";
 import { revalidatePath } from "next/cache";
 import { TemplateMongoRepository } from "../repositories";
 import { UpdateTemplateDTO } from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
-import { CookieSession } from "@features/auth/utils";
+import { verifySession } from "@features/auth/server";
 
-export async function createTemplateCommand(): Promise<CommandResult<string>> {
+export async function createTemplateAction(): Promise<ActionResult<string>> {
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("No secret found");
+    const session = await verifySession();
+
+    if (!session) {
+      throw new Error("Forbidden");
     }
 
-    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
-
-    const create = { orgId: user.orgId };
+    const create = { orgId: session.orgId };
 
     const templateId = await TemplateMongoRepository.create(create);
     await AuditLogMongoRepository.create({
@@ -35,20 +35,20 @@ export async function createTemplateCommand(): Promise<CommandResult<string>> {
   }
 }
 
-export async function updateTemplateCommand(
+export async function updateTemplateAction(
   id: string,
   template: UpdateTemplateDTO
-): Promise<CommandResult<string>> {
+): Promise<ActionResult<string>> {
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("No secret found");
-    }
+    const session = await verifySession();
 
-    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
+    if (!session) {
+      throw new Error("Forbidden");
+    }
 
     const templateId = await TemplateMongoRepository.update(id, template);
     await AuditLogMongoRepository.create({
-      userId: user.id,
+      userId: session.id,
       operation: "update",
       collection: "template",
       documentId: templateId,

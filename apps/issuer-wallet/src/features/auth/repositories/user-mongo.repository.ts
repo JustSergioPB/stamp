@@ -1,5 +1,5 @@
 import { MongoRepository } from "@lib/mongo";
-import { CreateUserDTO, User } from "../models";
+import { CreateUserDTO, UpdateUserDTO, User } from "../models";
 import { PaginatedList, Query } from "@lib/query";
 import { ObjectId } from "mongodb";
 
@@ -96,18 +96,6 @@ export class UserMongoRepository extends MongoRepository {
     };
   }
 
-  static async userExistsByEmail(email: string): Promise<boolean> {
-    const collection = await this.connect<MongoUser>(
-      UserMongoRepository.collectionName
-    );
-
-    if (!collection) {
-      throw new Error("Failed to retrieve collection");
-    }
-
-    return !!(await collection.findOne({ email }));
-  }
-
   static async create(create: CreateUserDTO): Promise<string> {
     const collection = await this.connect<MongoUser>(
       UserMongoRepository.collectionName
@@ -128,7 +116,7 @@ export class UserMongoRepository extends MongoRepository {
     return documentRef.insertedId.toString();
   }
 
-  static async rotateNonce(email: string, nonce: number): Promise<void> {
+  static async update(id: string, update: UpdateUserDTO): Promise<string> {
     const collection = await this.connect<MongoUser>(
       UserMongoRepository.collectionName
     );
@@ -137,13 +125,19 @@ export class UserMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    await collection.updateOne(
-      { email },
+    const documentRef = await collection.updateOne(
       {
-        $set: {
-          nonce,
-        },
+        _id: new ObjectId(id),
+      },
+      {
+        $set: update,
       }
     );
+
+    if (!documentRef.upsertedId) {
+      throw new Error("User not found");
+    }
+
+    return documentRef.upsertedId.toString();
   }
 }

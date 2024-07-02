@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonVariants } from "@components/ui/button";
-import { verifyMagicLinkCommand } from "@features/auth/commands";
+import { verifyMagicLinkAction } from "@features/auth/actions";
 import { useTranslation } from "@i18n/client";
 import { SearchParams } from "@lib/query";
 import { cn } from "@lib/utils";
@@ -24,7 +24,7 @@ export default function Page({ params: { lang }, searchParams }: Props) {
 
   const verify = useCallback(async (token: string) => {
     setLoading(true);
-    const { errorCode } = await verifyMagicLinkCommand(token);
+    const { errorCode } = await verifyMagicLinkAction(token);
     setErrorCode(errorCode);
     setLoading(false);
     if (!errorCode) {
@@ -44,7 +44,9 @@ export default function Page({ params: { lang }, searchParams }: Props) {
         {loading ? (
           <>
             <Loader className="h-16 w-16 mb-4 animate-spin" />
-            <h1 className="text-2xl font-semibold mb-2">{t('expired.loading')}</h1>
+            <h1 className="text-2xl font-semibold mb-2">
+              {t("expired.loading")}
+            </h1>
           </>
         ) : errorCode ? (
           <>

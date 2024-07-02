@@ -1,30 +1,26 @@
 "use server";
 
-import { CommandResult } from "@lib/command";
+import { ActionResult } from "@lib/action";
 import { CreateOrgDTO } from "../models";
 import { OrgMongoRepository } from "../repositories";
 import { revalidatePath } from "next/cache";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
-import { CookieSession } from "../utils";
+import { verifySession } from "../server";
 
-export async function createOrgCommand(
+export async function createOrgAction(
   create: CreateOrgDTO
-): Promise<CommandResult<void>> {
+): Promise<ActionResult<void>> {
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("No secret found");
-    }
+    const session = await verifySession();
 
-    const user = await CookieSession.getCurrent(process.env.JWT_SECRET);
-
-    if (user.role !== "superAdmin") {
+    if (!session || session.role !== "superAdmin") {
       throw new Error("Forbidden");
     }
 
     const orgId = await OrgMongoRepository.create(create);
 
     await AuditLogMongoRepository.create({
-      userId: user.id,
+      userId: session.id,
       operation: "create",
       collection: "orgs",
       documentId: orgId,

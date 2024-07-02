@@ -1,1 +1,1 @@
-export * from "./template.commands";
+export * from "./template.actions";

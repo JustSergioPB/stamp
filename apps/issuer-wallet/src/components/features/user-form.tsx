@@ -33,7 +33,7 @@ import {
 import { userRoles } from "@features/auth/models";
 import { useState } from "react";
 import { toast } from "sonner";
-import { createUserCommand } from "@features/auth/commands/user.commands";
+import { createUserAction } from "@features/auth/actions";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
@@ -54,7 +54,7 @@ export default function AddUserButton({ lang, orgId }: Props) {
 
   async function handleSubmit(formData: UserZod) {
     setLoading(true);
-    const result = await createUserCommand({
+    const result = await createUserAction({
       ...formData,
       orgId,
       profilePic: "",
