@@ -1,0 +1,51 @@
+{
+  "new": "Nuevo usuario",
+  "cta": "Crea, edita y gestiona los empleados",
+  "title": "Usuarios",
+  "form": {
+    "name": {
+      "label": "Nombre",
+      "placeholder": "John",
+      "errors": {
+        "required": "El nombre es requerido"
+      }
+    },
+    "lastName": {
+      "label": "Apellido/s",
+      "placeholder": "Doe",
+      "errors": {
+        "required": "El apellido/s es requerido"
+      }
+    },
+    "email": {
+      "label": "Correo electrónico",
+      "placeholder": "john.doe@gmail.com",
+      "errors": {
+        "required": "El correo electrónico es requerido",
+        "email": "El correo electrónico no es válido"
+      }
+    },
+    "role": {
+      "label": "Rol",
+      "placeholder": "Selecciona un rol",
+      "errors": {
+        "required": "El rol es requerido"
+      }
+    }
+  },
+  "roles": {
+    "orgAdmin": "Org admin",
+    "superAdmin": "Super admin",
+    "issuer": "Emisor"
+  },
+  "actions": {
+    "add": "Añadir usuario"
+  },
+  "props": {
+    "id": "Id"
+  },
+  "empty": {
+    "title": "No hay usuarios",
+    "subtitle": "Parece que aún no has añadido ningún usuario. Haz click en el botón de abajo para empezar."
+  }
+}

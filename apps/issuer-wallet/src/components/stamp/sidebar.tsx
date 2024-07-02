@@ -6,19 +6,19 @@ import { buttonVariants } from "@components/ui/button";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@i18n/client";
 import { ReactNode } from "react";
-import { LucideIcon } from "lucide-react";
 
 export type NavLink = {
   title: string;
   label?: string;
   href: string;
-  icon?: LucideIcon;
+  icon?: ReactNode;
 };
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   links: NavLink[];
   lang: string;
   header?: ReactNode;
+  footer?: ReactNode;
   dictionary: string;
 }
 
@@ -27,15 +27,21 @@ export default function Sidebar({
   className,
   lang,
   header,
+  footer,
   dictionary,
 }: Props) {
   const pathname = usePathname();
   const { t } = useTranslation(lang, dictionary);
 
   return (
-    <div className={cn("h-full border-r shadow-sm p-4", className)}>
+    <div
+      className={cn(
+        "h-full border-r shadow-sm space-y-4 flex flex-col",
+        className
+      )}
+    >
       {header}
-      <nav className="grid gap-2">
+      <nav className="grid content-start gap-2 grow shrink-0 basis-auto p-4">
         {links.map((link, index) => (
           <Link
             key={index}
@@ -47,7 +53,7 @@ export default function Sidebar({
               "justify-start"
             )}
           >
-            {link.icon && <link.icon className="mr-2 h-4 w-4" />}
+            {link.icon}
             {t(link.title)}
             {link.label && (
               <span
@@ -63,6 +69,7 @@ export default function Sidebar({
           </Link>
         ))}
       </nav>
+      {footer}
     </div>
   );
 }

@@ -1,0 +1,36 @@
+{
+  "title": "Organizaciones",
+  "cta": "Crea, edita y gestiona tus organizaciones aquí",
+  "add": "Añadir organización",
+  "empty": {
+    "title": "No hay organizaciones",
+    "subtitle": "Parece que aún no has creado ninguna organización. Haz click en el botón de abajo para empezar."
+  },
+  "types": {
+    "individual": "Individuo",
+    "private": "Compañía",
+    "public": "Institución pública"
+  },
+  "form": {
+    "title": "Crear organización",
+    "name": {
+      "label": "Nombre",
+      "placeholder": "ACME Inc."
+    },
+    "type": {
+      "label": "Tipo",
+      "placeholder": "Selecciona un tipo"
+    }
+  },
+  "props": {
+    "id": "Id",
+    "users": "Usuarios",
+    "overview": "Resumen"
+  },
+  "actions": {
+    "edit": "Editar organización",
+    "addUser": "Añadir usuario",
+    "seeUsers": "Ver usuarios",
+    "backToOrgs": "Volver a organizaciones"
+  }
+}

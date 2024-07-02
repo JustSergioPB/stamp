@@ -1,17 +1,23 @@
 import { ObjectId } from "mongodb";
 import { MongoRepository } from "@lib/mongo";
 import { PaginatedList, Query } from "@lib/query";
-import { Template, TemplateDetailedView, TemplateUpdateDTO } from "../models";
+import {
+  CreateTemplateDTO,
+  Template,
+  TemplateDetailedView,
+  UpdateTemplateDTO,
+} from "../models";
 
-export class TemplateMongoRepository extends MongoRepository<
-  Omit<Template, "id" | "createdAt">
-> {
-  constructor() {
-    super("templates");
-  }
+export type MongoTemplate = Omit<Template, "id" | "createdAt">;
+export class TemplateMongoRepository extends MongoRepository {
+  private static collectionName = "templates";
 
-  async search(query: Query<Template>): Promise<PaginatedList<Template>> {
-    const collection = await this.connect();
+  static async search(
+    query: Query<Template>
+  ): Promise<PaginatedList<Template>> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -41,8 +47,10 @@ export class TemplateMongoRepository extends MongoRepository<
     };
   }
 
-  async getById(id: string): Promise<TemplateDetailedView> {
-    const collection = await this.connect();
+  static async getById(id: string): Promise<TemplateDetailedView> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -59,31 +67,30 @@ export class TemplateMongoRepository extends MongoRepository<
     return {
       ...document,
       id: document._id.toString(),
-      createdAt: document._id.getTimestamp().toISOString(),
-      modifiedAt: document._id.getTimestamp().toISOString(),
     };
   }
 
-  async create(): Promise<Template> {
-    const collection = await this.connect();
+  static async create(create: CreateTemplateDTO): Promise<string> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documentRef = await collection.insertOne({
-      modifiedAt: new Date().toISOString(),
-    });
+    const documentRef = await collection.insertOne(create);
 
-    return {
-      id: documentRef.insertedId.toString(),
-      createdAt: documentRef.insertedId.getTimestamp().toISOString(),
-      modifiedAt: documentRef.insertedId.getTimestamp().toISOString(),
-    };
+    return documentRef.insertedId.toString();
   }
 
-  async update(id: string, template: TemplateUpdateDTO): Promise<void> {
-    const collection = await this.connect();
+  static async update(
+    id: string,
+    template: UpdateTemplateDTO
+  ): Promise<string> {
+    const collection = await this.connect<MongoTemplate>(
+      TemplateMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");
@@ -94,8 +101,10 @@ export class TemplateMongoRepository extends MongoRepository<
       { $set: { ...template, modifiedAt: new Date().toISOString() } }
     );
 
-    if (!documentRef.matchedCount) {
+    if (!documentRef.upsertedId) {
       throw new Error("Template not found");
     }
+
+    return documentRef.upsertedId.toString();
   }
 }

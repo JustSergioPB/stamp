@@ -1,9 +1,6 @@
 import { Template } from "../domain/template";
 
-export type TemplateSummaryView = Pick<
-  Template,
-  "id" | "createdAt" | "modifiedAt"
-> & {
+export type TemplateSummaryView = Pick<Template, "id"> & {
   name?: string;
   status: "ready" | "not-ready";
   type?: string[];

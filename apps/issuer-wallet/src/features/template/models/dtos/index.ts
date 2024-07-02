@@ -1,1 +1,2 @@
-export * from "./template-update.dto";
+export * from "./update-template.dto";
+export * from "./create-template.dto";

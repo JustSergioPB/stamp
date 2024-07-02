@@ -1,23 +1,38 @@
-"use client";
-
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
-import { Braces, PenTool } from "lucide-react";
-import { Toaster } from "@components/ui/sonner";
+import Banner from "@components/stamp/banner";
+import { Building, Braces, User } from "lucide-react";
+import UserProfile from "@components/stamp/user-profile";
+import { verifySession } from "@features/auth/server";
+import { UserMongoRepository } from "@features/auth/repositories";
+import { redirect } from "next/navigation";
 
 type Props = {
   children: ReactNode;
   params: { lang: string };
 };
 
-export default function Layout({ children, params: { lang } }: Props) {
-  const BASE_ROUTE = `/${lang}/app`;
+export default async function Layout({ children, params: { lang } }: Props) {
+  const session = await verifySession();
 
-  const NAV_LINKS: NavLink[] = [
+  if (!session) {
+    redirect(`${lang}/auth`);
+  }
+
+  const user = await UserMongoRepository.getById(session.id);
+
+  const BASE_ROUTE = `/${lang}/admin`;
+
+  const navLinks: NavLink[] = [
     {
       title: "templates",
-      icon: Braces,
+      icon: <Braces className="h-4 w-4 mr-2" />,
       href: `${BASE_ROUTE}/templates`,
+    },
+    {
+      title: "users",
+      icon: <User className="h-4 w-4 mr-2" />,
+      href: `${BASE_ROUTE}/users`,
     },
   ];
 
@@ -26,19 +41,12 @@ export default function Layout({ children, params: { lang } }: Props) {
       <Sidebar
         className="basis-64 shrink-0"
         lang={lang}
-        links={NAV_LINKS}
+        links={navLinks}
         dictionary="sidebar"
-        header={
-          <div className="flex items-center gap-2 mt-4 mb-10">
-            <PenTool className="h-7 w-7" />
-            <h1 className="text-xl font-semibold leading-tight">
-              IssuerWallet
-            </h1>
-          </div>
-        }
+        header={<Banner className="p-4" />}
+        footer={<UserProfile className="p-4" user={user} lang={lang} />}
       />
       <div className="h-full basis-auto grow shrink-0">{children}</div>
-      <Toaster richColors/>
     </main>
   );
 }
