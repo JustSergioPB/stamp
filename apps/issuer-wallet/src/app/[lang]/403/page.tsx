@@ -5,10 +5,10 @@ import { ArrowRight, Ban, Lock, TimerOff } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
-  lang: string;
+  params: { lang: string };
 };
 
-export default async function ForbiddenScreen({ lang }: Props) {
+export default async function Page({ params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "auth");
 
   return (

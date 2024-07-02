@@ -1,7 +1,7 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
-import { Building, Braces, User } from "lucide-react";
+import { Building } from "lucide-react";
 import UserProfile from "@components/stamp/user-profile";
 import { verifySession } from "@features/auth/server";
 import { UserMongoRepository } from "@features/auth/repositories";
@@ -21,18 +21,13 @@ export default async function Layout({ children, params: { lang } }: Props) {
 
   const user = await UserMongoRepository.getById(session.id);
 
-  const BASE_ROUTE = `/${lang}/admin`;
+  const BASE_ROUTE = `/${lang}/app`;
 
   const navLinks: NavLink[] = [
     {
-      title: "templates",
-      icon: <Braces className="h-4 w-4 mr-2" />,
-      href: `${BASE_ROUTE}/templates`,
-    },
-    {
-      title: "users",
-      icon: <User className="h-4 w-4 mr-2" />,
-      href: `${BASE_ROUTE}/users`,
+      title: "orgs",
+      icon: <Building className="h-4 w-4 mr-2" />,
+      href: `${BASE_ROUTE}/orgs`,
     },
   ];
 

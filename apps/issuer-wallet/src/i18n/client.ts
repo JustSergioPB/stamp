@@ -10,7 +10,7 @@ import { useCookies } from "react-cookie";
 import resourcesToBackend from "i18next-resources-to-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { getOptions } from "./options";
-import { cookieName, languages } from "./constants";
+import { langCookieName, languages } from "./constants";
 
 const runsOnServerSide = typeof window === "undefined";
 
@@ -37,7 +37,7 @@ export function useTranslation(
   ns: string,
   options: { [key: string]: any } = {}
 ) {
-  const [cookies, setCookie] = useCookies([cookieName]);
+  const [cookies, setCookie] = useCookies([langCookieName]);
   const ret = useTranslationOrg(ns, options);
   const { i18n } = ret;
   if (runsOnServerSide && lang && i18n.resolvedLanguage !== lang) {
@@ -54,7 +54,7 @@ export function useTranslation(
     }, [lang, i18n]);
     useEffect(() => {
       if (cookies["x-lang"] === lang) return;
-      setCookie(cookieName, lang, { path: "/" });
+      setCookie(langCookieName, lang, { path: "/" });
     }, [lang, cookies["x-lang"], setCookie, cookies]);
   }
   return ret;

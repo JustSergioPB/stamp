@@ -2,7 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SignJWT, jwtVerify } from "jose";
-import { Session, User } from "../models";
+import { Session } from "../models";
 
 type Cookie = {
   name: string;
@@ -30,13 +30,7 @@ const key = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function verifySession(): Promise<Session | null> {
   const token = cookies().get(cookie.name)?.value;
-  const session = token ? await decrypt(token) : null;
-
-  if (!session) {
-    redirect("/auth");
-  }
-
-  return session;
+  return token ? await decrypt(token) : null;
 }
 
 export async function createSession(user: Session): Promise<void> {

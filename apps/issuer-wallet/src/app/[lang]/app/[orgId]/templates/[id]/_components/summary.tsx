@@ -8,7 +8,6 @@ import { Separator } from "@components/ui/separator";
 import { TemplateSummaryView } from "@features/template/models";
 import { useTranslation } from "@i18n/server";
 import {
-  Calendar,
   CirclePlus,
   Database,
   Info,
