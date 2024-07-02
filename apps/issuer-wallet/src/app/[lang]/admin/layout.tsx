@@ -1,6 +1,6 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
-import Banner from "@components/stamp/banner";
+import Banner from "@components/admin/banner";
 import { Building } from "lucide-react";
 import UserProfile from "@components/stamp/user-profile";
 import { verifySession } from "@features/auth/server";
