@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import acceptLanguage from "accept-language";
 import { fallbackLang, languages, langCookieName } from "./i18n/constants";
 import { verifySession } from "@features/auth/server";
+import { Session } from "@features/auth/models";
 
 acceptLanguage.languages(languages);
 
@@ -28,24 +29,6 @@ export async function middleware(req: NextRequest) {
     !req.nextUrl.pathname.startsWith("/_next")
   ) {
     return NextResponse.redirect(new URL(`/${lang}${req.nextUrl.pathname}`));
-  }
-
-  const session = await verifySession();
-  const isAppRoute = "/app".includes(req.nextUrl.pathname);
-  const isAdminRoute = "/admin".includes(req.nextUrl.pathname);
-  const isAdmin = session && session.role === "superAdmin";
-  const belongsToOrg = session && session.orgId.includes(req.nextUrl.pathname);
-
-  if (isAppRoute && !session) {
-    return NextResponse.redirect(new URL(`${lang}/auth`, req.nextUrl));
-  }
-
-  if (isAdminRoute && !isAdmin) {
-    return NextResponse.redirect(new URL(`${lang}/403`, req.nextUrl));
-  }
-
-  if (!isAdmin && !belongsToOrg) {
-    return NextResponse.redirect(new URL(`${lang}/403`, req.nextUrl));
   }
 
   return NextResponse.next();

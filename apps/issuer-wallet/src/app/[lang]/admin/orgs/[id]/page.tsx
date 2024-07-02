@@ -20,7 +20,7 @@ export default async function Page({ params: { lang, id } }: Props) {
     <section className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">
       <Link
         className={cn(buttonVariants({ size: "sm", variant: "ghost" }))}
-        href={`/${lang}/app/orgs`}
+        href={`/${lang}/admin/orgs`}
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
         {t("actions.backToOrgs")}
@@ -39,7 +39,7 @@ export default async function Page({ params: { lang, id } }: Props) {
           </div>
         </div>
         <Link
-          href={`/${lang}/app/orgs/${id}/users`}
+          href={`/${lang}/admin/orgs/${id}/users`}
           className={cn(buttonVariants({ size: "sm" }))}
         >
           {t("actions.seeUsers")}

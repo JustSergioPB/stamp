@@ -53,7 +53,7 @@ export default async function Page({
 
   return (
     <div className="h-full flex flex-col gap-4 p-10">
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-between gap-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>

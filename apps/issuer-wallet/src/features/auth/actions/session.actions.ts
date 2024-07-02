@@ -33,12 +33,13 @@ export async function sendMagicLinkAction(
 
     const user = await UserMongoRepository.getByEmail(email);
     const magicUrl = await generateMagicLink(user.email, user.nonce, lang);
-    const { t } = await useTranslation("auth", lang);
+    const { t } = await useTranslation(lang, "auth");
+
     const mailConfig = {
       magicUrl: magicUrl,
       domainUrl: process.env.DOMAIN,
       ignoreText: t("magicLink.email.ignoreText"),
-      redirectText: t("magicLink.email.edirectText"),
+      redirectText: t("magicLink.email.redirectText"),
       promoText: t("magicLink.email.promoText"),
     };
 
@@ -92,6 +93,7 @@ export async function verifyMagicLinkAction(
       throw new Error("Invalid nonce");
     }
 
+    console.log(user);
     await UserMongoRepository.update(user.id, { nonce: Nonce.generate() });
     await createSession(user);
 

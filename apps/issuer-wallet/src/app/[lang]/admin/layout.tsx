@@ -15,19 +15,17 @@ type Props = {
 export default async function Layout({ children, params: { lang } }: Props) {
   const session = await verifySession();
 
-  if (!session) {
-    redirect(`${lang}/auth`);
+  if (!session || session.role !== "superAdmin") {
+    redirect(`/${lang}/auth`);
   }
 
   const user = await UserMongoRepository.getById(session.id);
-
-  const BASE_ROUTE = `/${lang}/app`;
 
   const navLinks: NavLink[] = [
     {
       title: "orgs",
       icon: <Building className="h-4 w-4 mr-2" />,
-      href: `${BASE_ROUTE}/orgs`,
+      href: `/${lang}/admin/orgs`,
     },
   ];
 

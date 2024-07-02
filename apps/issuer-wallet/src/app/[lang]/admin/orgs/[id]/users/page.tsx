@@ -21,16 +21,16 @@ import { ArrowLeft } from "lucide-react";
 
 type Props = {
   searchParams: SearchParams;
-  params: { lang: string; id: string; orgId: string };
+  params: { lang: string; id: string };
 };
 
 export default async function Page({
   searchParams,
-  params: { lang, id, orgId },
+  params: { lang, id },
 }: Props) {
   const { t } = await useTranslation(lang, "users");
   const { t: tOrgs } = await useTranslation(lang, "orgs");
-  const query = QueryMapper.fromURL<User>({ ...searchParams, orgId });
+  const query = QueryMapper.fromURL<User>({ ...searchParams, orgId: id });
   const paginatedList = await UserMongoRepository.search(query);
   const org = await OrgMongoRepository.getById(id);
 
@@ -70,7 +70,7 @@ export default async function Page({
           <BreadcrumbItem>
             <BreadcrumbLink
               className="flex items-center gap-1"
-              href={`/${lang}/app/orgs`}
+              href={`/${lang}/admin/orgs`}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               {tOrgs("actions.backToOrgs")}
@@ -78,7 +78,7 @@ export default async function Page({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/${lang}/app/orgs/${id}`}>
+            <BreadcrumbLink href={`/${lang}/admin/orgs/${id}`}>
               {org.name}
             </BreadcrumbLink>
           </BreadcrumbItem>

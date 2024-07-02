@@ -1,6 +1,5 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { SignJWT, jwtVerify } from "jose";
 import { Session } from "../models";
 
@@ -37,12 +36,10 @@ export async function createSession(user: Session): Promise<void> {
   const expires = new Date(Date.now() + cookie.duration);
   const session = await encrypt(user);
   cookies().set(cookie.name, session, { ...cookie.options, expires });
-  redirect("/app/templates");
 }
 
-export function deleteSession(): Promise<void> {
+export function deleteSession(): void {
   cookies().delete(cookie.name);
-  redirect("/auth");
 }
 
 async function encrypt(payload: Session): Promise<string> {

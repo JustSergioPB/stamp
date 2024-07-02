@@ -8,7 +8,7 @@ import { cn } from "@lib/utils";
 import { ArrowRight, HeartCrack, Loader } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   params: { lang: string };
@@ -22,7 +22,7 @@ export default function Page({ params: { lang }, searchParams }: Props) {
   const { t } = useTranslation(lang, "auth");
   const router = useRouter();
 
-  const verify = useCallback(async (token: string) => {
+  const verify = async (token: string) => {
     setLoading(true);
     const { errorCode } = await verifyMagicLinkAction(token);
     setErrorCode(errorCode);
@@ -30,13 +30,13 @@ export default function Page({ params: { lang }, searchParams }: Props) {
     if (!errorCode) {
       router.push(`/${lang}/app/templates`);
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (token && !Array.isArray(token)) {
       verify(token);
     }
-  }, [verify]);
+  }, []);
 
   return (
     <div className="h-full flex items-center justify-center">
@@ -57,7 +57,7 @@ export default function Page({ params: { lang }, searchParams }: Props) {
             <p className="text-muted-foreground w-1/3 text-center mb-16">
               {t("expired.description")}
             </p>
-            <Link className={cn(buttonVariants())} href="/auth">
+            <Link className={cn(buttonVariants())} href={`/${lang}/auth`}>
               {t("expired.button")}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Link>

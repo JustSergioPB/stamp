@@ -116,7 +116,7 @@ export class UserMongoRepository extends MongoRepository {
     return documentRef.insertedId.toString();
   }
 
-  static async update(id: string, update: UpdateUserDTO): Promise<string> {
+  static async update(id: string, update: UpdateUserDTO): Promise<void> {
     const collection = await this.connect<MongoUser>(
       UserMongoRepository.collectionName
     );
@@ -125,7 +125,7 @@ export class UserMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documentRef = await collection.updateOne(
+    await collection.updateOne(
       {
         _id: new ObjectId(id),
       },
@@ -133,11 +133,5 @@ export class UserMongoRepository extends MongoRepository {
         $set: update,
       }
     );
-
-    if (!documentRef.upsertedId) {
-      throw new Error("User not found");
-    }
-
-    return documentRef.upsertedId.toString();
   }
 }

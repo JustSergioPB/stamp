@@ -15,10 +15,10 @@ import { TemplateMongoRepository } from "@features/template/repositories";
 import { SummaryMapper } from "@features/template/utils";
 
 type Props = {
-  params: { lang: string; id: string };
+  params: { lang: string; id: string; orgId: string };
 };
 
-export default async function Page({ params: { lang, id } }: Props) {
+export default async function Page({ params: { lang, id, orgId } }: Props) {
   const { t } = await useTranslation(lang, "template");
   const detailedView = await TemplateMongoRepository.getById(id);
   const summary = SummaryMapper.fromDetailedView(detailedView);
@@ -27,7 +27,7 @@ export default async function Page({ params: { lang, id } }: Props) {
     <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">
       <Link
         className={cn(buttonVariants({ size: "sm", variant: "ghost" }))}
-        href={`/${lang}/app/templates`}
+        href={`/${lang}/app/${orgId}/templates`}
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
         {t("actions.backToTemplates")}

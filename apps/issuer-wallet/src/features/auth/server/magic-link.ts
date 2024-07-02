@@ -10,6 +10,7 @@ export async function generateMagicLink(
   nonce: number,
   lang: string
 ): Promise<string> {
+  console.log({ email, nonce });
   const token = await encrypt({ email, nonce });
   return `${domain}/${lang}/auth/magic-link?token=${token}`;
 }
