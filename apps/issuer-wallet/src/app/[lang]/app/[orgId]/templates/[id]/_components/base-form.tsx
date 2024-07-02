@@ -29,7 +29,7 @@ import { BaseZod, defaultBaseZod, baseZod } from "@features/template/models";
 import { Switch } from "@components/ui/switch";
 import { Textarea } from "@components/ui/textarea";
 import { toast } from "sonner";
-import { updateTemplateAction } from "@features/template/commands";
+import { updateTemplateAction } from "@features/template/actions";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;

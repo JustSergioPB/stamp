@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateAction } from "src/features/template/commands/template.commands";
+import { updateTemplateAction } from "src/features/template/actions/template.actions";
 import { Button } from "@components/ui/button";
 import {
   Form,

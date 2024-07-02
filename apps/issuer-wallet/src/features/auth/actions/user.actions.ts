@@ -1,14 +1,14 @@
 "use server";
 
 import { ActionResult } from "@lib/action";
-import { CreateUserDTO } from "../models";
+import { ActionCreateUserDTO, Nonce } from "../models";
 import { UserMongoRepository } from "../repositories";
 import { revalidatePath } from "next/cache";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "../server";
 
 export async function createUserAction(
-  create: CreateUserDTO
+  create: ActionCreateUserDTO
 ): Promise<ActionResult<void>> {
   try {
     const session = await verifySession();
@@ -20,6 +20,7 @@ export async function createUserAction(
     const userId = await UserMongoRepository.create({
       ...create,
       orgId: session.orgId,
+      nonce: Nonce.generate(),
     });
 
     await AuditLogMongoRepository.create({

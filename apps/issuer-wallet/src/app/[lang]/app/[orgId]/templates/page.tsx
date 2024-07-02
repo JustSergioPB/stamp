@@ -13,14 +13,17 @@ import StatusCell from "@components/stamp/status-cell";
 
 type Props = {
   searchParams: SearchParams;
-  params: { lang: string };
+  params: { lang: string; orgId: string };
 };
 
-export default async function Page({ searchParams, params: { lang } }: Props) {
+export default async function Page({
+  searchParams,
+  params: { lang, orgId },
+}: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tLang } = await useTranslation(lang, "langs");
 
-  const query = QueryMapper.fromURL<Template>(searchParams);
+  const query = QueryMapper.fromURL<Template>({ ...searchParams, orgId });
   const paginatedList = await TemplateMongoRepository.search(query);
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {

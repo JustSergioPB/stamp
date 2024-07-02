@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
-import { updateTemplateAction } from "@features/template/commands";
+import { updateTemplateAction } from "@features/template/actions";
 import {
   ContentZod,
   contentZod,

@@ -37,10 +37,9 @@ import { createUserAction } from "@features/auth/actions";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
-  orgId: string;
 }
 
-export default function AddUserButton({ lang, orgId }: Props) {
+export default function AddUserButton({ lang }: Props) {
   const { t } = useTranslation(lang, "users");
   const { t: tAction } = useTranslation(lang, "actions");
   const { t: tError } = useTranslation(lang, "errors");
@@ -56,7 +55,6 @@ export default function AddUserButton({ lang, orgId }: Props) {
     setLoading(true);
     const result = await createUserAction({
       ...formData,
-      orgId,
       profilePic: "",
     });
 
