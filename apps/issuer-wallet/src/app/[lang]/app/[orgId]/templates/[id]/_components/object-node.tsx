@@ -6,7 +6,7 @@ import TreeAngle from "@components/stamp/tree-angle";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { cn } from "@lib/utils";
-import { ContentZod, defaultJsonSchemaZod } from "@features/template/models";
+import { ContentZod, defaultJsonSchemaZod } from "@features/credentials/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   control?: Control<ContentZod, any>;

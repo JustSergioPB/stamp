@@ -19,12 +19,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
-import { updateTemplateAction } from "@features/template/actions";
+import { updateTemplateAction } from "@features/credentials/template/actions";
 import {
   ContentZod,
   contentZod,
   defaultContentZod,
-} from "@features/template/models";
+} from "@features/credentials/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
@@ -68,10 +68,7 @@ export default function ContentForm({
     <Form {...form}>
       <form
         className={cn("space-y-4", className)}
-        onSubmit={form.handleSubmit(onSubmit, () => {
-          console.log(form.getValues());
-          console.log(form.formState);
-        })}
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}

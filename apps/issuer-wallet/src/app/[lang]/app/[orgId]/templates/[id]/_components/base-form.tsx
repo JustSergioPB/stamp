@@ -25,11 +25,11 @@ import { Button } from "@components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@lib/utils";
-import { BaseZod, defaultBaseZod, baseZod } from "@features/template/models";
+import { BaseZod, defaultBaseZod, baseZod } from "@features/credentials/template/models";
 import { Switch } from "@components/ui/switch";
 import { Textarea } from "@components/ui/textarea";
 import { toast } from "sonner";
-import { updateTemplateAction } from "@features/template/actions";
+import { updateTemplateAction } from "@features/credentials/template/actions";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;

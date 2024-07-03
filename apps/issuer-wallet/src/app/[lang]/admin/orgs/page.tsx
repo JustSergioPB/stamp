@@ -2,7 +2,7 @@ import EmptyScreen from "@components/stamp/empty-screen";
 import { Org } from "@features/auth/models";
 import { OrgMongoRepository } from "@features/auth/repositories";
 import { useTranslation } from "@i18n/server";
-import { QueryMapper, SearchParams } from "@lib/query";
+import { SearchParams } from "@lib/query";
 import AddButton from "./_components/add-button";
 import StampTable, { Column } from "@components/stamp/table";
 import LinkCell from "@components/stamp/link-cell";
@@ -16,8 +16,7 @@ type Props = {
 
 export default async function Page({ searchParams, params: { lang } }: Props) {
   const { t } = await useTranslation(lang, "orgs");
-  const query = QueryMapper.fromURL<Org>(searchParams);
-  const paginatedList = await OrgMongoRepository.search(query);
+  const paginatedList = await OrgMongoRepository.search(searchParams);
 
   const columns: Column<Org>[] = [
     {

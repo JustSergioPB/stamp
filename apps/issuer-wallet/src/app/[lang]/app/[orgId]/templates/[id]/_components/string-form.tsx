@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
-import { ContentZod } from "@features/template/models";
+import { ContentZod } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/client";
 import { Control, FieldPath } from "react-hook-form";
 

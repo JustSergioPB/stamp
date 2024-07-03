@@ -49,7 +49,7 @@ import {
   DialogTrigger,
 } from "@components/ui/dialog";
 import ObjectNode from "./object-node";
-import { ContentZod } from "@features/template/models";
+import { ContentZod } from "@features/credentials/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   control?: Control<ContentZod, any>;

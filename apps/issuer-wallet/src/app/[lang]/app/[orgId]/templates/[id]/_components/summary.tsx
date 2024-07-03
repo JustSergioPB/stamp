@@ -5,7 +5,7 @@ import StatusBadge from "@components/stamp/status-badge";
 import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert";
 import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
-import { TemplateSummaryView } from "@features/template/models";
+import { TemplateSummaryView } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
 import {
   CirclePlus,

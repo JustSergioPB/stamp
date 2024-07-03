@@ -7,7 +7,7 @@ import { Badge } from "@components/ui/badge";
 import { User } from "@features/auth/models";
 import { UserMongoRepository } from "@features/auth/repositories/user-mongo.repository";
 import { useTranslation } from "@i18n/server";
-import { QueryMapper, SearchParams } from "@lib/query";
+import { SearchParams } from "@lib/query";
 
 type Props = {
   searchParams: SearchParams;
@@ -19,8 +19,7 @@ export default async function Page({
   params: { lang, orgId },
 }: Props) {
   const { t } = await useTranslation(lang, "users");
-  const query = QueryMapper.fromURL<User>(searchParams);
-  const paginatedList = await UserMongoRepository.search(query);
+  const paginatedList = await UserMongoRepository.search(searchParams);
 
   const columns: Column<User>[] = [
     {

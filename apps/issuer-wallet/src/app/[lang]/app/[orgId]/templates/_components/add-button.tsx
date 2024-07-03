@@ -1,6 +1,6 @@
 "use client";
 
-import { createTemplateAction } from "src/features/template/actions/template.actions";
+import { createTemplateAction } from "@features/credentials/template/actions/template.actions";
 import { Button } from "@components/ui/button";
 import { useTranslation } from "@i18n/client";
 import { CirclePlus, LoaderCircle } from "lucide-react";

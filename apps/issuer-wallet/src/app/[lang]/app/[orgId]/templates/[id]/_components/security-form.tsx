@@ -1,6 +1,6 @@
 "use client";
 
-import { updateTemplateAction } from "src/features/template/actions/template.actions";
+import { updateTemplateAction } from "@features/credentials/template/actions/template.actions";
 import { Button } from "@components/ui/button";
 import {
   Form,
@@ -19,7 +19,7 @@ import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { SecurityZod, securityZod } from "@features/template/models";
+import { SecurityZod, securityZod } from "@features/credentials/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;

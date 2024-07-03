@@ -11,8 +11,8 @@ import ContentForm from "./_components/content-form";
 import SecurityForm from "./_components/security-form";
 import StatusForm from "./_components/status-form";
 import ValdityForm from "./_components/validity-form";
-import { TemplateMongoRepository } from "@features/template/repositories";
-import { SummaryMapper } from "@features/template/utils";
+import { TemplateMongoRepository } from "@features/credentials/template/repositories";
+import { SummaryMapper } from "@features/credentials/template/utils";
 
 type Props = {
   params: { lang: string; id: string; orgId: string };

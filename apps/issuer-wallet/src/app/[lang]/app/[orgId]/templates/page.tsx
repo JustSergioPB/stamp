@@ -1,10 +1,10 @@
 import { useTranslation } from "@i18n/server";
 import EmptyScreen from "@components/stamp/empty-screen";
 import AddButton from "./_components/add-button";
-import { SearchParams, QueryMapper } from "@lib/query";
-import { TemplateMongoRepository } from "@features/template/repositories";
-import { Template, TemplateSummaryView } from "@features/template/models";
-import { SummaryMapper } from "@features/template/utils";
+import { SearchParams } from "@lib/query";
+import { TemplateMongoRepository } from "@features/credentials/template/repositories";
+import { TemplateSummaryView } from "@features/credentials/template/models";
+import { SummaryMapper } from "@features/credentials/template/utils";
 import StampTable, { Column } from "@components/stamp/table";
 import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
@@ -23,8 +23,10 @@ export default async function Page({
   const { t } = await useTranslation(lang, "template");
   const { t: tLang } = await useTranslation(lang, "langs");
 
-  const query = QueryMapper.fromURL<Template>({ ...searchParams, orgId });
-  const paginatedList = await TemplateMongoRepository.search(query);
+  const paginatedList = await TemplateMongoRepository.search({
+    ...searchParams,
+    orgId,
+  });
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {
     items: items.map((item) => SummaryMapper.fromTemplate(item)),

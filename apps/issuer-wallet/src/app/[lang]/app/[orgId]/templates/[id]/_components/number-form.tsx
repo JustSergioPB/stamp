@@ -9,7 +9,7 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
-import { ContentZod } from "@features/template/models";
+import { ContentZod } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/client";
 import { Control, FieldPath } from "react-hook-form";
 
