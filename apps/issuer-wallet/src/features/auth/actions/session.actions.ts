@@ -73,7 +73,7 @@ export async function sendMagicLinkAction(
 
 export async function verifyMagicLinkAction(
   token: string
-): Promise<ActionResult<void>> {
+): Promise<ActionResult<string>> {
   try {
     const secret = process.env.JWT_SECRET;
 
@@ -93,12 +93,11 @@ export async function verifyMagicLinkAction(
       throw new Error("Invalid nonce");
     }
 
-    console.log(user);
     await UserMongoRepository.update(user.id, { nonce: Nonce.generate() });
     await createSession(user);
 
     return {
-      data: null,
+      data: user.orgId,
       errorCode: null,
     };
   } catch (error) {

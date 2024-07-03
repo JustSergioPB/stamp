@@ -24,11 +24,11 @@ export default function Page({ params: { lang }, searchParams }: Props) {
 
   const verify = async (token: string) => {
     setLoading(true);
-    const { errorCode } = await verifyMagicLinkAction(token);
+    const { errorCode, data } = await verifyMagicLinkAction(token);
     setErrorCode(errorCode);
     setLoading(false);
     if (!errorCode) {
-      router.push(`/${lang}/app/templates`);
+      router.push(`/${lang}/app/${data}/templates`);
     }
   };
 

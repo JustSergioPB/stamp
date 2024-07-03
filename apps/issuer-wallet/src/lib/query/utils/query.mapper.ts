@@ -8,6 +8,7 @@ import {
 
 export class QueryMapper {
   static fromURL<T>(data: SearchParams): Query<T> {
+    //TODO: Add orgId filtering
     const { page, pageSize, orderBy, orderDirection } = data;
     return {
       page: this.parsePage(page),
