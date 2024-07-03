@@ -75,7 +75,7 @@ export default async function Page({
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        <AddButton lang={lang} />
+        <AddButton lang={lang} orgId={orgId} />
       </div>
       {paginatedList.items.length > 0 ? (
         <StampTable
@@ -86,7 +86,7 @@ export default async function Page({
         />
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
-          <AddButton lang={lang} />
+          <AddButton lang={lang} orgId={orgId} />
         </EmptyScreen>
       )}
     </div>

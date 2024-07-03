@@ -19,7 +19,7 @@ export async function createTemplateAction(): Promise<ActionResult<string>> {
 
     const templateId = await TemplateMongoRepository.create(create);
     await AuditLogMongoRepository.create({
-      userId: "",
+      userId: session.id,
       operation: "create",
       collection: "template",
       documentId: templateId,

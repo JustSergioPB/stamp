@@ -10,9 +10,10 @@ import { toast } from "sonner";
 
 type Props = {
   lang: string;
+  orgId: string;
 };
 
-export default function AddButton({ lang }: Props) {
+export default function AddButton({ lang, orgId }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
   const { t: tError } = useTranslation(lang, "errors");
@@ -28,7 +29,7 @@ export default function AddButton({ lang }: Props) {
       toast.error(tError(result.errorCode));
     } else {
       toast.success(tAction("success"));
-      router.push(`/${lang}/app/templates/${result.data}`);
+      router.push(`/${lang}/app/${orgId}/templates/${result.data}`);
     }
 
     setLoading(false);
