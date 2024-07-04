@@ -1,7 +1,7 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
-import { Braces, FileText, User } from "lucide-react";
+import { BookCopy, FileText, User } from "lucide-react";
 import UserProfile from "@components/stamp/user-profile";
 import { verifySession } from "@features/auth/server";
 import { UserMongoRepository } from "@features/auth/repositories";
@@ -27,7 +27,7 @@ export default async function Layout({
   const navLinks: NavLink[] = [
     {
       title: "templates",
-      icon: <Braces className="h-4 w-4 mr-2" />,
+      icon: <BookCopy className="h-4 w-4 mr-2" />,
       href: `/${lang}/app/${orgId}/templates`,
     },
     {

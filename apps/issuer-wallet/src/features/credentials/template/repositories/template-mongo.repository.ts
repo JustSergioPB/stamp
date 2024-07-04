@@ -1,15 +1,32 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import { MongoRepository } from "@lib/mongo";
 import { PaginatedList, SearchParams } from "@lib/query";
-import {
-  CreateTemplateDTO,
-  Template,
-  TemplateDetailedView,
-  UpdateTemplateDTO,
-} from "../models";
+import { CreateTemplateDTO, Template, TemplateDetailedView } from "../models";
 import { QueryMapper } from "@lib/mongo";
+import {
+  JsonSchemaMongo,
+  JsonSchemaMongoRepository,
+} from "@features/credentials/json-schema/repositories";
+import { JsonSchemaMapper } from "@features/credentials/json-schema/utils/json-schema-mapper";
 
-export type TemplateMongo = Omit<Template, "id" | "createdAt">;
+export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
+  _orgId: ObjectId;
+  content?: {
+    id?: boolean;
+    _jsonSchemaId: ObjectId;
+  };
+};
+
+export type TemplateMongoAggregated = WithId<
+  Omit<Template, "id" | "content" | "orgId"> & {
+    content?: {
+      id?: boolean;
+      _jsonSchemaId: ObjectId;
+    };
+    jsonSchema: WithId<JsonSchemaMongo>;
+    _orgId: ObjectId;
+  }
+>;
 export class TemplateMongoRepository extends MongoRepository {
   private static collectionName = "templates";
 
@@ -31,10 +48,24 @@ export class TemplateMongoRepository extends MongoRepository {
     const count = await collection.countDocuments();
 
     return {
-      items: documents.map(({ _id, ...document }) => ({
-        ...document,
-        id: _id.toString(),
-      })),
+      items: documents.map(({ _id, _orgId, content, ...document }) => {
+        let base: Template = {
+          ...document,
+          id: _id.toString(),
+          orgId: _orgId.toString(),
+        };
+
+        if (content) {
+          base = {
+            ...base,
+            content: {
+              id: content.id,
+              jsonSchemaId: content._jsonSchemaId.toString(),
+            },
+          };
+        }
+        return base;
+      }),
       count,
       currentPage: page,
       totalPages: Math.ceil(count / pageSize),
@@ -51,18 +82,54 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const document = await collection.findOne({
-      _id: new ObjectId(id),
-    });
+    const documents = await collection
+      .aggregate<TemplateMongoAggregated>([
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: JsonSchemaMongoRepository.collectionName,
+            localField: "content._jsonSchemaId",
+            foreignField: "_id",
+            as: "jsonSchema",
+          },
+        },
+        {
+          $unwind: {
+            path: "$jsonSchema",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ])
+      .toArray();
 
-    if (!document) {
+    if (!documents[0]) {
       throw new Error("Template not found");
     }
 
-    return {
+    const { _id, _orgId, content, jsonSchema, ...document } = documents[0];
+
+    let base: TemplateDetailedView = {
       ...document,
-      id: document._id.toString(),
+      id: _id.toString(),
+      orgId: _orgId.toString(),
     };
+
+    if (content && jsonSchema) {
+      const { _id, ...value } = jsonSchema;
+      base = {
+        ...base,
+        content: {
+          id: content.id,
+          credentialSubject: JsonSchemaMapper.toZod(value),
+        },
+      };
+    }
+
+    return base;
   }
 
   static async create(create: CreateTemplateDTO): Promise<string> {
@@ -74,15 +141,14 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documentRef = await collection.insertOne(create);
+    const documentRef = await collection.insertOne({
+      _orgId: new ObjectId(create.orgId),
+    });
 
     return documentRef.insertedId.toString();
   }
 
-  static async update(
-    id: string,
-    template: UpdateTemplateDTO
-  ): Promise<string> {
+  static async update(id: string, template: Partial<Template>): Promise<void> {
     const collection = await this.connect<TemplateMongo>(
       TemplateMongoRepository.collectionName
     );
@@ -91,15 +157,21 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documentRef = await collection.updateOne(
+    const { content, ...update } = template;
+
+    await collection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { ...template, modifiedAt: new Date().toISOString() } }
+      {
+        $set: {
+          ...update,
+          ...(content && {
+            content: {
+              id: content.id,
+              _jsonSchemaId: new ObjectId(content.jsonSchemaId),
+            },
+          }),
+        },
+      }
     );
-
-    if (!documentRef.upsertedId) {
-      throw new Error("Template not found");
-    }
-
-    return documentRef.upsertedId.toString();
   }
 }

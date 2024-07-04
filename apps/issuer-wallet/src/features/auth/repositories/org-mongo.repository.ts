@@ -4,7 +4,7 @@ import { PaginatedList, SearchParams } from "@lib/query";
 import { ObjectId } from "mongodb";
 import { CreateOrgDTO } from "../models/dtos";
 
-export type OrgMongo = Omit<Org, "id" | "createdAt">;
+export type OrgMongo = Omit<Org, "id">;
 export class OrgMongoRepository extends MongoRepository {
   private static collectionName = "orgs";
 

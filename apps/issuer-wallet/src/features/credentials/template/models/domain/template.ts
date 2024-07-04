@@ -7,11 +7,15 @@ import {
 } from "../zod";
 
 export type Template = {
-  content?: ContentZod;
   base?: BaseZod;
   security?: SecurityZod;
   status?: StatusZod;
   validity?: ValidityZod;
+  content?: Content;
   orgId: string;
   id: string;
+};
+
+export type Content = Pick<ContentZod, "id"> & {
+  jsonSchemaId: string;
 };

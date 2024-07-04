@@ -1,11 +1,11 @@
 "use client";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
+import { Avatar, AvatarFallback } from "@components/ui/avatar";
 import { Button } from "@components/ui/button";
 import { logoutAction } from "@features/auth/actions";
 import { User } from "@features/auth/models";
 import { cn } from "@lib/utils";
-import { LogOut, PenTool, Shield, ShieldCheck, ShieldHalf } from "lucide-react";
+import { LogOut, PenTool, ShieldCheck, ShieldHalf } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLDivElement> {

@@ -1,3 +1,6 @@
-import { TemplateZod } from "../zod";
+import { Template } from "../domain";
+import { ContentZod } from "../zod";
 
-export type UpdateTemplateDTO = Partial<TemplateZod>;
+export type UpdateTemplateDTO = Partial<
+  Omit<Template, "content"> & { content?: ContentZod }
+>;

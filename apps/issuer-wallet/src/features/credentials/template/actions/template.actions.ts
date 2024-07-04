@@ -3,9 +3,12 @@
 import { ActionResult } from "@lib/action";
 import { revalidatePath } from "next/cache";
 import { TemplateMongoRepository } from "../repositories";
-import { UpdateTemplateDTO } from "../models";
+import { Content, ContentZod, Template, UpdateTemplateDTO } from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
+import { ContentMapper } from "../utils";
+import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
+import { Session } from "@features/auth/models";
 
 export async function createTemplateAction(): Promise<ActionResult<string>> {
   try {
@@ -37,7 +40,7 @@ export async function createTemplateAction(): Promise<ActionResult<string>> {
 
 export async function updateTemplateAction(
   id: string,
-  template: UpdateTemplateDTO
+  update: UpdateTemplateDTO
 ): Promise<ActionResult<string>> {
   try {
     const session = await verifySession();
@@ -46,16 +49,21 @@ export async function updateTemplateAction(
       throw new Error("Forbidden");
     }
 
-    const templateId = await TemplateMongoRepository.update(id, template);
+    const { content, ...rest } = update;
+    let template: Partial<Template> = content
+      ? { ...rest, content: await createContent(content, session) }
+      : rest;
+
+    await TemplateMongoRepository.update(id, template);
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "update",
       collection: "template",
-      documentId: templateId,
-      changes: template,
+      documentId: id,
+      changes: update,
     });
-    revalidatePath(`${templateId}`);
-    return { data: templateId, errorCode: null };
+    revalidatePath(`${id}`);
+    return { data: id, errorCode: null };
   } catch (error) {
     console.error(error);
     return {
@@ -63,4 +71,26 @@ export async function updateTemplateAction(
       errorCode: "1",
     };
   }
+}
+
+async function createContent(
+  content: ContentZod,
+  session: Session
+): Promise<Content> {
+  const { id, ...credentialSubject } = content;
+  const jsonSchema = ContentMapper.toDomain(credentialSubject);
+  const jsonSchemaId = await JsonSchemaMongoRepository.create(jsonSchema);
+
+  await AuditLogMongoRepository.create({
+    userId: session.id,
+    operation: "create",
+    collection: "json-schema",
+    documentId: jsonSchemaId,
+    changes: jsonSchema,
+  });
+
+  return {
+    id,
+    jsonSchemaId,
+  };
 }

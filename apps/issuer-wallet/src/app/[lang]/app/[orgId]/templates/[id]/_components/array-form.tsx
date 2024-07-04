@@ -23,7 +23,6 @@ import {
 } from "@components/ui/select";
 import { ContentZod } from "@features/credentials/template/models";
 
-
 interface Props extends React.HTMLAttributes<HTMLElement> {
   control?: Control<ContentZod, any>;
   lang: string;
@@ -36,9 +35,9 @@ export default function ArrayForm({ control, lang, prefix, watch }: Props) {
   const minItemsPath = `${prefix}.minItems` as FieldPath<ContentZod>;
   const maxItemsPath = `${prefix}.maxItems` as FieldPath<ContentZod>;
   const uniqueItemsPath = `${prefix}.uniqueItems` as FieldPath<ContentZod>;
-  const subtypePath = `${prefix}.subtype` as FieldPath<ContentZod>;
+  const subtypePath = `${prefix}.items.type` as FieldPath<ContentZod>;
 
-  const subtype = watch(subtypePath) as JsonSchemaType | undefined;
+  const subtype = watch(subtypePath) as JsonSchemaType;
 
   function renderForm() {
     switch (subtype) {
@@ -52,11 +51,29 @@ export default function ArrayForm({ control, lang, prefix, watch }: Props) {
           />
         );
       case "number":
-        return <NumberForm control={control} lang={lang} prefix={prefix} />;
+        return (
+          <NumberForm
+            control={control}
+            lang={lang}
+            prefix={`${prefix}.items`}
+          />
+        );
       case "integer":
-        return <NumberForm control={control} lang={lang} prefix={prefix} />;
+        return (
+          <NumberForm
+            control={control}
+            lang={lang}
+            prefix={`${prefix}.items`}
+          />
+        );
       case "string":
-        return <StringForm control={control} lang={lang} prefix={prefix} />;
+        return (
+          <StringForm
+            control={control}
+            lang={lang}
+            prefix={`${prefix}.items`}
+          />
+        );
       default:
         return <></>;
     }
@@ -128,7 +145,7 @@ export default function ArrayForm({ control, lang, prefix, watch }: Props) {
       <FormField
         control={control}
         name={subtypePath}
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
@@ -149,7 +166,9 @@ export default function ArrayForm({ control, lang, prefix, watch }: Props) {
                 ))}
               </SelectContent>
             </Select>
-            <FormMessage />
+            {fieldState.error?.message && (
+              <FormMessage>{t(fieldState.error?.message)}</FormMessage>
+            )}
           </FormItem>
         )}
       />

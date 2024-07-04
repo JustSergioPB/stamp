@@ -50,9 +50,10 @@ export default function ContentForm({
 
   async function onSubmit(data: ContentZod) {
     setLoading(true);
+    console.log("data", form.getValues());
 
     const result = await updateTemplateAction(templateId, {
-      content: data,
+      content: form.getValues(),
     });
 
     if (result.errorCode) {
@@ -68,7 +69,9 @@ export default function ContentForm({
     <Form {...form}>
       <form
         className={cn("space-y-4", className)}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.error(errors);
+        })}
       >
         <FormField
           control={form.control}
@@ -98,7 +101,7 @@ export default function ContentForm({
         />
         <FormField
           control={form.control}
-          name="credentialSubject"
+          name="credentialSubject.properties"
           render={({ fieldState }) => (
             <FormItem
               className={cn(
@@ -109,7 +112,7 @@ export default function ContentForm({
               <FormLabel>{t("form.content.title")}</FormLabel>
               <FormControl>
                 <ObjectNode
-                  prefix="credentialSubject"
+                  prefix="credentialSubject.properties"
                   watch={form.watch}
                   lang={lang}
                   control={form.control}
@@ -119,7 +122,7 @@ export default function ContentForm({
                 <FormMessage>
                   {t(
                     fieldState.error.message ??
-                      "form.content.errors.credentialSubject.min"
+                      "form.content.errors.credentialSubject.invalid"
                   )}
                 </FormMessage>
               )}

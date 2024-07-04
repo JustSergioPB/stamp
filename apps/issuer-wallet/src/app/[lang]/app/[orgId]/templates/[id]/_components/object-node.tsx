@@ -6,7 +6,10 @@ import TreeAngle from "@components/stamp/tree-angle";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { cn } from "@lib/utils";
-import { ContentZod, defaultJsonSchemaZod } from "@features/credentials/template/models";
+import {
+  ContentZod,
+  defaultJsonSchemaZod,
+} from "@features/credentials/template/models";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   control?: Control<ContentZod, any>;
@@ -27,7 +30,9 @@ export default function ObjectNode({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: prefix as "credentialSubject" | `credentialSubject.${number}`,
+    name: prefix as
+      | "credentialSubject.properties"
+      | `credentialSubject.properties.${number}`,
   });
 
   return (

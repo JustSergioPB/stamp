@@ -1,14 +1,18 @@
+import { TemplateMongo } from "@features/credentials/template/repositories";
 import { MongoRepository, QueryMapper } from "@lib/mongo";
 import { PaginatedList, SearchParams } from "@lib/query";
 import { JsonSchema } from "@stamp/domain";
 import { ObjectId } from "mongodb";
 
 export type JsonSchemaMongo = JsonSchema;
+export type JsonSchemaMongoAggregated = JsonSchema & {
+  template: TemplateMongo;
+};
 
 export class JsonSchemaMongoRepository extends MongoRepository {
-  private static collectionName = "json-schema";
+  static collectionName = "json-schema";
 
-  static async create(create: SearchParams): Promise<string> {
+  static async create(create: JsonSchema): Promise<string> {
     const collection = await this.connect<JsonSchemaMongo>(
       JsonSchemaMongoRepository.collectionName
     );

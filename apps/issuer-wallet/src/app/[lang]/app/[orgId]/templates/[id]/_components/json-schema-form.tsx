@@ -35,7 +35,6 @@ import {
   useController,
 } from "react-hook-form";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
-import { Switch } from "@components/ui/switch";
 import ArrayForm from "./array-form";
 import NumberForm from "./number-form";
 import StringForm from "./string-form";
@@ -70,25 +69,33 @@ export default function JsonSchemaForm({
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
 
-  const namePath = `${prefix}.name` as FieldPath<ContentZod>;
+  const titlePath = `${prefix}.title` as FieldPath<ContentZod>;
   const typePath = `${prefix}.type` as FieldPath<ContentZod>;
-  const requiredPath = `${prefix}.required` as FieldPath<ContentZod>;
-  const subtypePath = `${prefix}.subtype` as FieldPath<ContentZod>;
+  const subtypePath = `${prefix}.items.type` as FieldPath<ContentZod>;
 
-  const name = watch(namePath) as string | undefined;
+  const title = watch(titlePath) as string | undefined;
   const type = watch(typePath) as JsonSchemaType | undefined;
   const subtype = watch(subtypePath) as JsonSchemaType | undefined;
+
   const {
-    fieldState: { error: nameError },
+    fieldState: { error: titleError },
   } = useController({
     control,
-    name: namePath,
+    name: titlePath,
   });
+
   const {
     fieldState: { error: typeError },
   } = useController({
     control,
     name: typePath,
+  });
+
+  const {
+    fieldState: { error: subtypeError },
+  } = useController({
+    control,
+    name: subtypePath,
   });
 
   function renderForm() {
@@ -140,24 +147,28 @@ export default function JsonSchemaForm({
         <Dialog>
           <DialogTrigger asChild>
             <Button
-              variant={nameError || typeError ? "destructive" : "secondary"}
+              variant={
+                titleError || typeError || (type === "array" && subtypeError)
+                  ? "destructive"
+                  : "secondary"
+              }
               size="sm"
               className="rounded-xl"
             >
               {getIcon()}
-              {name || t("form.content.property.new")}
+              {title || t("form.content.property.new")}
             </Button>
           </DialogTrigger>
           <DialogContent className="flex flex-col">
             <DialogHeader className="p-1">
               <DialogTitle>
-                {name || t("form.content.property.new")}
+                {title || t("form.content.property.new")}
               </DialogTitle>
             </DialogHeader>
             <div className="max-h-[70vh] space-y-2 overflow-y-auto p-1">
               <FormField
                 control={control}
-                name={namePath}
+                name={titlePath}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormControl>
@@ -206,27 +217,6 @@ export default function JsonSchemaForm({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={control}
-                name={requiredPath}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className="flex items-center justify-between">
-                        <FormLabel htmlFor={requiredPath}>
-                          {t("form.content.required.label")}
-                        </FormLabel>
-                        <Switch
-                          id={requiredPath}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               {renderForm()}
             </div>
             <DialogFooter>
@@ -242,11 +232,20 @@ export default function JsonSchemaForm({
           <Trash className="h-4 w-4" />
         </Button>
       </div>
-      {(type === "object" || subtype === "object") && (
+      {type === "object" && (
         <ObjectNode
           className="ml-4"
           lang={lang}
           prefix={`${prefix}.properties`}
+          watch={watch}
+          control={control}
+        />
+      )}
+      {subtype === "object" && (
+        <ObjectNode
+          className="ml-4"
+          lang={lang}
+          prefix={`${prefix}.items.properties`}
           watch={watch}
           control={control}
         />
