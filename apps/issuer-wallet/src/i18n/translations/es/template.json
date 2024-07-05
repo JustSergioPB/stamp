@@ -31,6 +31,11 @@
       "description": "Para que una plantilla esté lista para emitir credenciales, debes completar la información obligatoria"
     }
   },
+  "id": {
+    "url": "URL",
+    "did": "DID",
+    "uuid": "UUID"
+  },
   "form": {
     "base": {
       "title": "Información básica",

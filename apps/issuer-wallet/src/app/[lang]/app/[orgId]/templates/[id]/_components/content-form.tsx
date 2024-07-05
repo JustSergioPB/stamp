@@ -1,10 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,7 +13,6 @@ import { Button } from "@components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "@lib/utils";
 import { useTranslation } from "@i18n/client";
-import { Switch } from "@components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -22,9 +20,11 @@ import ObjectNode from "./object-node";
 import { updateTemplateAction } from "@features/credentials/template/actions";
 import {
   ContentZod,
+  IdZod,
   contentZod,
   defaultContentZod,
 } from "@features/credentials/template/models";
+import IdForm from "./id-form";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
@@ -48,9 +48,8 @@ export default function ContentForm({
     defaultValues: formValue ?? defaultContentZod,
   });
 
-  async function onSubmit(data: ContentZod) {
+  async function onSubmit() {
     setLoading(true);
-    console.log("data", form.getValues());
 
     const result = await updateTemplateAction(templateId, {
       content: form.getValues(),
@@ -69,35 +68,11 @@ export default function ContentForm({
     <Form {...form}>
       <form
         className={cn("space-y-4", className)}
-        onSubmit={form.handleSubmit(onSubmit, (errors) => {
-          console.error(errors);
-        })}
+        onSubmit={form.handleSubmit(onSubmit)}
       >
-        <FormField
-          control={form.control}
-          name="id"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className="flex items-center justify-between space-x-2">
-                  <div className="basis-5/6">
-                    <FormLabel htmlFor="id">
-                      {t("form.content.id.label")}
-                    </FormLabel>
-                    <FormDescription>
-                      {t("form.content.id.description")}
-                    </FormDescription>
-                  </div>
-                  <Switch
-                    id="id"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <IdForm
+          control={form.control as unknown as Control<{ id?: IdZod }, any>}
+          lang={lang}
         />
         <FormField
           control={form.control}

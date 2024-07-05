@@ -1,10 +1,8 @@
 import { z } from "zod";
+import { idZod } from "./id.zod";
 
 export const baseZod = z.object({
-  id: z.object({
-    present: z.boolean().optional(),
-    type: z.enum(["URL", "DID", "UUID"]).optional(),
-  }),
+  id: idZod.optional(),
   type: z.array(z.string()).optional(),
   name: z.string().optional(),
   description: z.string().optional(),
