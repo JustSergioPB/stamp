@@ -9,26 +9,24 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
-import { ContentZod } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/client";
-import { Control, FieldPath } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 type Props = {
-  control?: Control<ContentZod, any>;
   lang: string;
   prefix: string;
   integer?: boolean;
 };
 
-export default function NumberForm({ control, lang, prefix }: Props) {
+export default function NumberForm({ lang, prefix }: Props) {
+  const { control } = useFormContext();
   const { t } = useTranslation(lang, "template");
-  const minimumPath = `${prefix}.minimum` as FieldPath<ContentZod>;
-  const exclusiveMinimumPath =
-    `${prefix}.exclusiveMinimum` as FieldPath<ContentZod>;
-  const maximumPath = `${prefix}.maximum` as FieldPath<ContentZod>;
-  const exclusiveMaximumPath =
-    `${prefix}.exclusiveMaximum` as FieldPath<ContentZod>;
-  const multipleOfPath = `${prefix}.multipleOf` as FieldPath<ContentZod>;
+
+  const minimumPath = `${prefix}.minimum`;
+  const exclusiveMinimumPath = `${prefix}.exclusiveMinimum`;
+  const maximumPath = `${prefix}.maximum`;
+  const exclusiveMaximumPath = `${prefix}.exclusiveMaximum`;
+  const multipleOfPath = `${prefix}.multipleOf`;
 
   return (
     <>

@@ -48,6 +48,8 @@ export default function ContentForm({
     defaultValues: formValue ?? defaultContentZod,
   });
 
+  console.log(formValue);
+
   async function onSubmit() {
     setLoading(true);
 
@@ -86,12 +88,7 @@ export default function ContentForm({
             >
               <FormLabel>{t("form.content.title")}</FormLabel>
               <FormControl>
-                <ObjectNode
-                  prefix="credentialSubject.properties"
-                  watch={form.watch}
-                  lang={lang}
-                  control={form.control}
-                />
+                <ObjectNode prefix="credentialSubject.properties" lang={lang} />
               </FormControl>
               {fieldState.error && (
                 <FormMessage>

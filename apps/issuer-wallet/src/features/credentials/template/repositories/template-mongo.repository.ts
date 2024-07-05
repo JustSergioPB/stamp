@@ -1,7 +1,12 @@
 import { ObjectId, WithId } from "mongodb";
 import { MongoRepository } from "@lib/mongo";
 import { PaginatedList, SearchParams } from "@lib/query";
-import { CreateTemplateDTO, Template, TemplateDetailedView } from "../models";
+import {
+  ContentZod,
+  CreateTemplateDTO,
+  Template,
+  TemplateDetailedView,
+} from "../models";
 import { QueryMapper } from "@lib/mongo";
 import {
   JsonSchemaMongo,
@@ -12,7 +17,7 @@ import { JsonSchemaMapper } from "@features/credentials/json-schema/utils/json-s
 export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
   _orgId: ObjectId;
   content?: {
-    id?: boolean;
+    id?: ContentZod["id"];
     _jsonSchemaId: ObjectId;
   };
 };
@@ -20,7 +25,7 @@ export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
 export type TemplateMongoAggregated = WithId<
   Omit<Template, "id" | "content" | "orgId"> & {
     content?: {
-      id?: boolean;
+      id?: ContentZod["id"];
       _jsonSchemaId: ObjectId;
     };
     jsonSchema: WithId<JsonSchemaMongo>;

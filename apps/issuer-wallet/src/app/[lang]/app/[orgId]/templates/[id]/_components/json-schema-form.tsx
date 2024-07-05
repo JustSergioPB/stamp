@@ -28,12 +28,7 @@ import {
   SigmaSquare,
   Trash,
 } from "lucide-react";
-import {
-  Control,
-  FieldPath,
-  UseFormWatch,
-  useController,
-} from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
 import ArrayForm from "./array-form";
 import NumberForm from "./number-form";
@@ -48,34 +43,32 @@ import {
   DialogTrigger,
 } from "@components/ui/dialog";
 import ObjectNode from "./object-node";
-import { ContentZod } from "@features/credentials/template/models";
+import { useState } from "react";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  control?: Control<ContentZod, any>;
-  watch: UseFormWatch<ContentZod>;
   lang: string;
   prefix: string;
   onRemove: () => void;
 }
 
 export default function JsonSchemaForm({
-  control,
   lang,
   onRemove,
   prefix,
-  watch,
   className,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
+  const { control, watch, getValues } = useFormContext();
+  const [subType, setSubType] = useState<JsonSchemaType | undefined>(
+    getValues(`${prefix}.items.type`)
+  );
 
-  const titlePath = `${prefix}.title` as FieldPath<ContentZod>;
-  const typePath = `${prefix}.type` as FieldPath<ContentZod>;
-  const subtypePath = `${prefix}.items.type` as FieldPath<ContentZod>;
+  const titlePath = `${prefix}.title`;
+  const typePath = `${prefix}.type`;
 
   const title = watch(titlePath) as string | undefined;
   const type = watch(typePath) as JsonSchemaType | undefined;
-  const subtype = watch(subtypePath) as JsonSchemaType | undefined;
 
   const {
     fieldState: { error: titleError },
@@ -91,30 +84,18 @@ export default function JsonSchemaForm({
     name: typePath,
   });
 
-  const {
-    fieldState: { error: subtypeError },
-  } = useController({
-    control,
-    name: subtypePath,
-  });
-
   function renderForm() {
     switch (type) {
       case "array":
         return (
-          <ArrayForm
-            control={control}
-            lang={lang}
-            prefix={prefix}
-            watch={watch}
-          />
+          <ArrayForm lang={lang} prefix={prefix} onSubTypeChange={setSubType} />
         );
       case "number":
-        return <NumberForm control={control} lang={lang} prefix={prefix} />;
+        return <NumberForm lang={lang} prefix={prefix} />;
       case "integer":
-        return <NumberForm control={control} lang={lang} prefix={prefix} />;
+        return <NumberForm lang={lang} prefix={prefix} />;
       case "string":
-        return <StringForm control={control} lang={lang} prefix={prefix} />;
+        return <StringForm lang={lang} prefix={prefix} />;
       default:
         return <></>;
     }
@@ -147,11 +128,7 @@ export default function JsonSchemaForm({
         <Dialog>
           <DialogTrigger asChild>
             <Button
-              variant={
-                titleError || typeError || (type === "array" && subtypeError)
-                  ? "destructive"
-                  : "secondary"
-              }
+              variant={titleError || typeError ? "destructive" : "secondary"}
               size="sm"
               className="rounded-xl"
             >
@@ -237,17 +214,13 @@ export default function JsonSchemaForm({
           className="ml-4"
           lang={lang}
           prefix={`${prefix}.properties`}
-          watch={watch}
-          control={control}
         />
       )}
-      {subtype === "object" && (
+      {subType === "object" && (
         <ObjectNode
           className="ml-4"
           lang={lang}
           prefix={`${prefix}.items.properties`}
-          watch={watch}
-          control={control}
         />
       )}
     </div>

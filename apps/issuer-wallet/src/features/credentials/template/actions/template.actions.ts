@@ -6,9 +6,9 @@ import { TemplateMongoRepository } from "../repositories";
 import { Content, ContentZod, Template, UpdateTemplateDTO } from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
-import { ContentMapper } from "../utils";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
 import { Session } from "@features/auth/models";
+import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
 
 export async function createTemplateAction(): Promise<ActionResult<string>> {
   try {
@@ -77,8 +77,9 @@ async function createContent(
   content: ContentZod,
   session: Session
 ): Promise<Content> {
-  const { id, ...credentialSubject } = content;
-  const jsonSchema = ContentMapper.toDomain(credentialSubject);
+  const jsonSchema = JsonSchemaMapper.toDomain(
+    content.credentialSubject
+  ).schema;
   const jsonSchemaId = await JsonSchemaMongoRepository.create(jsonSchema);
 
   await AuditLogMongoRepository.create({
@@ -90,7 +91,7 @@ async function createContent(
   });
 
   return {
-    id,
+    id: content.id,
     jsonSchemaId,
   };
 }

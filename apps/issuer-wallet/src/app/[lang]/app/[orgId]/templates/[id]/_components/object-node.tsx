@@ -1,30 +1,22 @@
 "use client";
-import { Control, UseFormWatch, useFieldArray } from "react-hook-form";
+
+import { useFieldArray, useFormContext } from "react-hook-form";
 import JsonSchemaForm from "./json-schema-form";
 import { useTranslation } from "@i18n/client";
 import TreeAngle from "@components/stamp/tree-angle";
 import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { cn } from "@lib/utils";
-import { ContentZod } from "@features/credentials/template/models";
 import { defaultJsonSchemaZod } from "@features/credentials/json-schema/models";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  control?: Control<ContentZod, any>;
-  watch: UseFormWatch<ContentZod>;
   lang: string;
   prefix: string;
-  recursive?: boolean;
 }
 
-export default function ObjectNode({
-  control,
-  lang,
-  prefix,
-  watch,
-  className,
-}: Props) {
+export default function ObjectNode({ lang, prefix, className }: Props) {
   const { t } = useTranslation(lang, "template");
+  const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -43,7 +35,6 @@ export default function ObjectNode({
               <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
               <JsonSchemaForm
                 lang={lang}
-                watch={watch}
                 className="grow shrink-0 basis-auto"
                 prefix={`${prefix}.${index}`}
                 onRemove={() => remove(index)}

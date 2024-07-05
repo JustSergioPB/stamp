@@ -10,12 +10,12 @@ export const JSONSchemaTypes = [
 
 export type JsonSchemaType = (typeof JSONSchemaTypes)[number];
 
-export type JsonSchema = {
+export type BaseJsonSchema = {
   $schema?: "https://json-schema.org/draft/2020-12/schema";
   $id?: string;
   $ref?: string;
   $defs?: { [key: string]: JsonSchema };
-  type?: JsonSchemaType;
+  type: JsonSchemaType;
   $comment?: string;
   examples?: unknown[];
   default?: unknown;
@@ -32,8 +32,27 @@ export type JsonSchema = {
   $dynamicAnchor?: string;
   const?: unknown;
   enum?: unknown[];
+};
 
-  // === OBJECT ===
+export type NumberJsonSchema = BaseJsonSchema & {
+  type: "number" | "integer";
+  multipleOf?: number;
+  minimum?: number;
+  exclusiveMinimum?: number;
+  maximum?: number;
+  exclusiveMaximum?: number;
+};
+
+export type StringJsonSchema = BaseJsonSchema & {
+  type: "string";
+  format?: string;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+};
+
+export type ObjectJsonSchema = BaseJsonSchema & {
+  type: "object";
   properties?: { [key: string]: JsonSchema };
   patternProperties?: { [key: string]: JsonSchema };
   additionalProperties?: boolean | JsonSchema;
@@ -41,8 +60,10 @@ export type JsonSchema = {
   minProperties?: number;
   maxProperties?: number;
   required?: string[];
+};
 
-  // === ARRAY ===
+export type ArrayJsonSchema = BaseJsonSchema & {
+  type: "array";
   items?: JsonSchema | JsonSchema[];
   prefixItems?: JsonSchema[];
   unevaluatedItems?: boolean | JsonSchema;
@@ -50,17 +71,21 @@ export type JsonSchema = {
   minItems?: number;
   maxItems?: number;
   uniqueItems?: boolean;
-
-  // === STRING ===
-  minLength?: number;
-  maxLength?: number;
-  pattern?: string;
-  format?: string;
-
-  // === NUMBER / INTEGER ===
-  multipleOf?: number;
-  minimum?: number;
-  exclusiveMinimum?: number;
-  maximum?: number;
-  exclusiveMaximum?: number;
 };
+
+export type BooleanJsonSchema = BaseJsonSchema & {
+  type: "boolean";
+};
+
+export type NullJsonSchema = BaseJsonSchema & {
+  type: "null";
+};
+
+export type JsonSchema =
+  | BaseJsonSchema
+  | NumberJsonSchema
+  | StringJsonSchema
+  | ObjectJsonSchema
+  | ArrayJsonSchema
+  | BooleanJsonSchema
+  | NullJsonSchema;
