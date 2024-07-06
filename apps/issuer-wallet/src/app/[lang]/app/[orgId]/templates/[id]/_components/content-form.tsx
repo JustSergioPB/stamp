@@ -48,8 +48,6 @@ export default function ContentForm({
     defaultValues: formValue ?? defaultContentZod,
   });
 
-  console.log(formValue);
-
   async function onSubmit() {
     setLoading(true);
 

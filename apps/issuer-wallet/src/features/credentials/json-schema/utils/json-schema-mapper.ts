@@ -10,7 +10,7 @@ export class JsonSchemaMapper {
     schema: JsonSchema;
     name: string;
   } {
-    const name = this.toCamelCase(this.removeAccents(jsonSchema.title ?? ""));
+    const name = this.toPropertyKey(jsonSchema.title ?? "");
     let schema: JsonSchema = jsonSchema;
 
     switch (jsonSchema.type) {
@@ -35,6 +35,7 @@ export class JsonSchemaMapper {
       patternProperties,
       additionalProperties,
       unevaluatedProperties,
+      required,
       ...rest
     } = jsonSchema;
     const base = rest as ObjectJsonSchema;
@@ -46,6 +47,10 @@ export class JsonSchemaMapper {
         mapped[name] = schema;
       });
       base.properties = mapped;
+    }
+
+    if (required) {
+      base.required = required.map((str) => this.toPropertyKey(str));
     }
 
     if (patternProperties) {
@@ -86,12 +91,8 @@ export class JsonSchemaMapper {
     const base = rest as ArrayJsonSchema;
 
     if (items) {
-      if (typeof items === "object") {
-        const { schema } = this.toDomain(items);
-        base.items = schema;
-      } else {
-        base.items = items;
-      }
+      const { schema } = this.toDomain(items);
+      base.items = schema;
     }
 
     if (prefixItems) {
@@ -122,6 +123,12 @@ export class JsonSchemaMapper {
     }
 
     return base;
+  }
+
+  static toPropertyKey(str: string): string {
+    const withoutAccents = this.removeAccents(str);
+    const lowerCase = withoutAccents.toLowerCase();
+    return this.toCamelCase(lowerCase);
   }
 
   private static removeAccents(str: string): string {
@@ -161,6 +168,7 @@ export class JsonSchemaMapper {
       patternProperties,
       additionalProperties,
       unevaluatedProperties,
+      required,
       ...rest
     } = jsonSchema;
     const base = rest as ObjectJsonSchemaZod;
@@ -172,6 +180,12 @@ export class JsonSchemaMapper {
         mapped.push(schema);
       });
       base.properties = mapped;
+
+      if (required) {
+        base.required = required
+          .map((str) => properties[str]!.title ?? "")
+          .filter((str) => str);
+      }
     }
 
     if (patternProperties) {

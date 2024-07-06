@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
+import { Separator } from "@components/ui/separator";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -56,6 +57,42 @@ export default function ArrayForm({ lang, prefix, onSubTypeChange }: Props) {
 
   return (
     <>
+      <FormField
+        control={control}
+        name={subtypePath}
+        render={({ field, fieldState }) => (
+          <FormItem>
+            <Select
+              onValueChange={(value) => {
+                field.onChange(value);
+                onSubTypeChange && onSubTypeChange(value as JsonSchemaType);
+              }}
+              value={field.value}
+            >
+              <FormControl>
+                <div className="flex items-center justify-between">
+                  <FormLabel>{t("form.content.array.subtype.label")}</FormLabel>
+                  <SelectTrigger className="basis-2/3">
+                    <SelectValue
+                      placeholder={t("form.content.array.subtype.label")}
+                    />
+                  </SelectTrigger>
+                </div>
+              </FormControl>
+              <SelectContent>
+                {JSONSchemaTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {t("form.content.types." + type)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {fieldState.error?.message && (
+              <FormMessage>{t(fieldState.error?.message)}</FormMessage>
+            )}
+          </FormItem>
+        )}
+      />
       <FormField
         control={control}
         name={uniqueItemsPath}
@@ -117,50 +154,14 @@ export default function ArrayForm({ lang, prefix, onSubTypeChange }: Props) {
           </FormItem>
         )}
       />
-      <FormField
-        control={control}
-        name={subtypePath}
-        render={({ field, fieldState }) => (
-          <FormItem>
-            <Select
-              onValueChange={(value) => {
-                field.onChange(value);
-                onSubTypeChange && onSubTypeChange(value as JsonSchemaType);
-              }}
-              value={field.value}
-            >
-              <FormControl>
-                <div className="flex items-center justify-between">
-                  <FormLabel>{t("form.content.array.subtype.label")}</FormLabel>
-                  <SelectTrigger className="basis-2/3">
-                    <SelectValue
-                      placeholder={t("form.content.array.subtype.label")}
-                    />
-                  </SelectTrigger>
-                </div>
-              </FormControl>
-              <SelectContent>
-                {JSONSchemaTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {t("form.content.types." + type)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {fieldState.error?.message && (
-              <FormMessage>{t(fieldState.error?.message)}</FormMessage>
-            )}
-          </FormItem>
-        )}
-      />
       {(subtype === "string" ||
         subtype === "number" ||
         subtype === "integer" ||
         subtype === "array") && (
-        <div>
-          <h5 className="my-4">{t("form.content.array.subtype.properties")}</h5>
-          <div className="space-y-2">{renderForm()}</div>
-        </div>
+        <>
+          <Separator />
+          {renderForm()}
+        </>
       )}
     </>
   );

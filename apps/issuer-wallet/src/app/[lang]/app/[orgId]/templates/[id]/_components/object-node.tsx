@@ -8,6 +8,8 @@ import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { cn } from "@lib/utils";
 import { defaultJsonSchemaZod } from "@features/credentials/json-schema/models";
+import { replaceLastOccurrence } from "@lib/string";
+import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -16,14 +18,43 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 
 export default function ObjectNode({ lang, prefix, className }: Props) {
   const { t } = useTranslation(lang, "template");
-  const { control } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: prefix as
-      | "credentialSubject.properties"
-      | `credentialSubject.properties.${number}`,
+    name: prefix,
   });
+
+  const requiredPath = `${replaceLastOccurrence(prefix, "properties", "required")}`;
+  const required = getValues(requiredPath) as string[] | undefined;
+
+  //TODO: This should be in a utils function in json schema
+  function isRequired(prefix: string): boolean {
+    const title = getValues(`${prefix}.title`) as string | undefined;
+
+    if (!required) {
+      return false;
+    }
+
+    return required.some((str) => str === title);
+  }
+
+  function handleRequiredChange(value: string, checked: boolean) {
+    if (!required) {
+      setValue(requiredPath, [value]);
+      return;
+    }
+
+    if (checked) {
+      setValue(requiredPath, [...required, value]);
+      return;
+    }
+
+    setValue(
+      requiredPath,
+      required.filter((item) => item !== value)
+    );
+  }
 
   return (
     <div className={cn("grow shrink-0 basis-auto", className)}>
@@ -37,7 +68,9 @@ export default function ObjectNode({ lang, prefix, className }: Props) {
                 lang={lang}
                 className="grow shrink-0 basis-auto"
                 prefix={`${prefix}.${index}`}
+                requiredChecked={isRequired(`${prefix}.${index}`)}
                 onRemove={() => remove(index)}
+                onRequiredChange={handleRequiredChange}
               />
             </li>
           ))}

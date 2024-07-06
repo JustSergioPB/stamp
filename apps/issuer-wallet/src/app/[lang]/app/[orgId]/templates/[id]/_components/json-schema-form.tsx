@@ -44,16 +44,23 @@ import {
 } from "@components/ui/dialog";
 import ObjectNode from "./object-node";
 import { useState } from "react";
+import { Switch } from "@components/ui/switch";
+import { Separator } from "@components/ui/separator";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   prefix: string;
+  requiredChecked: boolean;
   onRemove: () => void;
+  // eslint-disable-next-line no-unused-vars
+  onRequiredChange: (value: string, checked: boolean) => void;
 }
 
 export default function JsonSchemaForm({
   lang,
   onRemove,
+  requiredChecked,
+  onRequiredChange,
   prefix,
   className,
 }: Props) {
@@ -67,8 +74,8 @@ export default function JsonSchemaForm({
   const titlePath = `${prefix}.title`;
   const typePath = `${prefix}.type`;
 
-  const title = watch(titlePath) as string | undefined;
-  const type = watch(typePath) as JsonSchemaType | undefined;
+  const title = watch(titlePath) as string;
+  const type = watch(typePath) as JsonSchemaType;
 
   const {
     fieldState: { error: titleError },
@@ -142,7 +149,7 @@ export default function JsonSchemaForm({
                 {title || t("form.content.property.new")}
               </DialogTitle>
             </DialogHeader>
-            <div className="max-h-[70vh] space-y-2 overflow-y-auto p-1">
+            <div className="max-h-[70vh] space-y-4 overflow-y-auto p-1">
               <FormField
                 control={control}
                 name={titlePath}
@@ -194,6 +201,17 @@ export default function JsonSchemaForm({
                   </FormItem>
                 )}
               />
+              <div className="flex items-center justify-between space-x-2">
+                <FormLabel htmlFor={prefix}>
+                  {t("form.content.required.label")}
+                </FormLabel>
+                <Switch
+                  id={prefix}
+                  checked={requiredChecked}
+                  onCheckedChange={(value) => onRequiredChange(title, value)}
+                />
+              </div>
+              <Separator />
               {renderForm()}
             </div>
             <DialogFooter>
