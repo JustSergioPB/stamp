@@ -26,10 +26,10 @@ export default function ObjectNode({ lang, prefix, className }: Props) {
   });
 
   const requiredPath = `${replaceLastOccurrence(prefix, "properties", "required")}`;
-  const required = getValues(requiredPath) as string[] | undefined;
 
   //TODO: This should be in a utils function in json schema
   function isRequired(prefix: string): boolean {
+    const required = getValues(requiredPath) as string[] | undefined;
     const title = getValues(`${prefix}.title`) as string | undefined;
 
     if (!required) {
@@ -40,6 +40,7 @@ export default function ObjectNode({ lang, prefix, className }: Props) {
   }
 
   function handleRequiredChange(value: string, checked: boolean) {
+    const required = getValues(requiredPath) as string[] | undefined;
     if (!required) {
       setValue(requiredPath, [value]);
       return;

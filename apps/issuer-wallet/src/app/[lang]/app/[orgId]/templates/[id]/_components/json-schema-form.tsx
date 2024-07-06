@@ -70,6 +70,8 @@ export default function JsonSchemaForm({
   const [subType, setSubType] = useState<JsonSchemaType | undefined>(
     getValues(`${prefix}.items.type`)
   );
+  //TODO: This seems like a ñapa, check later
+  const [required, setRequired] = useState<boolean>(requiredChecked);
 
   const titlePath = `${prefix}.title`;
   const typePath = `${prefix}.type`;
@@ -127,6 +129,11 @@ export default function JsonSchemaForm({
       default:
         return <CircleAlert className="h-4 w-4 mr-2" />;
     }
+  }
+
+  function handleRequiredChange(checked: boolean) {
+    setRequired(checked);
+    onRequiredChange(title, checked);
   }
 
   return (
@@ -207,8 +214,8 @@ export default function JsonSchemaForm({
                 </FormLabel>
                 <Switch
                   id={prefix}
-                  checked={requiredChecked}
-                  onCheckedChange={(value) => onRequiredChange(title, value)}
+                  checked={required}
+                  onCheckedChange={handleRequiredChange}
                 />
               </div>
               <Separator />
