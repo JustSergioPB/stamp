@@ -1,6 +1,5 @@
 import { useTranslation } from "@i18n/server";
 import { TemplateMongoRepository } from "@features/credentials/template/repositories";
-import { ContentUtils } from "@features/credentials/template/utils/content.utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,7 +21,6 @@ type Props = {
 export default async function Page({ params: { lang, id, orgId } }: Props) {
   const { t } = await useTranslation(lang, "template");
   const view = await TemplateMongoRepository.getById(id);
-  const content = ContentUtils.toZod(view.content);
 
   return (
     <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted">
@@ -66,7 +64,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
         <ContentCard
           className="basis-2/5 min-w-0"
           lang={lang}
-          value={content}
+          value={view.content}
           id={view.id}
         />
       </div>

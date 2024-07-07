@@ -17,17 +17,7 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { useTranslation } from "@i18n/client";
-import {
-  Binary,
-  CaseSensitive,
-  CircleAlert,
-  CircleSlash2,
-  List,
-  Network,
-  Sigma,
-  SigmaSquare,
-  Trash,
-} from "lucide-react";
+import { Trash } from "lucide-react";
 import { useController, useFormContext } from "react-hook-form";
 import { JSONSchemaTypes, JsonSchemaType } from "@stamp/domain";
 import ArrayForm from "./array-form";
@@ -46,6 +36,7 @@ import ObjectForm from "./object-form";
 import { useState } from "react";
 import { Switch } from "@components/ui/switch";
 import { Separator } from "@components/ui/separator";
+import { iconMap } from "./icon.map";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -110,27 +101,6 @@ export default function JsonSchemaForm({
     }
   }
 
-  function getIcon() {
-    switch (type) {
-      case "null":
-        return <CircleSlash2 className="h-4 w-4 mr-2" />;
-      case "boolean":
-        return <Binary className="h-4 w-4 mr-2" />;
-      case "object":
-        return <Network className="h-4 w-4 mr-2" />;
-      case "array":
-        return <List className="h-4 w-4 mr-2" />;
-      case "number":
-        return <Sigma className="h-4 w-4 mr-2" />;
-      case "integer":
-        return <SigmaSquare className="h-4 w-4 mr-2" />;
-      case "string":
-        return <CaseSensitive className="h-4 w-4 mr-2" />;
-      default:
-        return <CircleAlert className="h-4 w-4 mr-2" />;
-    }
-  }
-
   function handleRequiredChange(checked: boolean) {
     setRequired(checked);
     onRequiredChange(title, checked);
@@ -146,7 +116,7 @@ export default function JsonSchemaForm({
               size="sm"
               className="rounded-xl"
             >
-              {getIcon()}
+              {iconMap[type]}
               {title || t("form.content.property.new")}
             </Button>
           </DialogTrigger>

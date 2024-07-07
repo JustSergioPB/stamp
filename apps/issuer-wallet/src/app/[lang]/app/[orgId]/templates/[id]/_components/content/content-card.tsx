@@ -1,15 +1,15 @@
 import Field from "@components/stamp/field";
-
-import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import { ContentZod } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
-import { Pencil, FileQuestion, Fingerprint } from "lucide-react";
+import { FileQuestion, Fingerprint } from "lucide-react";
 import ContentForm from "./content-form";
+import { ContentDetailedView } from "@features/credentials/template/models/views/content-detailed.view";
+import { ContentUtils } from "@features/credentials/template/utils/content.utils";
+import { ObjectJsonSchemaPill } from "./json-schema-pill";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  value: ContentZod | undefined;
+  value: ContentDetailedView | undefined;
   id: string;
 }
 
@@ -21,13 +21,14 @@ export default async function ContentCard({
 }: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tWord } = await useTranslation(lang, "words");
+  const content = ContentUtils.toZod(value);
 
   return (
     <Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{t("form.content.title")}</CardTitle>
-          <ContentForm lang={lang} templateId={id} formValue={value} />
+          <ContentForm lang={lang} templateId={id} formValue={content} />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -45,7 +46,14 @@ export default async function ContentCard({
           </Field>
         </div>
         <h3>{t("form.content.title")}</h3>
-        {value ? <></> : <></>}
+        {value ? (
+          <ObjectJsonSchemaPill
+            schema={ContentUtils.removeIdFromSchema(value.credentialSubject)}
+            isFirst
+          />
+        ) : (
+          <></>
+        )}
       </CardContent>
     </Card>
   );
