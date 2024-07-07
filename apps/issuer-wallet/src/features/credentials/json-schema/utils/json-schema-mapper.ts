@@ -183,7 +183,7 @@ export class JsonSchemaMapper {
 
       if (required) {
         base.required = required
-          .map((str) => properties[str]!.title ?? "")
+          .map((str) => properties[str]?.title ?? "")
           .filter((str) => str);
       }
     }

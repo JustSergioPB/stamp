@@ -24,7 +24,7 @@ export class SummaryMapper {
       hasSecurityAssertion: !!data.security?.assertion,
       hasRevocation: !!data.status?.revocable,
       hasName: !!data.base?.name,
-      hasType: !!data.base?.type,
+      hasType: !!data.base?.type && data.base.type.length > 0,
     };
   }
 }

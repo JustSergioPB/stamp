@@ -3,43 +3,35 @@ import ChipList from "@components/stamp/chip-list";
 import Field from "@components/stamp/field";
 import StatusBadge from "@components/stamp/status-badge";
 import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert";
-import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
-import { TemplateSummaryView } from "@features/credentials/template/models";
+import { TemplateDetailedView } from "@features/credentials/template/models";
+import { SummaryMapper } from "@features/credentials/template/utils";
 import { useTranslation } from "@i18n/server";
-import {
-  CirclePlus,
-  Database,
-  Info,
-  Languages,
-  Loader,
-  User,
-} from "lucide-react";
+import { Database, Info, Languages, Loader } from "lucide-react";
+import AddButton from "./add-button";
 
 type Props = {
   lang: string;
-  summary: TemplateSummaryView;
+  view: TemplateDetailedView;
 };
 
-export default async function Summary({ lang, summary }: Props) {
-  const { t: tCredential } = await useTranslation(lang, "credential");
+export default async function Summary({ lang, view }: Props) {
   const { t: tWord } = await useTranslation(lang, "words");
   const { t: tLang } = await useTranslation(lang, "langs");
   const { t } = await useTranslation(lang, "template");
-
   const {
-    name,
     id,
-    type,
+    name,
     status,
+    type,
+    lang: summaryLang,
     hasContent,
     hasCredentialId,
     hasSecurityAssertion,
     hasRevocation,
-    lang: summaryLang,
     hasName,
     hasType,
-  } = summary;
+  } = SummaryMapper.fromDetailedView(view);
 
   return (
     <>
@@ -48,10 +40,7 @@ export default async function Summary({ lang, summary }: Props) {
           <h1 className="text-xl font-semibold mb-2">{name ?? id}</h1>
           <ChipList items={type ?? []} />
         </div>
-        <Button size="sm" disabled={status !== "ready"}>
-          <CirclePlus className="h-4 w-4 mr-2" />
-          {tCredential("actions.create")}
-        </Button>
+        <AddButton lang={lang} disabled={status !== "ready"} template={view} />
       </section>
       <Separator />
       {status === "not-ready" && (
@@ -71,9 +60,6 @@ export default async function Summary({ lang, summary }: Props) {
               value={t(status === "ready" ? "status.ready" : "status.notReady")}
               variant={status === "ready" ? "success" : "base"}
             />
-          </Field>
-          <Field label={t("summary.createdBy")} Icon={User}>
-            <p className="text-sm">John doe</p>
           </Field>
           <Field label={t("summary.lang")} Icon={Languages}>
             <p className="text-sm">{summaryLang ? tLang(summaryLang) : ""}</p>

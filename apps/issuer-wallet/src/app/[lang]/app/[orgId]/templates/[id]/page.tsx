@@ -12,7 +12,9 @@ import SecurityForm from "./_components/security-form";
 import StatusForm from "./_components/status-form";
 import ValdityForm from "./_components/validity-form";
 import { TemplateMongoRepository } from "@features/credentials/template/repositories";
-import { SummaryMapper } from "@features/credentials/template/utils";
+import { ContentZod } from "@features/credentials/template/models";
+import { ObjectJsonSchema } from "@stamp/domain";
+import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
 
 type Props = {
   params: { lang: string; id: string; orgId: string };
@@ -20,8 +22,32 @@ type Props = {
 
 export default async function Page({ params: { lang, id, orgId } }: Props) {
   const { t } = await useTranslation(lang, "template");
-  const detailedView = await TemplateMongoRepository.getById(id);
-  const summary = SummaryMapper.fromDetailedView(detailedView);
+  const view = await TemplateMongoRepository.getById(id);
+  let content: ContentZod | undefined;
+
+  if (view.content) {
+    const { credentialSubject, ...rest } = view.content;
+    const schemaWithoutId = removeIdFromSchema(
+      credentialSubject as ObjectJsonSchema
+    );
+    content = {
+      ...rest,
+      credentialSubject: JsonSchemaMapper.toZod(schemaWithoutId),
+    };
+  }
+
+  function removeIdFromSchema(schema: ObjectJsonSchema): ObjectJsonSchema {
+    const { properties, ...rest } = schema;
+    const schemaWithoutId: ObjectJsonSchema = rest;
+
+    if (properties) {
+      const { id, ...otherProps } = properties;
+      schemaWithoutId.properties = otherProps;
+      schemaWithoutId.required = schema.required?.filter((prop) => prop !== "id");
+    }
+
+    return schemaWithoutId;
+  }
 
   return (
     <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">
@@ -32,7 +58,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
         <ArrowLeft className="h-4 w-4 mr-2" />
         {t("actions.backToTemplates")}
       </Link>
-      <Summary lang={lang} summary={summary} />
+      <Summary lang={lang} view={view} />
       <Tabs defaultValue="base">
         <TabsList>
           <TabsTrigger value="base">{t("form.base.title")}</TabsTrigger>
@@ -46,7 +72,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.base.subtitle")}
           </h3>
-          <BaseForm lang={lang} templateId={id} formValue={detailedView.base} />
+          <BaseForm lang={lang} templateId={id} formValue={view.base} />
         </TabsContent>
         <TabsContent value="content" className="mt-8 w-2/3">
           <h2 className="text-lg font-semibold mb-2">
@@ -55,11 +81,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.content.subtitle")}
           </h3>
-          <ContentForm
-            lang={lang}
-            templateId={id}
-            formValue={detailedView.content}
-          />
+          <ContentForm lang={lang} templateId={id} formValue={content} />
         </TabsContent>
         <TabsContent value="security" className="mt-8 w-2/3">
           <h2 className="text-lg font-semibold mb-2">
@@ -68,11 +90,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.security.subtitle")}
           </h3>
-          <SecurityForm
-            lang={lang}
-            templateId={id}
-            formValue={detailedView.security}
-          />
+          <SecurityForm lang={lang} templateId={id} formValue={view.security} />
         </TabsContent>
         <TabsContent value="status" className="mt-8 w-2/3">
           <h2 className="text-lg font-semibold mb-2">
@@ -81,11 +99,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.status.subtitle")}
           </h3>
-          <StatusForm
-            lang={lang}
-            templateId={id}
-            formValue={detailedView.status}
-          />
+          <StatusForm lang={lang} templateId={id} formValue={view.status} />
         </TabsContent>
         <TabsContent value="validity" className="mt-8 w-2/3">
           <h2 className="text-lg font-semibold mb-2">
@@ -94,11 +108,7 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
           <h3 className="text-sm text-muted-foreground mb-8">
             {t("form.validity.subtitle")}
           </h3>
-          <ValdityForm
-            lang={lang}
-            templateId={id}
-            formValue={detailedView.validity}
-          />
+          <ValdityForm lang={lang} templateId={id} formValue={view.validity} />
         </TabsContent>
       </Tabs>
     </main>

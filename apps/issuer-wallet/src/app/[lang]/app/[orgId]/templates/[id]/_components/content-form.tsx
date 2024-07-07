@@ -51,6 +51,8 @@ export default function ContentForm({
   async function onSubmit() {
     setLoading(true);
 
+    console.log(form.getValues());
+
     const result = await updateTemplateAction(templateId, {
       content: form.getValues(),
     });

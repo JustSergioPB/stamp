@@ -12,7 +12,6 @@ import {
   JsonSchemaMongo,
   JsonSchemaMongoRepository,
 } from "@features/credentials/json-schema/repositories";
-import { JsonSchemaMapper } from "@features/credentials/json-schema/utils/json-schema-mapper";
 
 export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
   _orgId: ObjectId;
@@ -129,7 +128,10 @@ export class TemplateMongoRepository extends MongoRepository {
         ...base,
         content: {
           id: content.id,
-          credentialSubject: JsonSchemaMapper.toZod(value),
+          credentialSubject: {
+            id: _id.toString(),
+            ...value,
+          },
         },
       };
     }
@@ -162,7 +164,7 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const { content, ...update } = template;
+    const { content, id: _, ...update } = template;
 
     await collection.updateOne(
       { _id: new ObjectId(id) },

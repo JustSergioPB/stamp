@@ -1,7 +1,7 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
-import { BookCopy, FileText, User } from "lucide-react";
+import { BookCopy, User } from "lucide-react";
 import UserProfile from "@components/stamp/user-profile";
 import { verifySession } from "@features/auth/server";
 import { UserMongoRepository } from "@features/auth/repositories";
@@ -29,11 +29,6 @@ export default async function Layout({
       title: "templates",
       icon: <BookCopy className="h-4 w-4 mr-2" />,
       href: `/${lang}/app/${orgId}/templates`,
-    },
-    {
-      title: "credentials",
-      icon: <FileText className="h-4 w-4 mr-2" />,
-      href: `/${lang}/app/${orgId}/credentials`,
     },
     {
       title: "users",
