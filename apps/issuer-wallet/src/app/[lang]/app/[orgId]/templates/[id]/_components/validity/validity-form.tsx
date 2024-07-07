@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
+  defaultValiditySchema,
   ValidityZod,
   validityZod,
 } from "@features/credentials/template/models";
@@ -46,7 +47,7 @@ export default function ValdityForm({ lang, templateId, formValue }: Props) {
 
   const form = useForm<ValidityZod>({
     resolver: zodResolver(validityZod),
-    defaultValues: formValue,
+    defaultValues: formValue ?? defaultValiditySchema,
   });
 
   async function onSubmit(data: ValidityZod) {

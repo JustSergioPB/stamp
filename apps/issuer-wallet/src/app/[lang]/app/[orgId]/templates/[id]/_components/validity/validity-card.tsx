@@ -21,6 +21,27 @@ export default async function ValidityCard({
   const { t } = await useTranslation(lang, "template");
   const { t: tWord } = await useTranslation(lang, "words");
 
+  function getValidityString() {
+    if (!value) return t("form.validity.notSet");
+
+    const { years, months, days, hours, mins, secs } = value;
+
+    if (!years && !months && !days && !hours && !mins && !secs) {
+      return t("form.validity.notExpires");
+    }
+
+    let str = "";
+
+    if (years) str += `${years}a `;
+    if (months) str += `${months}m `;
+    if (days) str += `${days}d `;
+    if (hours) str += `${hours}h `;
+    if (mins) str += `${mins}m `;
+    if (secs) str += `${secs}s `;
+
+    return str;
+  }
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -31,7 +52,7 @@ export default async function ValidityCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <Field label={tWord("expiresIn")} Icon={Timer}>
-          <p className="text-sm">{value ? tWord("yes") : tWord("no")}</p>
+          <p className="text-sm">{getValidityString()}</p>
         </Field>
       </CardContent>
     </Card>

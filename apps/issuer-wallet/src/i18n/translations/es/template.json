@@ -181,6 +181,8 @@
     "validity": {
       "title": "Periodo de validez",
       "subtitle": "Configura el periodo de validez de la credencial generada a partir de esta plantilla. Si no quieres establecer un periodo de validez, déjalo en blanco.",
+      "notSet": "No configurado",
+      "notExpires": "No caduca",
       "years": {
         "label": "Años"
       },

@@ -56,7 +56,7 @@ export default async function BaseCard({
         <Field type="vertical" label={t("summary.type")} Icon={FileSignature}>
           <ChipList items={value?.type ?? []} />
         </Field>
-        <div className="flex gap-4">
+        <div className="flex gap-8">
           <div className="space-y-4 basis-1/2">
             <h3>{tWord("summary")}</h3>
             <Field label={t("summary.status")} Icon={Loader}>

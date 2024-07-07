@@ -2,27 +2,27 @@ import { z } from "zod";
 
 export const validityZod = z.object({
   years: z.number().min(1, "form.validity.errors.min").optional(),
-  months: z
+  months: z.coerce
     .number()
     .min(1, "form.validity.errors.min")
     .max(11, "form.validity.errors.max")
     .optional(),
-  days: z
+  days: z.coerce
     .number()
     .min(1, "form.validity.errors.min")
     .max(30, "form.validity.errors.max")
     .optional(),
-  hours: z
+  hours: z.coerce
     .number()
     .min(1, "form.validity.errors.min")
     .max(23, "form.validity.errors.max")
     .optional(),
-  mins: z
+  mins: z.coerce
     .number()
     .min(1, "form.validity.errors.min")
     .max(59, "form.validity.errors.max")
     .optional(),
-  secs: z
+  secs: z.coerce
     .number()
     .min(1, "form.validity.errors.min")
     .max(59, "form.validity.errors.max")
