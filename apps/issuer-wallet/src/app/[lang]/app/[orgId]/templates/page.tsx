@@ -71,7 +71,7 @@ export default async function Page({
   ];
 
   return (
-    <div className="h-full flex flex-col gap-8 p-8">
+    <div className="h-full flex flex-col gap-8 p-8 bg-muted">
       <div className="flex items-center justify-between gap-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>

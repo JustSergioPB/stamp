@@ -1,18 +1,19 @@
-import { buttonVariants } from "@components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { useTranslation } from "@i18n/server";
-import { cn } from "@lib/utils";
-import { TabsContent } from "@radix-ui/react-tabs";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import Summary from "./_components/summary";
-import BaseForm from "./_components/base-form";
-import ContentForm from "./_components/content-form";
-import SecurityForm from "./_components/security-form";
-import StatusForm from "./_components/status-form";
-import ValdityForm from "./_components/validity-form";
 import { TemplateMongoRepository } from "@features/credentials/template/repositories";
 import { ContentUtils } from "@features/credentials/template/utils/content.utils";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@components/ui/breadcrumb";
+import BaseCard from "./_components/base/base-card";
+import ValidityCard from "./_components/validity/validity-card";
+import SecurityCard from "./_components/security/security-card";
+import StatusCard from "./_components/status/status-card";
+import ContentCard from "./_components/content/content-card";
 
 type Props = {
   params: { lang: string; id: string; orgId: string };
@@ -24,67 +25,51 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
   const content = ContentUtils.toZod(view.content);
 
   return (
-    <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">
-      <Link
-        className={cn(buttonVariants({ size: "sm", variant: "ghost" }))}
-        href={`/${lang}/app/${orgId}/templates`}
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        {t("actions.backToTemplates")}
-      </Link>
-      <Summary lang={lang} view={view} />
-      <Tabs defaultValue="base">
-        <TabsList>
-          <TabsTrigger value="base">{t("form.base.title")}</TabsTrigger>
-          <TabsTrigger value="content">{t("form.content.title")}</TabsTrigger>
-          <TabsTrigger value="security">{t("form.security.title")}</TabsTrigger>
-          <TabsTrigger value="status">{t("form.status.title")}</TabsTrigger>
-          <TabsTrigger value="validity">{t("form.validity.title")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="base" className="mt-8 w-2/3">
-          <h2 className="text-lg font-semibold mb-2">{t("form.base.title")}</h2>
-          <h3 className="text-sm text-muted-foreground mb-8">
-            {t("form.base.subtitle")}
-          </h3>
-          <BaseForm lang={lang} templateId={id} formValue={view.base} />
-        </TabsContent>
-        <TabsContent value="content" className="mt-8 w-2/3">
-          <h2 className="text-lg font-semibold mb-2">
-            {t("form.content.title")}
-          </h2>
-          <h3 className="text-sm text-muted-foreground mb-8">
-            {t("form.content.subtitle")}
-          </h3>
-          <ContentForm lang={lang} templateId={id} formValue={content} />
-        </TabsContent>
-        <TabsContent value="security" className="mt-8 w-2/3">
-          <h2 className="text-lg font-semibold mb-2">
-            {t("form.security.title")}
-          </h2>
-          <h3 className="text-sm text-muted-foreground mb-8">
-            {t("form.security.subtitle")}
-          </h3>
-          <SecurityForm lang={lang} templateId={id} formValue={view.security} />
-        </TabsContent>
-        <TabsContent value="status" className="mt-8 w-2/3">
-          <h2 className="text-lg font-semibold mb-2">
-            {t("form.status.title")}
-          </h2>
-          <h3 className="text-sm text-muted-foreground mb-8">
-            {t("form.status.subtitle")}
-          </h3>
-          <StatusForm lang={lang} templateId={id} formValue={view.status} />
-        </TabsContent>
-        <TabsContent value="validity" className="mt-8 w-2/3">
-          <h2 className="text-lg font-semibold mb-2">
-            {t("form.validity.title")}
-          </h2>
-          <h3 className="text-sm text-muted-foreground mb-8">
-            {t("form.validity.subtitle")}
-          </h3>
-          <ValdityForm lang={lang} templateId={id} formValue={view.validity} />
-        </TabsContent>
-      </Tabs>
+    <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/${lang}/app/${orgId}/templates`}>
+              {t("title")}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{view.base?.name ?? view.id}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="flex gap-8">
+        <div className="basis-3/5 space-y-8">
+          <BaseCard
+            lang={lang}
+            value={view.base}
+            id={view.id}
+            hasContent={!!view.content}
+          />
+          <ValidityCard lang={lang} value={view.validity} id={view.id} />
+          <div className="flex gap-8">
+            <SecurityCard
+              className="basis-1/2"
+              lang={lang}
+              value={view.security}
+              id={view.id}
+            />
+            <StatusCard
+              className="basis-1/2"
+              lang={lang}
+              value={view.status}
+              id={view.id}
+            />
+          </div>
+        </div>
+        <ContentCard
+          className="basis-2/5 min-w-0"
+          lang={lang}
+          value={content}
+          id={view.id}
+        />
+      </div>
     </main>
   );
 }

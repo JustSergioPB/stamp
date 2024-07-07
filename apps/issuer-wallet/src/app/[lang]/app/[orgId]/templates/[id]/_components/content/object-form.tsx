@@ -15,7 +15,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   prefix: string;
 }
 
-export default function ObjectNode({ lang, prefix, className }: Props) {
+export default function ObjectForm({ lang, prefix, className }: Props) {
   const { t } = useTranslation(lang, "template");
   const { control, setValue, getValues } = useFormContext();
 

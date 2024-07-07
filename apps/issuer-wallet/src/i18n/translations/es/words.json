@@ -1,4 +1,12 @@
 {
   "compulsory": "Obligatorio",
-  "recommended": "Recomendado"
+  "recommended": "Recomendado",
+  "yes": "Sí",
+  "no": "No",
+  "identification": "Identificación",
+  "identifiable": "Identificable",
+  "idType": "Tipo de identificador",
+  "active": "Activo",
+  "expiresIn": "Caduca en",
+  "summary": "Resumen"
 }

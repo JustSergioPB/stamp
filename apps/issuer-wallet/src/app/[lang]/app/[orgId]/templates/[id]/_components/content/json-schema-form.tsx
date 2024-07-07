@@ -42,7 +42,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@components/ui/dialog";
-import ObjectNode from "./object-node";
+import ObjectForm from "./object-form";
 import { useState } from "react";
 import { Switch } from "@components/ui/switch";
 import { Separator } from "@components/ui/separator";
@@ -235,14 +235,14 @@ export default function JsonSchemaForm({
         </Button>
       </div>
       {type === "object" && (
-        <ObjectNode
+        <ObjectForm
           className="ml-4"
           lang={lang}
           prefix={`${prefix}.properties`}
         />
       )}
       {subType === "object" && (
-        <ObjectNode
+        <ObjectForm
           className="ml-4"
           lang={lang}
           prefix={`${prefix}.items.properties`}
