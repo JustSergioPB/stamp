@@ -17,7 +17,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import ObjectNode from "./object-node";
-import { updateTemplateAction } from "@features/credentials/template/actions";
+import {
+  updateContentAction,
+  updateTemplateAction,
+} from "@features/credentials/template/actions";
 import {
   ContentZod,
   IdZod,
@@ -51,11 +54,7 @@ export default function ContentForm({
   async function onSubmit() {
     setLoading(true);
 
-    console.log(form.getValues());
-
-    const result = await updateTemplateAction(templateId, {
-      content: form.getValues(),
-    });
+    const result = await updateContentAction(templateId, form.getValues());
 
     if (result.errorCode) {
       toast.error(tError(result.errorCode));

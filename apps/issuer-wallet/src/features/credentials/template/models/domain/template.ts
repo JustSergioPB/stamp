@@ -1,10 +1,5 @@
-import {
-  BaseZod,
-  ContentZod,
-  SecurityZod,
-  StatusZod,
-  ValidityZod,
-} from "../zod";
+import { BaseZod, SecurityZod, StatusZod, ValidityZod } from "../zod";
+import { Content } from "./content";
 
 export type Template = {
   base?: BaseZod;
@@ -14,8 +9,4 @@ export type Template = {
   content?: Content;
   orgId: string;
   id: string;
-};
-
-export type Content = Pick<ContentZod, "id"> & {
-  jsonSchemaId: string;
 };

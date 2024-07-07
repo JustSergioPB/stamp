@@ -12,9 +12,7 @@ import SecurityForm from "./_components/security-form";
 import StatusForm from "./_components/status-form";
 import ValdityForm from "./_components/validity-form";
 import { TemplateMongoRepository } from "@features/credentials/template/repositories";
-import { ContentZod } from "@features/credentials/template/models";
-import { ObjectJsonSchema } from "@stamp/domain";
-import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
+import { ContentUtils } from "@features/credentials/template/utils/content.utils";
 
 type Props = {
   params: { lang: string; id: string; orgId: string };
@@ -23,31 +21,7 @@ type Props = {
 export default async function Page({ params: { lang, id, orgId } }: Props) {
   const { t } = await useTranslation(lang, "template");
   const view = await TemplateMongoRepository.getById(id);
-  let content: ContentZod | undefined;
-
-  if (view.content) {
-    const { credentialSubject, ...rest } = view.content;
-    const schemaWithoutId = removeIdFromSchema(
-      credentialSubject as ObjectJsonSchema
-    );
-    content = {
-      ...rest,
-      credentialSubject: JsonSchemaMapper.toZod(schemaWithoutId),
-    };
-  }
-
-  function removeIdFromSchema(schema: ObjectJsonSchema): ObjectJsonSchema {
-    const { properties, ...rest } = schema;
-    const schemaWithoutId: ObjectJsonSchema = rest;
-
-    if (properties) {
-      const { id, ...otherProps } = properties;
-      schemaWithoutId.properties = otherProps;
-      schemaWithoutId.required = schema.required?.filter((prop) => prop !== "id");
-    }
-
-    return schemaWithoutId;
-  }
+  const content = ContentUtils.toZod(view.content);
 
   return (
     <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden">

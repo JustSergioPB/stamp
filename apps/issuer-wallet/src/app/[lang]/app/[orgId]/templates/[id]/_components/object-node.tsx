@@ -8,8 +8,7 @@ import { Button } from "@components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { cn } from "@lib/utils";
 import { defaultJsonSchemaZod } from "@features/credentials/json-schema/models";
-import { replaceLastOccurrence } from "@lib/string";
-import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
+import { replaceLastOccurrence } from "@lib/typescript";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
