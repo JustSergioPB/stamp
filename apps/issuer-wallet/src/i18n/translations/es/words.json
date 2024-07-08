@@ -8,5 +8,6 @@
   "idType": "Tipo de identificador",
   "active": "Activo",
   "expiresIn": "Caduca en",
-  "summary": "Resumen"
+  "summary": "Resumen",
+  "logout": "Cerrar sesión"
 }
