@@ -81,7 +81,7 @@ export default function ContentForm({ lang, templateId, formValue }: Props) {
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="max-h-[80vh] overflow-y-auto space-y-4">
+            <div className="max-h-[70vh] overflow-y-auto space-y-4">
               <IdForm
                 control={
                   form.control as unknown as Control<{ id?: IdZod }, any>

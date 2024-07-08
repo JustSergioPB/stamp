@@ -3,8 +3,6 @@ export function isObject(obj: any): boolean {
 }
 
 export function deepEqual(obj1: any, obj2: any): boolean {
-  console.log("obj1", Object.keys(obj1));
-  console.log("obj2", Object.keys(obj2));
   if (obj1 === obj2) {
     return true;
   }

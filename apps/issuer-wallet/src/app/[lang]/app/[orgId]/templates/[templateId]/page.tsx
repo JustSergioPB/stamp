@@ -15,15 +15,17 @@ import StatusCard from "./_components/status/status-card";
 import ContentCard from "./_components/content/content-card";
 
 type Props = {
-  params: { lang: string; id: string; orgId: string };
+  params: { lang: string; templateId: string; orgId: string };
 };
 
-export default async function Page({ params: { lang, id, orgId } }: Props) {
+export default async function Page({
+  params: { lang, templateId, orgId },
+}: Props) {
   const { t } = await useTranslation(lang, "template");
-  const view = await TemplateMongoRepository.getById(id);
+  const view = await TemplateMongoRepository.getById(templateId);
 
   return (
-    <main className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted">
+    <div className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -68,6 +70,6 @@ export default async function Page({ params: { lang, id, orgId } }: Props) {
           id={view.id}
         />
       </div>
-    </main>
+    </div>
   );
 }

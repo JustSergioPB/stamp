@@ -155,6 +155,24 @@ export class TemplateMongoRepository extends MongoRepository {
     return documentRef.insertedId.toString();
   }
 
+  static async getName(id: string): Promise<string | undefined> {
+    const collection = await this.connect<TemplateMongo>(
+      TemplateMongoRepository.collectionName
+    );
+
+    if (!collection) {
+      throw new Error("Failed to retrieve collection");
+    }
+
+    const document = await collection.findOne({ _id: new ObjectId(id) });
+
+    if (!document) {
+      throw new Error("Template not found");
+    }
+
+    return document.base?.name;
+  }
+
   static async update(id: string, template: Partial<Template>): Promise<void> {
     const collection = await this.connect<TemplateMongo>(
       TemplateMongoRepository.collectionName
