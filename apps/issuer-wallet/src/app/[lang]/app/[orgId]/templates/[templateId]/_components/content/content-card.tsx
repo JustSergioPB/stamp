@@ -49,7 +49,6 @@ export default async function ContentCard({
         {value ? (
           <ObjectJsonSchemaPill
             schema={ContentUtils.removeIdFromSchema(value.credentialSubject)}
-            isFirst
           />
         ) : (
           <></>

@@ -24,11 +24,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ObjectJsonSchemaForm from "./object-json-schema-form";
+import { ContentUtils } from "@features/credentials/template/utils/content.utils";
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   template: TemplateDetailedView;
   lang: string;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 export default function AddButton({ lang, disabled, template }: Props) {
@@ -37,17 +38,17 @@ export default function AddButton({ lang, disabled, template }: Props) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const withOutId = ContentUtils.removeIdFromSchema(
+    template.content?.credentialSubject as ObjectJsonSchema
+  );
+
   const form = useForm({
-    resolver: zodResolver(
-      getZodObject(
-        template.content?.credentialSubject as ObjectJsonSchema,
-        true
-      )
-    ),
+    resolver: zodResolver(getZodObject(withOutId, true)),
   });
 
   function handleSubmit() {
     const data = form.getValues();
+    console.log(data);
   }
 
   function getZodString(schema: StringJsonSchema, required: boolean) {
@@ -268,25 +269,27 @@ export default function AddButton({ lang, disabled, template }: Props) {
           {t("actions.create")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-full w-full">
+      <DialogContent>
         <DialogTitle>{template.base?.name ?? t("verifiable")}</DialogTitle>
         <Form {...form}>
           <form
             className="space-y-4"
-            onSubmit={form.handleSubmit(handleSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit, () => {
+              console.log("error");
+            })}
           >
             <ObjectJsonSchemaForm
               lang={lang}
-              jsonSchema={
-                template.content?.credentialSubject as ObjectJsonSchema
-              }
+              jsonSchema={withOutId}
               fieldName="credentialSubject"
+              className="max-h-[70vh] overflow-y-auto overflow-x-hidden"
             />
             <DialogFooter>
               <DialogFooter>
                 <Button
                   variant="ghost"
                   type="reset"
+                  className="max-h-[70vh] overflow-y-auto px-1"
                   onClick={() => setOpen(false)}
                   disabled={loading}
                 >

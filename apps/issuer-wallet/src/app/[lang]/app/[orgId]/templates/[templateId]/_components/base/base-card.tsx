@@ -42,10 +42,6 @@ export default async function BaseCard({
           <CardTitle>{value?.name ?? id}</CardTitle>
           <div className="flex items-center gap-4">
             <BaseForm lang={lang} templateId={id} formValue={value} />
-            <Button size="sm">
-              <CirclePlus className="h-4 w-4 mr-2" />
-              Emitir credencial
-            </Button>
           </div>
         </div>
       </CardHeader>

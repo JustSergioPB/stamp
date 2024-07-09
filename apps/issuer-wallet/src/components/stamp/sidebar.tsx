@@ -27,6 +27,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   footer?: ReactNode;
   dictionary: string;
   size?: "compact" | "extended";
+  exact?: boolean;
 }
 
 export default function Sidebar({
@@ -37,9 +38,14 @@ export default function Sidebar({
   footer,
   dictionary,
   size = "compact",
+  exact = false,
 }: Props) {
   const pathname = usePathname();
   const { t } = useTranslation(lang, dictionary);
+
+  function isSelected(href: string) {
+    return exact ? pathname === href : pathname.includes(href);
+  }
 
   return (
     <div
@@ -52,14 +58,13 @@ export default function Sidebar({
       <nav className="grid content-start gap-2 grow shrink-0 basis-auto py-8">
         {links.map((link, index) =>
           size === "compact" ? (
-            <TooltipProvider delayDuration={0}>
+            <TooltipProvider delayDuration={0} key={index}>
               <Tooltip>
                 <TooltipTrigger>
                   <Link
-                    key={index}
                     href={link.href}
                     className={cn(
-                      pathname.includes(link.href)
+                      isSelected(link.href)
                         ? buttonVariants({ variant: "default", size: "icon" })
                         : buttonVariants({ variant: "ghost", size: "icon" })
                     )}
@@ -77,10 +82,10 @@ export default function Sidebar({
               key={index}
               href={link.href}
               className={cn(
-                pathname.includes(link.href)
+                isSelected(link.href)
                   ? buttonVariants({ variant: "default", size: "sm" })
                   : buttonVariants({ variant: "ghost", size: "sm" }),
-                "justify-start"
+                "justify-start gap-2"
               )}
             >
               {link.icon}

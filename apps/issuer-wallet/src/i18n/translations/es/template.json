@@ -3,6 +3,8 @@
   "cta": "Crea, edita y gestiona plantillas aquí",
   "add": "Añadir plantilla",
   "create": "Crear plantilla",
+  "overview": "Vista general",
+  "credentials": "Credenciales",
   "summary": {
     "id": "Id",
     "name": "Nombre",

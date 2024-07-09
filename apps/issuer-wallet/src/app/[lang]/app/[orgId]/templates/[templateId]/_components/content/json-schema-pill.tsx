@@ -1,23 +1,51 @@
-import { JsonSchema, ObjectJsonSchema } from "@stamp/domain";
+import { ArrayJsonSchema, JsonSchema, ObjectJsonSchema } from "@stamp/domain";
 import { iconMap } from "./icon.map";
 import TreeAngle from "@components/stamp/tree-angle";
-import { cn } from "@lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  schema: JsonSchema;
+  jsonSchema: JsonSchema;
+  isLast?: boolean;
 }
 
-export default function JsonSchemaPill({ schema, className }: Props) {
+export default function JsonSchemaPill({
+  jsonSchema,
+  className,
+  isLast,
+}: Props) {
+  let children;
+
+  if (jsonSchema.type === "object") {
+    children = jsonSchema as ObjectJsonSchema;
+  }
+
+  if (jsonSchema.type === "array") {
+    const arrayJsonSchema = jsonSchema as ArrayJsonSchema;
+
+    if (
+      arrayJsonSchema.items &&
+      !Array.isArray(arrayJsonSchema.items) &&
+      arrayJsonSchema.items.type === "object"
+    ) {
+      children = arrayJsonSchema.items as ObjectJsonSchema;
+    }
+  }
+
+  function renderPill() {
+    return (
+      <div className="inline-flex items-center bg-muted rounded-xl py-2 px-3">
+        {iconMap[jsonSchema.type]}
+        <p className="text-sm">{jsonSchema.title}</p>
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
-      <div className="inline-flex items-center bg-muted rounded-xl py-2 px-3">
-        {iconMap[schema.type]}
-        <p className="text-sm">{schema.title}</p>
-      </div>
-      {schema.type === "object" && (
+      {isLast ? <TreeAngle>{renderPill()}</TreeAngle> : renderPill()}
+      {children && (
         <ObjectJsonSchemaPill
-          className="ml-4"
-          schema={schema as ObjectJsonSchema}
+          className={isLast ? "ml-8" : "ml-4"}
+          jsonSchema={children}
         />
       )}
     </div>
@@ -25,54 +53,45 @@ export default function JsonSchemaPill({ schema, className }: Props) {
 }
 
 interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  schema: ObjectJsonSchema;
-  isFirst?: boolean;
+  jsonSchema: ObjectJsonSchema;
 }
 
-export function ObjectJsonSchemaPill({
-  schema,
-  className,
-  isFirst,
-}: ItemProps) {
-  if (!schema.properties) {
+export function ObjectJsonSchemaPill({ jsonSchema, className }: ItemProps) {
+  if (!jsonSchema.properties) {
     return <></>;
   }
 
-  const keys = Object.keys(schema.properties);
-  const lastKey = keys[keys.length - 1];
+  const keys = Object.keys(jsonSchema.properties);
+  const lastKey = keys.pop();
+
+  function renderListItem(key: string) {
+    if (!jsonSchema.properties || !jsonSchema.properties[key]) return <></>;
+
+    return (
+      <li key={key} className="flex items-start first:mt-2">
+        <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
+        <JsonSchemaPill key={key} jsonSchema={jsonSchema.properties[key]} />
+      </li>
+    );
+  }
+
+  function renderLast() {
+    if (!lastKey || !jsonSchema.properties?.[lastKey]) return <></>;
+
+    return (
+      <JsonSchemaPill jsonSchema={jsonSchema.properties[lastKey]} isLast />
+    );
+  }
 
   return (
-    <div className={cn("grow shrink-0 basis-auto", className)}>
+    <div className={className}>
       <div className="flex">
         <span className="border-l-2 border-l-neutral-300 inline-block"></span>
-        <ul className="w-full space-y-2">
-          {keys.map(
-            (key, index) =>
-              schema.properties?.[key] &&
-              index !== keys.length - 1 && (
-                <li key={key} className="flex items-start first:mt-2">
-                  <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
-                  <JsonSchemaPill
-                    className="grow shrink-0 basis-auto"
-                    key={key}
-                    schema={schema.properties[key]}
-                  />
-                </li>
-              )
-          )}
+        <ul className="w-full space-y-2 mb-2">
+          {keys.map((key) => renderListItem(key))}
         </ul>
       </div>
-      {!isFirst
-        ? lastKey &&
-          schema.properties?.[lastKey] && (
-            <TreeAngle>
-              <JsonSchemaPill schema={schema.properties[lastKey]} />
-            </TreeAngle>
-          )
-        : lastKey &&
-          schema.properties?.[lastKey] && (
-            <JsonSchemaPill schema={schema.properties[lastKey]} />
-          )}
+      {renderLast()}
     </div>
   );
 }

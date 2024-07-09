@@ -1,3 +1,4 @@
+import EmptyScreen from "@components/stamp/empty-screen";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,7 +10,8 @@ import {
 import { TemplateMongoRepository } from "@features/credentials/template/repositories";
 import { useTranslation } from "@i18n/server";
 import { SearchParams } from "@lib/query";
-import { t } from "i18next";
+import AddButton from "./_components/add-button";
+import { CredentialMongoRepository } from "@features/credentials/credential/repositories";
 
 type Props = {
   searchParams: SearchParams;
@@ -22,10 +24,11 @@ export default async function Page({
 }: Props) {
   const { t } = await useTranslation(lang, "credential");
   const { t: tTemplate } = await useTranslation(lang, "template");
-  const name = await TemplateMongoRepository.getName(templateId);
+  const view = await TemplateMongoRepository.getById(templateId);
+  const paginatedList = await CredentialMongoRepository.search(searchParams);
 
   return (
-    <div className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted">
+    <div className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted flex flex-col">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -38,7 +41,7 @@ export default async function Page({
             <BreadcrumbLink
               href={`/${lang}/app/${orgId}/templates/${templateId}`}
             >
-              {name ?? templateId}
+              {view.base?.name ?? templateId}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -47,6 +50,20 @@ export default async function Page({
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
+          <p className=" text-neutral-500">{t("cta")}</p>
+        </div>
+        <AddButton lang={lang} template={view} />
+      </div>
+      {paginatedList.items.length > 0 ? (
+        <></>
+      ) : (
+        <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
+          <AddButton lang={lang} template={view} />
+        </EmptyScreen>
+      )}
     </div>
   );
 }
