@@ -1,5 +1,4 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
-import { TemplateMongoRepository } from "@features/credentials/template/repositories";
 import { Book, FileStack } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -14,7 +13,7 @@ export default async function Layout({
 }: Props) {
   const navLinks: NavLink[] = [
     {
-      title: "overview",
+      title: "template",
       icon: <Book className="h-4 w-4" />,
       href: `/${lang}/app/${orgId}/templates/${templateId}`,
     },
@@ -25,14 +24,9 @@ export default async function Layout({
     },
   ];
 
-  const view = await TemplateMongoRepository.getById(templateId);
-
   return (
     <div className="h-full overflow-hidden flex">
       <Sidebar
-        header={
-          <h1 className="text-lg font-bold">{view.base?.name ?? view.id}</h1>
-        }
         lang={lang}
         links={navLinks}
         dictionary="template"

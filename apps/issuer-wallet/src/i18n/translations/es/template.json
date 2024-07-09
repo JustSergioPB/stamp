@@ -5,6 +5,7 @@
   "create": "Crear plantilla",
   "overview": "Vista general",
   "credentials": "Credenciales",
+  "template": "Plantilla",
   "summary": {
     "id": "Id",
     "name": "Nombre",

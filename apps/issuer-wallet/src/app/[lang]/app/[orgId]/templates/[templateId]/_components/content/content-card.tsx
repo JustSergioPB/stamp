@@ -6,6 +6,7 @@ import ContentForm from "./content-form";
 import { ContentDetailedView } from "@features/credentials/template/models/views/content-detailed.view";
 import { ContentUtils } from "@features/credentials/template/utils/content.utils";
 import { ObjectJsonSchemaPill } from "./json-schema-pill";
+import { ObjectJsonSchema } from "@stamp/domain";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
@@ -22,6 +23,13 @@ export default async function ContentCard({
   const { t } = await useTranslation(lang, "template");
   const { t: tWord } = await useTranslation(lang, "words");
   const content = ContentUtils.toZod(value);
+
+  function renderContent() {
+    if (!value) return <></>;
+    const withOutId = ContentUtils.removeIdFromSchema(value.credentialSubject);
+
+    return <ObjectJsonSchemaPill jsonSchema={withOutId} />;
+  }
 
   return (
     <Card className={className}>
@@ -46,13 +54,7 @@ export default async function ContentCard({
           </Field>
         </div>
         <h3>{t("form.content.title")}</h3>
-        {value ? (
-          <ObjectJsonSchemaPill
-            schema={ContentUtils.removeIdFromSchema(value.credentialSubject)}
-          />
-        ) : (
-          <></>
-        )}
+        {renderContent()}
       </CardContent>
     </Card>
   );
