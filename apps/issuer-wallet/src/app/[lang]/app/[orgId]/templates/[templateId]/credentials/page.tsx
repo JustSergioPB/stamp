@@ -12,6 +12,8 @@ import { useTranslation } from "@i18n/server";
 import { SearchParams } from "@lib/query";
 import AddButton from "./_components/add-button";
 import { CredentialMongoRepository } from "@features/credentials/credential/repositories";
+import { ContentUtils } from "@features/credentials/template/utils/content.utils";
+import { JsonSchema } from "@stamp/domain";
 
 type Props = {
   searchParams: SearchParams;
@@ -26,6 +28,12 @@ export default async function Page({
   const { t: tTemplate } = await useTranslation(lang, "template");
   const view = await TemplateMongoRepository.getById(templateId);
   const paginatedList = await CredentialMongoRepository.search(searchParams);
+  let jsonSchema: JsonSchema | undefined;
+  if (view.content?.credentialSubject) {
+    jsonSchema = ContentUtils.removeIdFromSchema(
+      view.content.credentialSubject
+    );
+  }
 
   return (
     <div className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted flex flex-col">
@@ -55,15 +63,17 @@ export default async function Page({
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        <AddButton lang={lang} template={view} />
+        {jsonSchema && <AddButton lang={lang} jsonSchema={jsonSchema} />}
       </div>
       {paginatedList.items.length > 0 ? (
         <></>
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
-          <AddButton lang={lang} template={view} />
+          {jsonSchema && <AddButton lang={lang} jsonSchema={jsonSchema} />}
         </EmptyScreen>
       )}
     </div>
   );
 }
+
+//TODO: Instead of empty screen if not content defined print alert

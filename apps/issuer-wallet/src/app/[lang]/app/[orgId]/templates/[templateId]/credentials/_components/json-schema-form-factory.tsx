@@ -30,28 +30,30 @@ import { iconMap } from "../../_components/content/icon.map";
 import TreeAngle from "@components/stamp/tree-angle";
 import { cn } from "@lib/utils";
 
-function Field({
-  schema,
-  prefix,
-  lang,
-  isLast,
-  className,
-}: {
-  schema: JsonSchema;
+type FactoryProps = {
+  jsonSchema: JsonSchema;
   prefix: string;
   lang: string;
   isLast?: boolean;
   className?: string;
-}) {
+};
+
+export function JsonSchemaFormFactory({
+  jsonSchema,
+  prefix,
+  lang,
+  isLast,
+  className,
+}: FactoryProps) {
   const { control } = useFormContext();
 
   function renderField(field: ControllerRenderProps<FieldValues, string>) {
-    switch (schema.type) {
+    switch (jsonSchema.type) {
       case "object":
         return (
           <ObjectJsonSchemaForm
             lang={lang}
-            jsonSchema={schema as ObjectJsonSchema}
+            jsonSchema={jsonSchema as ObjectJsonSchema}
             fieldName={prefix}
             isLast={isLast}
           />
@@ -60,7 +62,7 @@ function Field({
         return (
           <ArrayJsonSchemaForm
             lang={lang}
-            jsonSchema={schema as ArrayJsonSchema}
+            jsonSchema={jsonSchema as ArrayJsonSchema}
             fieldName={prefix}
             isLast={isLast}
           />
@@ -68,7 +70,7 @@ function Field({
       case "boolean":
         return (
           <BooleanJsonSchemaForm
-            jsonSchema={schema as BooleanJsonSchema}
+            jsonSchema={jsonSchema as BooleanJsonSchema}
             field={field}
             isLast={isLast}
           />
@@ -76,7 +78,7 @@ function Field({
       case "string":
         return (
           <StringJsonSchemaForm
-            jsonSchema={schema as StringJsonSchema}
+            jsonSchema={jsonSchema as StringJsonSchema}
             field={field}
             isLast={isLast}
           />
@@ -84,7 +86,7 @@ function Field({
       case "number":
         return (
           <NumberJsonSchemaForm
-            jsonSchema={schema as NumberJsonSchema}
+            jsonSchema={jsonSchema as NumberJsonSchema}
             field={field}
             isLast={isLast}
           />
@@ -92,7 +94,7 @@ function Field({
       case "integer":
         return (
           <NumberJsonSchemaForm
-            jsonSchema={schema as NumberJsonSchema}
+            jsonSchema={jsonSchema as NumberJsonSchema}
             field={field}
             isLast={isLast}
           />
@@ -147,7 +149,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isLast?: boolean;
 }
 
-export default function ObjectJsonSchemaForm({
+export function ObjectJsonSchemaForm({
   jsonSchema,
   fieldName,
   className,
@@ -165,8 +167,8 @@ export default function ObjectJsonSchemaForm({
     return (
       <li key={key} className="flex items-start first:mt-2">
         <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
-        <Field
-          schema={jsonSchema.properties[key]}
+        <JsonSchemaFormFactory
+          jsonSchema={jsonSchema.properties[key]}
           prefix={`${fieldName}.${key}`}
           lang={lang}
         />
@@ -178,8 +180,8 @@ export default function ObjectJsonSchemaForm({
     if (!lastKey || !jsonSchema.properties?.[lastKey]) return <></>;
 
     return (
-      <Field
-        schema={jsonSchema.properties[lastKey]}
+      <JsonSchemaFormFactory
+        jsonSchema={jsonSchema.properties[lastKey]}
         prefix={`${fieldName}.${lastKey}`}
         lang={lang}
         isLast
@@ -235,8 +237,8 @@ export function ArrayJsonSchemaForm({
     return (
       <li className="flex items-start first:mt-2" key={`${field}.${index}`}>
         <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
-        <Field
-          schema={{ ...schema, title: `${jsonSchema.title} ${index + 1}` }}
+        <JsonSchemaFormFactory
+          jsonSchema={{ ...schema, title: `${jsonSchema.title} ${index + 1}` }}
           prefix={`${fieldName}.${index}`}
           lang={lang}
           className="grow shrink-0 basis-auto"
