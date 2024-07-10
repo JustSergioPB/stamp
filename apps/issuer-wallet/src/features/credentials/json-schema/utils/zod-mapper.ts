@@ -8,9 +8,10 @@ import {
 } from "@stamp/domain";
 import { z } from "zod";
 
+//TODO: Review what implies to be required for each type
 export interface ZodMapper<T> {
   // eslint-disable-next-line no-unused-vars
-  map(jsonSchema: JsonSchema, required: boolean): z.ZodType<T>;
+  map(jsonSchema: JsonSchema): z.ZodType<T>;
 }
 
 export class ZodMapperFactory {
@@ -33,12 +34,8 @@ export class ZodMapperFactory {
 }
 
 export class StringZodMapper implements ZodMapper<string> {
-  map(jsonSchema: StringJsonSchema, required: boolean): z.ZodType<string> {
+  map(jsonSchema: StringJsonSchema): z.ZodType<string> {
     const base = z.string();
-
-    if (!required) {
-      base.optional();
-    }
 
     if (jsonSchema.minLength) {
       base.min(jsonSchema.minLength ?? 1, "form.validation.minLength");
@@ -69,12 +66,8 @@ export class StringZodMapper implements ZodMapper<string> {
 }
 
 export class NumberZodMapper implements ZodMapper<number> {
-  map(jsonSchema: NumberJsonSchema, required: boolean): z.ZodType<number> {
+  map(jsonSchema: NumberJsonSchema): z.ZodType<number> {
     const base = z.coerce.number();
-
-    if (!required) {
-      base.optional();
-    }
 
     if (jsonSchema.minimum) {
       base.min(jsonSchema.minimum, "form.validation.minimum");
@@ -101,19 +94,13 @@ export class NumberZodMapper implements ZodMapper<number> {
 }
 
 export class BooleanZodMapper implements ZodMapper<boolean> {
-  map(jsonSchema: JsonSchema, required: boolean): z.ZodType<boolean> {
-    let base = z.boolean();
-
-    if (!required) {
-      base.optional();
-    }
-
-    return base;
+  map(jsonSchema: JsonSchema): z.ZodType<boolean> {
+    return z.boolean();
   }
 }
 
 export class ObjectZodMapper implements ZodMapper<Object> {
-  map(jsonSchema: ObjectJsonSchema, required: boolean): z.ZodType<Object> {
+  map(jsonSchema: ObjectJsonSchema): z.ZodType<Object> {
     let contentBase: { [x: string]: z.ZodType<any> } = {};
 
     if (jsonSchema.properties) {
@@ -121,36 +108,29 @@ export class ObjectZodMapper implements ZodMapper<Object> {
       keys.forEach((key) => {
         if (!jsonSchema.properties?.[key]) return;
         const mapper = ZodMapperFactory.create(jsonSchema.properties[key].type);
-        const mapepd = mapper.map(jsonSchema.properties[key], required);
-        contentBase[key] = mapepd;
+        const mapped = mapper.map(jsonSchema.properties[key]);
+        if (!jsonSchema.required?.includes(key)) {
+          mapped.optional();
+        }
+        contentBase[key] = mapped;
       });
     }
 
-    let base = z.object(contentBase);
-
-    if (!required) {
-      base.optional();
-    }
-
-    return base;
+    return z.object(contentBase);
   }
 }
 
 export class ArrayZodMapper implements ZodMapper<Array<any>> {
-  map(jsonSchema: ArrayJsonSchema, required: boolean): z.ZodType<any[]> {
+  map(jsonSchema: ArrayJsonSchema): z.ZodType<any[]> {
     let contentBase: z.ZodType<any> = z.any();
 
     if (jsonSchema.items && typeof jsonSchema.items === "object") {
       const items = jsonSchema.items as JsonSchema;
       const mapper = ZodMapperFactory.create(items.type);
-      contentBase = mapper.map(items, required);
+      contentBase = mapper.map(items);
     }
 
     const base: z.ZodArray<any> = z.array(contentBase);
-
-    if (!required) {
-      base.optional();
-    }
 
     if (jsonSchema.minItems) {
       base.min(jsonSchema.minItems, "form.validation.minItems");

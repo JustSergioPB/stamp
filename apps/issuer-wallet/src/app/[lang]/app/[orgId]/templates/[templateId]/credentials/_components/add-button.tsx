@@ -15,7 +15,10 @@ import { JsonSchema, ObjectJsonSchema } from "@stamp/domain";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ZodMapperFactory } from "@features/credentials/json-schema/utils";
+import {
+  DefaultValueFactory,
+  ZodMapperFactory,
+} from "@features/credentials/json-schema/utils";
 import { JsonSchemaFormFactory } from "./json-schema-form-factory";
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {
@@ -30,14 +33,15 @@ export default function AddButton({ lang, disabled, jsonSchema }: Props) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const mapper = ZodMapperFactory.create(jsonSchema.type);
-  const mapped = mapper.map(jsonSchema, true);
+  const mapped = mapper.map(jsonSchema);
+  const defaultValues = DefaultValueFactory.create(jsonSchema);
 
   const form = useForm({
     resolver: zodResolver(mapped),
+    defaultValues,
   });
 
-  function handleSubmit() {
-    const data = form.getValues();
+  function handleSubmit(data: unknown) {
     console.log(data);
   }
 
@@ -55,13 +59,13 @@ export default function AddButton({ lang, disabled, jsonSchema }: Props) {
           <form
             className="space-y-4"
             onSubmit={form.handleSubmit(handleSubmit, () => {
-              console.log("error");
+              console.log(form.formState.errors);
             })}
           >
             <JsonSchemaFormFactory
               lang={lang}
               jsonSchema={jsonSchema}
-              prefix="credentialSubject"
+              prefix=""
               className="max-h-[70vh] overflow-y-auto overflow-x-hidden"
             />
             <DialogFooter>

@@ -29,6 +29,7 @@ import {
 import { iconMap } from "../../_components/content/icon.map";
 import TreeAngle from "@components/stamp/tree-angle";
 import { cn } from "@lib/utils";
+import { DefaultValueFactory } from "@features/credentials/json-schema/utils";
 
 type FactoryProps = {
   jsonSchema: JsonSchema;
@@ -231,6 +232,13 @@ export function ArrayJsonSchemaForm({
     name: fieldName,
   });
 
+  function appendListItem() {
+    let defaultValues = !jsonSchema.items
+      ? {}
+      : DefaultValueFactory.create(jsonSchema.items as JsonSchema);
+    append(defaultValues);
+  }
+
   function renderListItem(field: Record<"id", string>, index: number) {
     const schema = jsonSchema.items as JsonSchema;
 
@@ -271,7 +279,12 @@ export function ArrayJsonSchemaForm({
         </ul>
       </div>
       <TreeAngle className={isLast ? "ml-12" : "ml-4"}>
-        <Button size="sm" type="button" className="rounded-xl" onClick={append}>
+        <Button
+          size="sm"
+          type="button"
+          className="rounded-xl"
+          onClick={appendListItem}
+        >
           <CirclePlus className="h-4 w-4 mr-2" />
           {t("add")}
         </Button>
