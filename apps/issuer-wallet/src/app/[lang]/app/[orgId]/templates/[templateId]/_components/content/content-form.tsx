@@ -4,6 +4,7 @@ import { Control, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,6 +34,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@components/ui/dialog";
+import { set } from "zod";
+import { Switch } from "@components/ui/switch";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
@@ -62,6 +65,7 @@ export default function ContentForm({ lang, templateId, formValue }: Props) {
       toast.error(tError(result.errorCode));
     } else {
       toast.success(tAction("success"));
+      setOpen(false);
     }
 
     setLoading(false);
@@ -87,6 +91,32 @@ export default function ContentForm({ lang, templateId, formValue }: Props) {
                   form.control as unknown as Control<{ id?: IdZod }, any>
                 }
                 lang={lang}
+              />
+              <FormField
+                control={form.control}
+                name="isAnonymous"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="flex items-center justify-between space-x-2">
+                        <div>
+                          <FormLabel htmlFor="isAnonymous">
+                            {t("form.content.isAnonymous.label")}
+                          </FormLabel>
+                          <FormDescription>
+                            {t("form.content.isAnonymous.description")}
+                          </FormDescription>
+                        </div>
+                        <Switch
+                          id="isAnonymous"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <FormField
                 control={form.control}

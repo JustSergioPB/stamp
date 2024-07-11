@@ -61,10 +61,7 @@ export class ContentUtils {
     return schemaWithoutId;
   }
 
-  static equals(
-    prev: ObjectJsonSchema | undefined,
-    next: ObjectJsonSchema
-  ): boolean {
+  static equals(prev: ObjectJsonSchema, next: ObjectJsonSchema): boolean {
     let equals = false;
     if (prev) {
       equals = deepEqual(next, prev);

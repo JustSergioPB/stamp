@@ -91,7 +91,7 @@ export default function BaseForm({ lang, templateId, formValue }: Props) {
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="max-h-[60vh] overflow-y-auto space-y-4">
+            <div className="max-h-[70vh] overflow-y-auto space-y-4">
               <div className="flex items-center gap-4">
                 <FormField
                   control={form.control}

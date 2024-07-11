@@ -17,6 +17,7 @@ export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
   _orgId: ObjectId;
   content?: {
     id?: ContentZod["id"];
+    isAnonymous?: ContentZod["isAnonymous"];
     _jsonSchemaId: ObjectId;
   };
 };
@@ -25,6 +26,7 @@ export type TemplateMongoAggregated = WithId<
   Omit<Template, "id" | "content" | "orgId"> & {
     content?: {
       id?: ContentZod["id"];
+      isAnonymous?: ContentZod["isAnonymous"];
       _jsonSchemaId: ObjectId;
     };
     jsonSchema: WithId<JsonSchemaMongo>;
@@ -128,6 +130,7 @@ export class TemplateMongoRepository extends MongoRepository {
         ...base,
         content: {
           id: content.id,
+          isAnonymous: content.isAnonymous,
           credentialSubject: {
             id: _id.toString(),
             ...value,
@@ -192,6 +195,7 @@ export class TemplateMongoRepository extends MongoRepository {
           ...(content && {
             content: {
               id: content.id,
+              isAnonymous: content.isAnonymous,
               _jsonSchemaId: new ObjectId(content.jsonSchemaId),
             },
           }),

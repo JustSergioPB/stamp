@@ -183,6 +183,7 @@ export function ObjectJsonSchemaForm({
     return (
       <JsonSchemaFormFactory
         jsonSchema={jsonSchema.properties[lastKey]}
+        className={cn("flex", isLast ? "ml-8" : "ml-4")}
         prefix={`${fieldName}.${lastKey}`}
         lang={lang}
         isLast
@@ -266,19 +267,19 @@ export function ArrayJsonSchemaForm({
   return (
     <div className={className}>
       {isLast ? (
-        <TreeAngle className="ml-4">
+        <TreeAngle>
           <Pill type="array" title={jsonSchema.title} />
         </TreeAngle>
       ) : (
         <Pill type="array" title={jsonSchema.title} />
       )}
-      <div className={cn("flex", isLast ? "ml-12" : "ml-4")}>
+      <div className={cn("flex", isLast ? "ml-8" : "ml-4")}>
         <span className="border-l-2 border-l-neutral-300 inline-block"></span>
         <ul className="space-y-2 mb-2 grow shrink-0 basis-auto">
           {fields.map((field, index) => renderListItem(field, index))}
         </ul>
       </div>
-      <TreeAngle className={isLast ? "ml-12" : "ml-4"}>
+      <TreeAngle className={isLast ? "ml-8" : "ml-4"}>
         <Button
           size="sm"
           type="button"
@@ -315,11 +316,7 @@ export function BooleanJsonSchemaForm({
     );
   }
 
-  return isLast ? (
-    <TreeAngle className="ml-4">{renderItem()}</TreeAngle>
-  ) : (
-    renderItem()
-  );
+  return isLast ? <TreeAngle>{renderItem()}</TreeAngle> : renderItem();
 }
 
 export function StringJsonSchemaForm({
@@ -351,11 +348,7 @@ export function StringJsonSchemaForm({
     );
   }
 
-  return isLast ? (
-    <TreeAngle className="ml-4">{renderItem()}</TreeAngle>
-  ) : (
-    renderItem()
-  );
+  return isLast ? <TreeAngle>{renderItem()}</TreeAngle> : renderItem();
 }
 
 export function NumberJsonSchemaForm({
@@ -394,9 +387,5 @@ export function NumberJsonSchemaForm({
       </div>
     );
   }
-  return isLast ? (
-    <TreeAngle className="ml-4">{renderItem()}</TreeAngle>
-  ) : (
-    renderItem()
-  );
+  return isLast ? <TreeAngle>{renderItem()}</TreeAngle> : renderItem();
 }

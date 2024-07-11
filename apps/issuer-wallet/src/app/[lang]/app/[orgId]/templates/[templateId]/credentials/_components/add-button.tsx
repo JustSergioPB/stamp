@@ -11,7 +11,7 @@ import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { Dialog } from "@radix-ui/react-dialog";
-import { JsonSchema, ObjectJsonSchema } from "@stamp/domain";
+import { JsonSchema } from "@stamp/domain";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -58,9 +58,7 @@ export default function AddButton({ lang, disabled, jsonSchema }: Props) {
         <Form {...form}>
           <form
             className="space-y-4"
-            onSubmit={form.handleSubmit(handleSubmit, () => {
-              console.log(form.formState.errors);
-            })}
+            onSubmit={form.handleSubmit(handleSubmit)}
           >
             <JsonSchemaFormFactory
               lang={lang}
@@ -73,7 +71,6 @@ export default function AddButton({ lang, disabled, jsonSchema }: Props) {
                 <Button
                   variant="ghost"
                   type="reset"
-                  className="max-h-[70vh] overflow-y-auto px-1"
                   onClick={() => setOpen(false)}
                   disabled={loading}
                 >

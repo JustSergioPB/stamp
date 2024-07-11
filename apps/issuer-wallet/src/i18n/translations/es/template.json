@@ -78,6 +78,10 @@
         "label": "Identificador",
         "description": "El contenido tendrá un identificador único"
       },
+      "isAnonymous": {
+        "label": "Anónimo",
+        "description": "Indica si se guarda una copia del contenido en el servidor o no"
+      },
       "required": {
         "label": "Requerido"
       },

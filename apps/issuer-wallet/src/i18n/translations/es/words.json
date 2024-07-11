@@ -9,5 +9,6 @@
   "active": "Activo",
   "expiresIn": "Caduca en",
   "summary": "Resumen",
-  "logout": "Cerrar sesión"
+  "logout": "Cerrar sesión",
+  "anonymous": "Anónimo"
 }

@@ -37,9 +37,7 @@ export class StringZodMapper implements ZodMapper<string> {
   map(jsonSchema: StringJsonSchema): z.ZodType<string> {
     const base = z.string();
 
-    if (jsonSchema.minLength) {
-      base.min(jsonSchema.minLength ?? 1, "form.validation.minLength");
-    }
+    base.min(jsonSchema.minLength ?? 1, "form.validation.minLength");
 
     if (jsonSchema.maxLength) {
       base.max(jsonSchema.maxLength, "form.validation.maxLength");

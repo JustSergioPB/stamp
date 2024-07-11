@@ -43,6 +43,7 @@ export class JsonSchemaMapper {
     if (properties) {
       let mapped: { [key: string]: JsonSchema } = {};
       properties.forEach((prop) => {
+        console.log(prop);
         const { schema, name } = this.toDomain(prop);
         mapped[name] = schema;
       });

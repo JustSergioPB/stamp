@@ -3,19 +3,12 @@
 import { ActionResult } from "@lib/action";
 import { revalidatePath } from "next/cache";
 import { TemplateMongoRepository } from "../repositories";
-import {
-  Content,
-  ContentZod,
-  Template,
-  TemplateDetailedView,
-  UpdateTemplateDTO,
-} from "../models";
+import { ContentZod, UpdateTemplateDTO } from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
 import { Session } from "@features/auth/models";
 import { ObjectJsonSchema } from "@stamp/domain";
-import { deepEqual } from "@lib/typescript";
 import { ContentUtils } from "../utils/content.utils";
 
 export async function createTemplateAction(): Promise<ActionResult<string>> {
@@ -89,26 +82,32 @@ export async function updateContentAction(
 
     const { content: prev, base } = await TemplateMongoRepository.getById(id);
     const next = ContentUtils.toDomain(content, base);
-    let equals = ContentUtils.equals(prev?.credentialSubject, next);
 
-    if (!equals) {
+    let update = {
+      id: content.id,
+      isAnonymous: content.isAnonymous,
+      jsonSchemaId: "",
+    };
+
+    if (
+      !prev?.credentialSubject ||
+      !ContentUtils.equals(prev?.credentialSubject, next)
+    ) {
       const jsonSchemaId = await createContent(session, next);
-      const update = {
-        content: {
-          id: content.id,
-          jsonSchemaId,
-        },
-      };
-      await TemplateMongoRepository.update(id, update);
-      await AuditLogMongoRepository.create({
-        userId: session.id,
-        operation: "update",
-        collection: "template",
-        documentId: id,
-        changes: update,
-      });
-      revalidatePath(`${id}`);
+      update = { ...update, jsonSchemaId };
+    } else {
+      update = { ...update, jsonSchemaId: prev.credentialSubject.id };
     }
+
+    await TemplateMongoRepository.update(id, { content: update });
+    await AuditLogMongoRepository.create({
+      userId: session.id,
+      operation: "update",
+      collection: "template",
+      documentId: id,
+      changes: update,
+    });
+    revalidatePath(`${id}`);
 
     return { data: id, errorCode: null };
   } catch (error) {

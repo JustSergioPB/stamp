@@ -40,7 +40,7 @@ export default async function Page({
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex gap-8">
-        <div className="basis-3/5 space-y-8">
+        <div className="basis-3/5 grow shrink-0 space-y-8">
           <BaseCard
             lang={lang}
             value={view.base}
