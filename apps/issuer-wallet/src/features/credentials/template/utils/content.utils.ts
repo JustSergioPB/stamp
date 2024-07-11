@@ -35,7 +35,11 @@ export class ContentUtils {
     let contentZod: ContentZod | undefined;
 
     if (content) {
-      const { credentialSubject, ...rest } = content;
+      //TODO: Improve this edge cases
+      const {
+        credentialSubject: { id, ...credentialSubject },
+        ...rest
+      } = content;
       const schemaWithoutId = this.removeIdFromSchema(credentialSubject);
       contentZod = {
         ...rest,

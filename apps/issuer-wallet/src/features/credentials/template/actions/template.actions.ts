@@ -82,6 +82,7 @@ export async function updateContentAction(
 
     const { content: prev, base } = await TemplateMongoRepository.getById(id);
     const next = ContentUtils.toDomain(content, base);
+    const { id: prevId, ...credentialSubject } = prev?.credentialSubject ?? {};
 
     let update = {
       id: content.id,
@@ -89,14 +90,16 @@ export async function updateContentAction(
       jsonSchemaId: "",
     };
 
-    if (
-      !prev?.credentialSubject ||
-      !ContentUtils.equals(prev?.credentialSubject, next)
-    ) {
+    const equals = ContentUtils.equals(
+      credentialSubject as ObjectJsonSchema,
+      next
+    );
+
+    if (!prevId || !credentialSubject || !equals) {
       const jsonSchemaId = await createContent(session, next);
       update = { ...update, jsonSchemaId };
     } else {
-      update = { ...update, jsonSchemaId: prev.credentialSubject.id };
+      update = { ...update, jsonSchemaId: prevId };
     }
 
     await TemplateMongoRepository.update(id, { content: update });
