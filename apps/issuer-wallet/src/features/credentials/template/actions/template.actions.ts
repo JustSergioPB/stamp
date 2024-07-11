@@ -11,7 +11,9 @@ import { Session } from "@features/auth/models";
 import { ObjectJsonSchema } from "@stamp/domain";
 import { ContentUtils } from "../utils/content.utils";
 
-export async function createTemplateAction(): Promise<ActionResult<string>> {
+export async function createTemplateAction(
+  content: ContentZod
+): Promise<ActionResult<string>> {
   try {
     const session = await verifySession();
 
@@ -19,7 +21,17 @@ export async function createTemplateAction(): Promise<ActionResult<string>> {
       throw new Error("Forbidden");
     }
 
-    const create = { orgId: session.orgId };
+    const next = ContentUtils.toDomain(content);
+    const jsonSchemaId = await createContent(session, next);
+
+    const create = {
+      orgId: session.orgId,
+      content: {
+        id: content.id,
+        isAnonymous: content.isAnonymous,
+        jsonSchemaId,
+      },
+    };
 
     const templateId = await TemplateMongoRepository.create(create);
     await AuditLogMongoRepository.create({
@@ -82,7 +94,7 @@ export async function updateContentAction(
 
     const { content: prev, base } = await TemplateMongoRepository.getById(id);
     const next = ContentUtils.toDomain(content, base);
-    const { id: prevId, ...credentialSubject } = prev?.credentialSubject ?? {};
+    const { id: prevId, ...credentialSubject } = prev.credentialSubject;
 
     let update = {
       id: content.id,
@@ -95,7 +107,7 @@ export async function updateContentAction(
       next
     );
 
-    if (!prevId || !credentialSubject || !equals) {
+    if (!prevId || !equals) {
       const jsonSchemaId = await createContent(session, next);
       update = { ...update, jsonSchemaId };
     } else {

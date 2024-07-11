@@ -11,13 +11,16 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Button } from "@components/ui/button";
-import { LoaderCircle, Pencil } from "lucide-react";
+import { CirclePlus, LoaderCircle, Pencil } from "lucide-react";
 import { useTranslation } from "@i18n/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import ObjectForm from "./object-form";
-import { updateContentAction } from "@features/credentials/template/actions";
+import {
+  createTemplateAction,
+  updateContentAction,
+} from "@features/credentials/template/actions";
 import {
   ContentZod,
   IdZod,
@@ -35,20 +38,28 @@ import {
   DialogTrigger,
 } from "@components/ui/dialog";
 import { Switch } from "@components/ui/switch";
+import { useRouter } from "next/navigation";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
   templateId: string;
+  orgId: string;
   formValue?: ContentZod;
 }
 
 //TODO: Patch min 1 error
-export default function ContentForm({ lang, templateId, formValue }: Props) {
+export default function ContentForm({
+  lang,
+  templateId,
+  orgId,
+  formValue,
+}: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
   const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const form = useForm<ContentZod>({
     resolver: zodResolver(contentZod),
@@ -58,13 +69,18 @@ export default function ContentForm({ lang, templateId, formValue }: Props) {
   async function onSubmit() {
     setLoading(true);
 
-    const result = await updateContentAction(templateId, form.getValues());
+    const result = formValue
+      ? await updateContentAction(templateId, form.getValues())
+      : await createTemplateAction(form.getValues());
 
     if (result.errorCode) {
       toast.error(tError(result.errorCode));
     } else {
       toast.success(tAction("success"));
       setOpen(false);
+
+      if (!formValue)
+        router.push(`/${lang}/app/${orgId}/templates/${result.data}`);
     }
 
     setLoading(false);
@@ -73,8 +89,16 @@ export default function ContentForm({ lang, templateId, formValue }: Props) {
   return (
     <Dialog open={open}>
       <DialogTrigger onClick={() => setOpen(true)} asChild>
-        <Button variant="ghost" size="icon">
-          <Pencil className="h-4 w-4" />
+        <Button
+          variant={formValue ? "ghost" : "default"}
+          size={formValue ? "icon" : "sm"}
+        >
+          {formValue ? (
+            <Pencil className="h-4 w-4" />
+          ) : (
+            <CirclePlus className="h-4 w-4 mr-2" />
+          )}
+          {!formValue && t("add")}
         </Button>
       </DialogTrigger>
       <DialogContent>

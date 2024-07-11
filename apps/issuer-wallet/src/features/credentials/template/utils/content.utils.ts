@@ -29,25 +29,18 @@ export class ContentUtils {
     return jsonSchema;
   }
 
-  static toZod(
-    content: ContentDetailedView | undefined
-  ): ContentZod | undefined {
-    let contentZod: ContentZod | undefined;
+  static toZod(content: ContentDetailedView): ContentZod {
+    //TODO: Improve this edge cases
+    const {
+      credentialSubject: { id, ...credentialSubject },
+      ...rest
+    } = content;
+    const schemaWithoutId = this.removeIdFromSchema(credentialSubject);
 
-    if (content) {
-      //TODO: Improve this edge cases
-      const {
-        credentialSubject: { id, ...credentialSubject },
-        ...rest
-      } = content;
-      const schemaWithoutId = this.removeIdFromSchema(credentialSubject);
-      contentZod = {
-        ...rest,
-        credentialSubject: JsonSchemaMapper.toZod(schemaWithoutId),
-      };
-    }
-
-    return contentZod;
+    return {
+      ...rest,
+      credentialSubject: JsonSchemaMapper.toZod(schemaWithoutId),
+    };
   }
 
   static removeIdFromSchema(schema: ObjectJsonSchema): ObjectJsonSchema {

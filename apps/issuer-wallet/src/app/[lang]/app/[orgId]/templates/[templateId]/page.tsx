@@ -67,7 +67,7 @@ export default async function Page({
           className="basis-2/5 min-w-0"
           lang={lang}
           value={view.content}
-          id={view.id}
+          templateId={view.id}
         />
       </div>
     </div>

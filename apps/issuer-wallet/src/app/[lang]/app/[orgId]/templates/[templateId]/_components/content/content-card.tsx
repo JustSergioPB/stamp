@@ -9,14 +9,14 @@ import { ObjectJsonSchemaPill } from "./json-schema-pill";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  value: ContentDetailedView | undefined;
-  id: string;
+  value: ContentDetailedView;
+  templateId: string;
 }
 
 export default async function ContentCard({
   lang,
   value,
-  id,
+  templateId,
   className,
 }: Props) {
   const { t } = await useTranslation(lang, "template");
@@ -35,7 +35,12 @@ export default async function ContentCard({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{t("form.content.title")}</CardTitle>
-          <ContentForm lang={lang} templateId={id} formValue={content} />
+          <ContentForm
+            lang={lang}
+            orgId={""}
+            templateId={templateId}
+            formValue={content}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">

@@ -6,7 +6,7 @@ export type Template = {
   security?: SecurityZod;
   status?: StatusZod;
   validity?: ValidityZod;
-  content?: Content;
+  content: Content;
   orgId: string;
   id: string;
 };

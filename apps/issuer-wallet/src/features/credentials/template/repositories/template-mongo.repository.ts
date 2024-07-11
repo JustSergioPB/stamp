@@ -15,7 +15,7 @@ import {
 
 export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
   _orgId: ObjectId;
-  content?: {
+  content: {
     id?: ContentZod["id"];
     isAnonymous?: ContentZod["isAnonymous"];
     _jsonSchemaId: ObjectId;
@@ -24,7 +24,7 @@ export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
 
 export type TemplateMongoAggregated = WithId<
   Omit<Template, "id" | "content" | "orgId"> & {
-    content?: {
+    content: {
       id?: ContentZod["id"];
       isAnonymous?: ContentZod["isAnonymous"];
       _jsonSchemaId: ObjectId;
@@ -59,17 +59,13 @@ export class TemplateMongoRepository extends MongoRepository {
           ...document,
           id: _id.toString(),
           orgId: _orgId.toString(),
+          content: {
+            id: content.id,
+            isAnonymous: content.isAnonymous,
+            jsonSchemaId: content._jsonSchemaId.toString(),
+          },
         };
 
-        if (content) {
-          base = {
-            ...base,
-            content: {
-              id: content.id,
-              jsonSchemaId: content._jsonSchemaId.toString(),
-            },
-          };
-        }
         return base;
       }),
       count,
@@ -116,28 +112,27 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Template not found");
     }
 
-    const { _id, _orgId, content, jsonSchema, ...document } = documents[0];
+    const {
+      _id,
+      _orgId,
+      content,
+      jsonSchema: { _id: _jsonSchemaId, ...value },
+      ...document
+    } = documents[0];
 
     let base: TemplateDetailedView = {
       ...document,
       id: _id.toString(),
       orgId: _orgId.toString(),
-    };
-
-    if (content && jsonSchema) {
-      const { _id, ...value } = jsonSchema;
-      base = {
-        ...base,
-        content: {
-          id: content.id,
-          isAnonymous: content.isAnonymous,
-          credentialSubject: {
-            id: _id.toString(),
-            ...value,
-          },
+      content: {
+        id: content.id,
+        isAnonymous: content.isAnonymous,
+        credentialSubject: {
+          id: _jsonSchemaId.toString(),
+          ...value,
         },
-      };
-    }
+      },
+    };
 
     return base;
   }
@@ -153,6 +148,11 @@ export class TemplateMongoRepository extends MongoRepository {
 
     const documentRef = await collection.insertOne({
       _orgId: new ObjectId(create.orgId),
+      content: {
+        id: create.content.id,
+        isAnonymous: create.content.isAnonymous,
+        _jsonSchemaId: new ObjectId(create.content.jsonSchemaId),
+      },
     });
 
     return documentRef.insertedId.toString();

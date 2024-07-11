@@ -1,6 +1,5 @@
 import { useTranslation } from "@i18n/server";
 import EmptyScreen from "@components/stamp/empty-screen";
-import AddButton from "./_components/add-button";
 import { SearchParams } from "@lib/query";
 import { TemplateMongoRepository } from "@features/credentials/template/repositories";
 import { TemplateSummaryView } from "@features/credentials/template/models";
@@ -10,6 +9,7 @@ import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import ChipListCell from "@components/stamp/chip-list-cell";
 import StatusCell from "@components/stamp/status-cell";
+import ContentForm from "./[templateId]/_components/content/content-form";
 
 type Props = {
   searchParams: SearchParams;
@@ -77,7 +77,7 @@ export default async function Page({
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        <AddButton lang={lang} orgId={orgId} />
+        <ContentForm lang={lang} orgId={orgId} templateId={""} />
       </div>
       {paginatedList.items.length > 0 ? (
         <StampTable
@@ -88,7 +88,7 @@ export default async function Page({
         />
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
-          <AddButton lang={lang} orgId={orgId} />
+          <ContentForm lang={lang} orgId={orgId} templateId={""} />
         </EmptyScreen>
       )}
     </div>
