@@ -41,17 +41,12 @@ import { iconMap } from "./icon.map";
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   prefix: string;
-  requiredChecked: boolean;
   onRemove: () => void;
-  // eslint-disable-next-line no-unused-vars
-  onRequiredChange: (value: string, checked: boolean) => void;
 }
 
 export default function JsonSchemaForm({
   lang,
   onRemove,
-  requiredChecked,
-  onRequiredChange,
   prefix,
   className,
 }: Props) {
@@ -61,11 +56,10 @@ export default function JsonSchemaForm({
   const [subType, setSubType] = useState<JsonSchemaType | undefined>(
     getValues(`${prefix}.items.type`)
   );
-  //TODO: This seems like a ñapa, check later
-  const [required, setRequired] = useState<boolean>(requiredChecked);
 
   const titlePath = `${prefix}.title`;
   const typePath = `${prefix}.type`;
+  const requiredPath = `${prefix}.required`;
 
   const title = watch(titlePath) as string;
   const type = watch(typePath) as JsonSchemaType;
@@ -99,11 +93,6 @@ export default function JsonSchemaForm({
       default:
         return <></>;
     }
-  }
-
-  function handleRequiredChange(checked: boolean) {
-    setRequired(checked);
-    onRequiredChange(title, checked);
   }
 
   return (
@@ -178,16 +167,30 @@ export default function JsonSchemaForm({
                   </FormItem>
                 )}
               />
-              <div className="flex items-center justify-between space-x-2">
-                <FormLabel htmlFor={prefix}>
-                  {t("form.content.required.label")}
-                </FormLabel>
-                <Switch
-                  id={prefix}
-                  checked={required}
-                  onCheckedChange={handleRequiredChange}
-                />
-              </div>
+              <FormField
+                control={control}
+                name={requiredPath}
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="flex items-center justify-between space-x-2">
+                        <FormLabel htmlFor={prefix}>
+                          {t("form.content.required.label")}
+                        </FormLabel>
+                        <Switch
+                          id={prefix}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </div>
+                    </FormControl>
+                    {fieldState.error?.message && (
+                      <FormMessage>{t(fieldState.error.message)}</FormMessage>
+                    )}
+                  </FormItem>
+                )}
+              />
+
               <Separator />
               {renderForm()}
             </div>

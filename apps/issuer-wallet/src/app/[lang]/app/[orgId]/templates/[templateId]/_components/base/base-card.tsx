@@ -1,12 +1,8 @@
 import ChipList from "@components/stamp/chip-list";
 import Field from "@components/stamp/field";
-import StatusBadge from "@components/stamp/status-badge";
+import StateBadge from "@components/stamp/status-badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import {
-  BaseZod,
-  TemplateDetailedView,
-  TemplateStatus,
-} from "@features/credentials/template/models";
+import { Template } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
 import {
   FileSignature,
@@ -23,7 +19,7 @@ import PublishButton from "../publish-button";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  template: TemplateDetailedView;
+  template: Template;
 }
 
 export default async function BaseCard({
@@ -64,7 +60,7 @@ export default async function BaseCard({
           <div className="space-y-4 basis-1/2">
             <h3>{tWord("summary")}</h3>
             <Field label={t("summary.status")} Icon={Loader}>
-              <StatusBadge value={template.templateStatus} lang={lang} />
+              <StateBadge value={template.state} lang={lang} />
             </Field>
             <Field label={t("summary.lang")} Icon={Languages}>
               <p className="text-sm">

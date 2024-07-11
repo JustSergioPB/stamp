@@ -3,13 +3,17 @@
 import { ActionResult } from "@lib/action";
 import { revalidatePath } from "next/cache";
 import { TemplateMongoRepository } from "../repositories";
-import { ContentZod, CreateTemplateDTO, UpdateTemplateDTO } from "../models";
+import {
+  ContentZod,
+  CreateTemplateDTO,
+  TemplateState,
+  UpdateTemplateDTO,
+} from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
 import { Session } from "@features/auth/models";
 import { ObjectJsonSchema } from "@stamp/domain";
-import { ContentUtils } from "../utils/content.utils";
 
 export async function createTemplateAction(
   content: ContentZod
@@ -21,17 +25,10 @@ export async function createTemplateAction(
       throw new Error("Forbidden");
     }
 
-    const next = ContentUtils.toDomain(content);
-    const jsonSchemaId = await createContent(session, next);
-
     const create: CreateTemplateDTO = {
       orgId: session.orgId,
-      templateStatus: "draft",
-      content: {
-        id: content.id,
-        isAnonymous: content.isAnonymous,
-        jsonSchemaId,
-      },
+      state: "draft",
+      content,
     };
 
     const templateId = await TemplateMongoRepository.create(create);
@@ -63,6 +60,8 @@ export async function updateTemplateAction(
       throw new Error("Forbidden");
     }
 
+    //TODO: Think if it's wort to make another call
+
     await TemplateMongoRepository.update(id, update);
     await AuditLogMongoRepository.create({
       userId: session.id,
@@ -82,9 +81,9 @@ export async function updateTemplateAction(
   }
 }
 
-export async function updateContentAction(
+export async function updateStateAction(
   id: string,
-  content: ContentZod
+  state: TemplateState
 ): Promise<ActionResult<string>> {
   try {
     const session = await verifySession();
@@ -93,38 +92,17 @@ export async function updateContentAction(
       throw new Error("Forbidden");
     }
 
-    const { content: prev, base } = await TemplateMongoRepository.getById(id);
-    const next = ContentUtils.toDomain(content, base);
-    const { id: prevId, ...credentialSubject } = prev.credentialSubject;
+    //TODO: Configure side effects
 
-    let update = {
-      id: content.id,
-      isAnonymous: content.isAnonymous,
-      jsonSchemaId: "",
-    };
-
-    const equals = ContentUtils.equals(
-      credentialSubject as ObjectJsonSchema,
-      next
-    );
-
-    if (!prevId || !equals) {
-      const jsonSchemaId = await createContent(session, next);
-      update = { ...update, jsonSchemaId };
-    } else {
-      update = { ...update, jsonSchemaId: prevId };
-    }
-
-    await TemplateMongoRepository.update(id, { content: update });
+    await TemplateMongoRepository.update(id, { state });
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "update",
       collection: TemplateMongoRepository.collectionName,
       documentId: id,
-      changes: update,
+      changes: { status },
     });
     revalidatePath(`${id}`);
-
     return { data: id, errorCode: null };
   } catch (error) {
     console.error(error);
@@ -135,6 +113,7 @@ export async function updateContentAction(
   }
 }
 
+//TODO: This will only happen when template is public
 async function createContent(
   session: Session,
   jsonSchema: ObjectJsonSchema

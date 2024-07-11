@@ -1,38 +1,13 @@
-import { ObjectId, WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { MongoRepository } from "@lib/mongo";
 import { PaginatedList, SearchParams } from "@lib/query";
-import {
-  ContentZod,
-  CreateTemplateDTO,
-  Template,
-  TemplateDetailedView,
-} from "../models";
+import { CreateTemplateDTO, Template } from "../models";
 import { QueryMapper } from "@lib/mongo";
-import {
-  JsonSchemaMongo,
-  JsonSchemaMongoRepository,
-} from "@features/credentials/json-schema/repositories";
 
-export type TemplateMongo = Omit<Template, "id" | "content" | "orgId"> & {
+export type TemplateMongo = Omit<Template, "id" | "orgId" | "jsonSchemaId"> & {
   _orgId: ObjectId;
-  content: {
-    id?: ContentZod["id"];
-    isAnonymous?: ContentZod["isAnonymous"];
-    _jsonSchemaId: ObjectId;
-  };
+  _jsonSchemaId?: ObjectId;
 };
-
-export type TemplateMongoAggregated = WithId<
-  Omit<Template, "id" | "content" | "orgId"> & {
-    content: {
-      id?: ContentZod["id"];
-      isAnonymous?: ContentZod["isAnonymous"];
-      _jsonSchemaId: ObjectId;
-    };
-    jsonSchema: WithId<JsonSchemaMongo>;
-    _orgId: ObjectId;
-  }
->;
 export class TemplateMongoRepository extends MongoRepository {
   static collectionName = "templates";
 
@@ -54,16 +29,11 @@ export class TemplateMongoRepository extends MongoRepository {
     const count = await collection.countDocuments();
 
     return {
-      items: documents.map(({ _id, _orgId, content, ...document }) => {
+      items: documents.map(({ _id, _orgId, ...document }) => {
         let base: Template = {
           ...document,
           id: _id.toString(),
           orgId: _orgId.toString(),
-          content: {
-            id: content.id,
-            isAnonymous: content.isAnonymous,
-            jsonSchemaId: content._jsonSchemaId.toString(),
-          },
         };
 
         return base;
@@ -75,7 +45,7 @@ export class TemplateMongoRepository extends MongoRepository {
     };
   }
 
-  static async getById(id: string): Promise<TemplateDetailedView> {
+  static async getById(id: string): Promise<Template> {
     const collection = await this.connect<TemplateMongo>(
       TemplateMongoRepository.collectionName
     );
@@ -84,57 +54,19 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const documents = await collection
-      .aggregate<TemplateMongoAggregated>([
-        {
-          $match: {
-            _id: new ObjectId(id),
-          },
-        },
-        {
-          $lookup: {
-            from: JsonSchemaMongoRepository.collectionName,
-            localField: "content._jsonSchemaId",
-            foreignField: "_id",
-            as: "jsonSchema",
-          },
-        },
-        {
-          $unwind: {
-            path: "$jsonSchema",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-      ])
-      .toArray();
+    const document = await collection.findOne({ _id: new ObjectId(id) });
 
-    if (!documents[0]) {
+    if (!document) {
       throw new Error("Template not found");
     }
 
-    const {
-      _id,
-      _orgId,
-      content,
-      jsonSchema: { _id: _jsonSchemaId, ...value },
-      ...document
-    } = documents[0];
+    const { _id, _orgId, ...rest } = document;
 
-    let base: TemplateDetailedView = {
-      ...document,
+    return {
+      ...rest,
       id: _id.toString(),
       orgId: _orgId.toString(),
-      content: {
-        id: content.id,
-        isAnonymous: content.isAnonymous,
-        credentialSubject: {
-          id: _jsonSchemaId.toString(),
-          ...value,
-        },
-      },
     };
-
-    return base;
   }
 
   static async create(create: CreateTemplateDTO): Promise<string> {
@@ -146,14 +78,11 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
+    const { orgId, ...rest } = create;
+
     const documentRef = await collection.insertOne({
-      _orgId: new ObjectId(create.orgId),
-      templateStatus: create.templateStatus,
-      content: {
-        id: create.content.id,
-        isAnonymous: create.content.isAnonymous,
-        _jsonSchemaId: new ObjectId(create.content.jsonSchemaId),
-      },
+      _orgId: new ObjectId(orgId),
+      ...rest,
     });
 
     return documentRef.insertedId.toString();
@@ -168,20 +97,20 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const { content, id: _, ...update } = template;
+    const { id: _, orgId, jsonSchemaId, ...rest } = template;
+    //TODO: patch so jsonSchemaId is inmutable
+
+    let update: Partial<TemplateMongo> = rest;
+
+    if (jsonSchemaId) {
+      update = { ...update, _jsonSchemaId: new ObjectId(jsonSchemaId) };
+    }
 
     await collection.updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
           ...update,
-          ...(content && {
-            content: {
-              id: content.id,
-              isAnonymous: content.isAnonymous,
-              _jsonSchemaId: new ObjectId(content.jsonSchemaId),
-            },
-          }),
         },
       }
     );

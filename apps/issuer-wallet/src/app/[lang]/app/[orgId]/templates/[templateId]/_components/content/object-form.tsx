@@ -17,44 +17,12 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 
 export default function ObjectForm({ lang, prefix, className }: Props) {
   const { t } = useTranslation(lang, "template");
-  const { control, setValue, getValues } = useFormContext();
+  const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: prefix,
   });
-
-  const requiredPath = `${replaceLastOccurrence(prefix, "properties", "required")}`;
-
-  //TODO: This should be in a utils function in json schema
-  function isRequired(prefix: string): boolean {
-    const required = getValues(requiredPath) as string[] | undefined;
-    const title = getValues(`${prefix}.title`) as string | undefined;
-
-    if (!required) {
-      return false;
-    }
-
-    return required.some((str) => str === title);
-  }
-
-  function handleRequiredChange(value: string, checked: boolean) {
-    const required = getValues(requiredPath) as string[] | undefined;
-    if (!required) {
-      setValue(requiredPath, [value]);
-      return;
-    }
-
-    if (checked) {
-      setValue(requiredPath, [...required, value]);
-      return;
-    }
-
-    setValue(
-      requiredPath,
-      required.filter((item) => item !== value)
-    );
-  }
 
   return (
     <div className={cn("grow shrink-0 basis-auto", className)}>
@@ -68,9 +36,7 @@ export default function ObjectForm({ lang, prefix, className }: Props) {
                 lang={lang}
                 className="grow shrink-0 basis-auto"
                 prefix={`${prefix}.${index}`}
-                requiredChecked={isRequired(`${prefix}.${index}`)}
                 onRemove={() => remove(index)}
-                onRequiredChange={handleRequiredChange}
               />
             </li>
           ))}

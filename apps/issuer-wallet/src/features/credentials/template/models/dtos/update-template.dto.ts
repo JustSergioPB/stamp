@@ -1,3 +1,3 @@
 import { Template } from "../domain";
 
-export type UpdateTemplateDTO = Partial<Omit<Template, "content">>;
+export type UpdateTemplateDTO = Partial<Template>;

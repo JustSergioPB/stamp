@@ -9,7 +9,7 @@ import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import ChipListCell from "@components/stamp/chip-list-cell";
 import ContentForm from "./[templateId]/_components/content/content-form";
-import StatusBadge from "@components/stamp/status-badge";
+import StateBadge from "@components/stamp/status-badge";
 
 type Props = {
   searchParams: SearchParams;
@@ -47,11 +47,11 @@ export default async function Page({
       cell: (item) => <TextCell value={item.name ?? ""} />,
     },
     {
-      key: "status",
+      key: "state",
       name: t("summary.status"),
       cell: (item) => (
         <div className="flex space-x-2">
-          <StatusBadge value={item.status} lang={lang} />
+          <StateBadge value={item.state} lang={lang} />
         </div>
       ),
     },

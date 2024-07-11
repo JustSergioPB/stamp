@@ -10,6 +10,7 @@ export const baseJsonSchemaZod = z.object({
   title: z
     .string()
     .min(1, { message: "form.content.errors.jsonSchema.required" }),
+  required: z.boolean().optional(),
 });
 
 export type BaseJsonSchemaZod = z.infer<typeof baseJsonSchemaZod>;
@@ -33,45 +34,63 @@ export const numberJsonSchemaZod = baseJsonSchemaZod.extend({
 
 export type NumberJsonSchemaZod = z.infer<typeof numberJsonSchemaZod>;
 
-export const baseObjectJsonSchemaZod = baseJsonSchemaZod.extend({
-  required: z.array(z.string()).optional(),
-});
-
-type RObjectJsonSchemaZod = z.infer<typeof baseObjectJsonSchemaZod> & {
-  properties?: RObjectJsonSchemaZod[];
-  patternProperties?: RObjectJsonSchemaZod[];
-  additionalProperties?: RObjectJsonSchemaZod;
-  unevaluatedProperties?: RObjectJsonSchemaZod;
+type RObjectJsonSchemaZod = z.infer<typeof baseJsonSchemaZod> & {
+  properties?: JsonSchemaZod[];
+  patternProperties?: JsonSchemaZod[];
+  additionalProperties?: JsonSchemaZod;
+  unevaluatedProperties?: JsonSchemaZod;
 };
 
 export const objectJsonSchemaZod: z.ZodSchema<RObjectJsonSchemaZod> =
-  baseObjectJsonSchemaZod.extend({
-    properties: z.lazy(() => objectJsonSchemaZod.array()).optional(),
-    patternProperties: z.lazy(() => objectJsonSchemaZod.array()).optional(),
-    additionalProperties: z.lazy(() => objectJsonSchemaZod).optional(),
-    unevaluatedProperties: z.lazy(() => objectJsonSchemaZod).optional(),
+  baseJsonSchemaZod.extend({
+    properties: z.lazy(() => jsonSchemaZod.array()).optional(),
+    patternProperties: z.lazy(() => jsonSchemaZod.array()).optional(),
+    additionalProperties: z.lazy(() => jsonSchemaZod).optional(),
+    unevaluatedProperties: z.lazy(() => jsonSchemaZod).optional(),
   });
 
 export type ObjectJsonSchemaZod = z.infer<typeof objectJsonSchemaZod>;
 
-export const arrayJsonSchemaZod = baseJsonSchemaZod.extend({
-  items: objectJsonSchemaZod.optional(),
-  prefixItems: z.array(objectJsonSchemaZod).optional(),
-  unevaluatedItems: objectJsonSchemaZod.optional(),
-  contains: objectJsonSchemaZod.optional(),
-  minItems: z.coerce.number().optional(),
-  maxItems: z.coerce.number().optional(),
-  uniqueItems: z.boolean().optional(),
-});
+type RArrayJsonSchemaZod = z.infer<typeof baseJsonSchemaZod> & {
+  items?: JsonSchemaZod;
+  prefixItems?: JsonSchemaZod[];
+  unevaluatedItems?: JsonSchemaZod;
+  contains?: JsonSchemaZod;
+  minItems?: number;
+  maxItems?: number;
+  uniqueItems?: boolean;
+};
+
+export const arrayJsonSchemaZod: z.ZodSchema<RArrayJsonSchemaZod> =
+  baseJsonSchemaZod.extend({
+    items: z.lazy(() => jsonSchemaZod).optional(),
+    prefixItems: z.lazy(() => jsonSchemaZod.array()).optional(),
+    unevaluatedItems: z.lazy(() => jsonSchemaZod).optional(),
+    contains: z.lazy(() => jsonSchemaZod).optional(),
+    minItems: z.coerce.number().optional(),
+    maxItems: z.coerce.number().optional(),
+    uniqueItems: z.boolean().optional(),
+  });
 
 export type ArrayJsonSchemaZod = z.infer<typeof arrayJsonSchemaZod>;
 
+export const nullJsonSchemaZod = baseJsonSchemaZod.extend({
+  type: z.literal("null"),
+});
+
+export type NullJsonSchemaZod = z.infer<typeof nullJsonSchemaZod>;
+
+export const booleanJsonSchemaZod = baseJsonSchemaZod.extend({
+  type: z.literal("boolean"),
+});
+
 export const jsonSchemaZod = z.union([
-  baseJsonSchemaZod,
   stringJsonSchemaZod,
   numberJsonSchemaZod,
   objectJsonSchemaZod,
   arrayJsonSchemaZod,
+  nullJsonSchemaZod,
+  booleanJsonSchemaZod,
 ]);
 
 export type JsonSchemaZod = z.infer<typeof jsonSchemaZod>;

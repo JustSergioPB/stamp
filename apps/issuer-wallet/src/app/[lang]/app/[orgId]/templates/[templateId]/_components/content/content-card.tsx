@@ -3,14 +3,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
 import { useTranslation } from "@i18n/server";
 import { FileLock2, FileQuestion, Fingerprint } from "lucide-react";
 import ContentForm from "./content-form";
-import { ContentUtils } from "@features/credentials/template/utils/content.utils";
 import { ObjectJsonSchemaPill } from "./json-schema-pill";
-import { TemplateDetailedView } from "@features/credentials/template/models";
+import { Template } from "@features/credentials/template/models";
 import { TemplateUtils } from "@features/credentials/template/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  template: TemplateDetailedView;
+  template: Template;
 }
 
 export default async function ContentCard({
@@ -20,15 +19,6 @@ export default async function ContentCard({
 }: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tWord } = await useTranslation(lang, "words");
-  const content = ContentUtils.toZod(template.content);
-
-  function renderContent() {
-    const withOutId = ContentUtils.removeIdFromSchema(
-      template.content.credentialSubject
-    );
-
-    return <ObjectJsonSchemaPill jsonSchema={withOutId} />;
-  }
 
   return (
     <Card className={className}>
@@ -39,7 +29,7 @@ export default async function ContentCard({
             lang={lang}
             orgId={""}
             templateId={template.id}
-            formValue={content}
+            formValue={template.content}
             disabled={!TemplateUtils.canEdit(template)}
           />
         </div>
@@ -66,7 +56,9 @@ export default async function ContentCard({
           </Field>
         </div>
         <h3>{t("form.content.title")}</h3>
-        {renderContent()}
+        <ObjectJsonSchemaPill
+          jsonSchemaZod={template.content.credentialSubject}
+        />
       </CardContent>
     </Card>
   );

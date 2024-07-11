@@ -1,13 +1,13 @@
-import { TemplateStatus } from "@features/credentials/template/models";
+import { TemplateState } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
 import { cn } from "@lib/utils";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLElement> {
-  value: TemplateStatus;
+  value: TemplateState;
   lang: string;
 }
 
-export default async function StatusBadge({ value, lang }: Props) {
+export default async function StateBadge({ value, lang }: Props) {
   const { t } = await useTranslation(lang, "template");
   return (
     <span
@@ -30,7 +30,7 @@ export default async function StatusBadge({ value, lang }: Props) {
           "bg-red-500": value === "deprecated",
         })}
       ></div>
-      {t(`status.${value}`)}
+      {t(`state.${value}`)}
     </span>
   );
 }

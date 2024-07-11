@@ -9,6 +9,7 @@ export class JsonSchemaMapper {
   public static toDomain(jsonSchema: JsonSchemaZod): {
     schema: JsonSchema;
     name: string;
+    required: boolean;
   } {
     const name = this.toPropertyKey(jsonSchema.title ?? "");
     let schema: JsonSchema = jsonSchema;
@@ -24,7 +25,7 @@ export class JsonSchemaMapper {
         schema = jsonSchema;
     }
 
-    return { schema, name };
+    return { schema, name, required: jsonSchema.required ?? false };
   }
 
   private static objectToDomain(
@@ -35,7 +36,6 @@ export class JsonSchemaMapper {
       patternProperties,
       additionalProperties,
       unevaluatedProperties,
-      required,
       ...rest
     } = jsonSchema;
     const base = rest as ObjectJsonSchema;
@@ -43,14 +43,14 @@ export class JsonSchemaMapper {
     if (properties) {
       let mapped: { [key: string]: JsonSchema } = {};
       properties.forEach((prop) => {
-        const { schema, name } = this.toDomain(prop);
+        const { schema, name, required } = this.toDomain(prop);
         mapped[name] = schema;
+
+        if (required) {
+          base.required = [...(base.required ?? []), name];
+        }
       });
       base.properties = mapped;
-    }
-
-    if (required) {
-      base.required = required.map((str) => this.toPropertyKey(str));
     }
 
     if (patternProperties) {
@@ -141,105 +141,5 @@ export class JsonSchemaMapper {
         chr ? chr.toUpperCase() : ""
       )
       .replace(/^(.)/, (match) => match.toLowerCase());
-  }
-
-  public static toZod(jsonSchema: JsonSchema): JsonSchemaZod {
-    let schema = jsonSchema as JsonSchemaZod;
-
-    switch (jsonSchema.type) {
-      case "object":
-        schema = this.objectToZod(jsonSchema as ObjectJsonSchema);
-        break;
-      case "array":
-        schema = this.arrayToZod(jsonSchema as ArrayJsonSchema);
-        break;
-      default:
-        schema = jsonSchema as JsonSchemaZod;
-    }
-
-    return schema;
-  }
-
-  private static objectToZod(
-    jsonSchema: ObjectJsonSchema
-  ): ObjectJsonSchemaZod {
-    const {
-      properties,
-      patternProperties,
-      additionalProperties,
-      unevaluatedProperties,
-      required,
-      ...rest
-    } = jsonSchema;
-    const base = rest as ObjectJsonSchemaZod;
-
-    if (properties) {
-      let mapped: ObjectJsonSchemaZod[] = [];
-      Object.keys(properties).forEach((key) => {
-        const schema = this.toZod(properties[key]!);
-        mapped.push(schema);
-      });
-      base.properties = mapped;
-
-      if (required) {
-        base.required = required
-          .map((str) => properties[str]?.title ?? "")
-          .filter((str) => str);
-      }
-    }
-
-    if (patternProperties) {
-      let mapped: ObjectJsonSchemaZod[] = [];
-      Object.keys(patternProperties).forEach((key) => {
-        const schema = this.toZod(patternProperties[key]!);
-        mapped.push(schema);
-      });
-      base.patternProperties = mapped;
-    }
-
-    if (additionalProperties && typeof additionalProperties === "object") {
-      const schema = this.toZod(additionalProperties);
-      base.additionalProperties = schema;
-    }
-
-    if (unevaluatedProperties && typeof unevaluatedProperties === "object") {
-      const schema = this.toZod(unevaluatedProperties);
-      base.unevaluatedProperties = schema;
-    }
-
-    return base;
-  }
-
-  private static arrayToZod(jsonSchema: ArrayJsonSchema): ArrayJsonSchemaZod {
-    const { items, prefixItems, unevaluatedItems, contains, ...rest } =
-      jsonSchema;
-    const base = rest as ArrayJsonSchemaZod;
-
-    if (items) {
-      //TODO: We don't support multitype items
-      const schema = this.toZod(items as JsonSchema);
-      base.items = schema;
-    }
-
-    if (prefixItems) {
-      let mapped: ArrayJsonSchemaZod[] = [];
-      prefixItems.forEach((item) => {
-        const schema = this.toZod(item);
-        mapped.push(schema);
-      });
-      base.prefixItems = mapped;
-    }
-
-    if (unevaluatedItems && typeof unevaluatedItems === "object") {
-      const schema = this.toZod(unevaluatedItems);
-      base.unevaluatedItems = schema;
-    }
-
-    if (contains && typeof contains === "object") {
-      const schema = this.toZod(contains);
-      base.contains = schema;
-    }
-
-    return base;
   }
 }

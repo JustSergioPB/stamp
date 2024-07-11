@@ -1,6 +1,6 @@
 import Field from "@components/stamp/field";
 import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import { TemplateDetailedView } from "@features/credentials/template/models";
+import { Template } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
 import { Timer } from "lucide-react";
 import ValdityForm from "./validity-form";
@@ -8,7 +8,7 @@ import { TemplateUtils } from "@features/credentials/template/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  template: TemplateDetailedView;
+  template: Template;
 }
 
 export default async function ValidityCard({

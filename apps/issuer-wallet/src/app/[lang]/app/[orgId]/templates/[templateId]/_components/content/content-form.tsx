@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import ObjectForm from "./object-form";
 import {
   createTemplateAction,
-  updateContentAction,
+  updateTemplateAction,
 } from "@features/credentials/template/actions";
 import {
   ContentZod,
@@ -72,7 +72,7 @@ export default function ContentForm({
     setLoading(true);
 
     const result = formValue
-      ? await updateContentAction(templateId, form.getValues())
+      ? await updateTemplateAction(templateId, { content: form.getValues() })
       : await createTemplateAction(form.getValues());
 
     setLoading(false);

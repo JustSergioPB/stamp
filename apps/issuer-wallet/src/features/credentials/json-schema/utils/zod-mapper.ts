@@ -105,8 +105,8 @@ export class ObjectZodMapper implements ZodMapper<Object> {
       const keys = Object.keys(jsonSchema.properties);
       keys.forEach((key) => {
         if (!jsonSchema.properties?.[key]) return;
-        const mapper = ZodMapperFactory.create(jsonSchema.properties[key].type);
-        const mapped = mapper.map(jsonSchema.properties[key]);
+        const mapper = ZodMapperFactory.create(jsonSchema.properties[key]!.type);
+        const mapped = mapper.map(jsonSchema.properties[key]!);
         if (!jsonSchema.required?.includes(key)) {
           mapped.optional();
         }

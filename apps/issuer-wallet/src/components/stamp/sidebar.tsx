@@ -32,7 +32,6 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 
 export default function Sidebar({
   links,
-  className,
   lang,
   header,
   footer,

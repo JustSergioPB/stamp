@@ -26,6 +26,7 @@ import { Separator } from "@components/ui/separator";
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
   prefix: string;
+  // eslint-disable-next-line no-unused-vars
   onSubTypeChange?: (type: JsonSchemaType) => void;
 }
 

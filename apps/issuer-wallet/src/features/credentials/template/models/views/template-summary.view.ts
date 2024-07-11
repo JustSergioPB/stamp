@@ -1,8 +1,8 @@
-import { Template, TemplateStatus } from "../domain/template";
+import { Template, TemplateState } from "../domain/template";
 
 export type TemplateSummaryView = Pick<Template, "id"> & {
   name?: string;
-  status: TemplateStatus;
+  state: TemplateState;
   type?: string[];
   lang?: string;
 };

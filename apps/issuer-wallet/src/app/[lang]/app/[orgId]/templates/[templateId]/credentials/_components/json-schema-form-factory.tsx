@@ -169,7 +169,7 @@ export function ObjectJsonSchemaForm({
       <li key={key} className="flex items-start first:mt-2">
         <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
         <JsonSchemaFormFactory
-          jsonSchema={jsonSchema.properties[key]}
+          jsonSchema={jsonSchema.properties[key]!}
           prefix={`${fieldName}.${key}`}
           lang={lang}
         />
@@ -182,7 +182,7 @@ export function ObjectJsonSchemaForm({
 
     return (
       <JsonSchemaFormFactory
-        jsonSchema={jsonSchema.properties[lastKey]}
+        jsonSchema={jsonSchema.properties[lastKey]!}
         className={cn("flex", isLast ? "ml-8" : "ml-4")}
         prefix={`${fieldName}.${lastKey}`}
         lang={lang}

@@ -224,7 +224,7 @@
   "actions": {
     "backToTemplates": "Volver a plantillas"
   },
-  "status": {
+  "state": {
     "private": "Privada",
     "draft": "Borrador",
     "public": "Publica",

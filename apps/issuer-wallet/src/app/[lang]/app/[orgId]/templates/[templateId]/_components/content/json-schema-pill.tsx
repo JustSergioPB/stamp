@@ -1,40 +1,44 @@
-import { ArrayJsonSchema, JsonSchema, ObjectJsonSchema } from "@stamp/domain";
+import {
+  ArrayJsonSchemaZod,
+  JsonSchemaZod,
+  ObjectJsonSchemaZod,
+} from "@features/credentials/json-schema/models";
 import { iconMap } from "./icon.map";
 import TreeAngle from "@components/stamp/tree-angle";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  jsonSchema: JsonSchema;
+  jsonSchemaZod: JsonSchemaZod;
   isLast?: boolean;
 }
 
 export default function JsonSchemaPill({
-  jsonSchema,
+  jsonSchemaZod,
   className,
   isLast,
 }: Props) {
   let children;
 
-  if (jsonSchema.type === "object") {
-    children = jsonSchema as ObjectJsonSchema;
+  if (jsonSchemaZod.type === "object") {
+    children = jsonSchemaZod as ObjectJsonSchemaZod;
   }
 
-  if (jsonSchema.type === "array") {
-    const arrayJsonSchema = jsonSchema as ArrayJsonSchema;
+  if (jsonSchemaZod.type === "array") {
+    const arrayJsonSchema = jsonSchemaZod as ArrayJsonSchemaZod;
 
     if (
       arrayJsonSchema.items &&
       !Array.isArray(arrayJsonSchema.items) &&
       arrayJsonSchema.items.type === "object"
     ) {
-      children = arrayJsonSchema.items as ObjectJsonSchema;
+      children = arrayJsonSchema.items as ObjectJsonSchemaZod;
     }
   }
 
   function renderPill() {
     return (
       <div className="inline-flex items-center bg-muted rounded-xl py-2 px-3">
-        {iconMap[jsonSchema.type]}
-        <p className="text-sm">{jsonSchema.title}</p>
+        {iconMap[jsonSchemaZod.type]}
+        <p className="text-sm">{jsonSchemaZod.title}</p>
       </div>
     );
   }
@@ -45,7 +49,7 @@ export default function JsonSchemaPill({
       {children && (
         <ObjectJsonSchemaPill
           className={isLast ? "ml-8" : "ml-4"}
-          jsonSchema={children}
+          jsonSchemaZod={children}
         />
       )}
     </div>
@@ -53,45 +57,33 @@ export default function JsonSchemaPill({
 }
 
 interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  jsonSchema: ObjectJsonSchema;
+  jsonSchemaZod: ObjectJsonSchemaZod;
 }
 
-export function ObjectJsonSchemaPill({ jsonSchema, className }: ItemProps) {
-  if (!jsonSchema.properties) {
+export function ObjectJsonSchemaPill({ jsonSchemaZod, className }: ItemProps) {
+  if (!jsonSchemaZod.properties) {
     return <></>;
   }
 
-  const keys = Object.keys(jsonSchema.properties);
-  const lastKey = keys.pop();
-
-  function renderListItem(key: string) {
-    if (!jsonSchema.properties || !jsonSchema.properties[key]) return <></>;
-
-    return (
-      <li key={key} className="flex items-start first:mt-2">
-        <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
-        <JsonSchemaPill key={key} jsonSchema={jsonSchema.properties[key]} />
-      </li>
-    );
-  }
-
-  function renderLast() {
-    if (!lastKey || !jsonSchema.properties?.[lastKey]) return <></>;
-
-    return (
-      <JsonSchemaPill jsonSchema={jsonSchema.properties[lastKey]} isLast />
-    );
-  }
+  const lastKey = jsonSchemaZod.properties.pop();
 
   return (
     <div className={className}>
       <div className="flex">
         <span className="border-l-2 border-l-neutral-300 inline-block"></span>
         <ul className="w-full space-y-2 mb-2">
-          {keys.map((key) => renderListItem(key))}
+          {jsonSchemaZod.properties.map((prop, index) => (
+            <li
+              key={`${prop.title}.${index}`}
+              className="flex items-start first:mt-2"
+            >
+              <span className="border-b-2 border-b-neutral-300 w-4 inline-block mt-5"></span>
+              <JsonSchemaPill jsonSchemaZod={prop} />
+            </li>
+          ))}
         </ul>
       </div>
-      {renderLast()}
+      {lastKey && <JsonSchemaPill jsonSchemaZod={lastKey} isLast />}
     </div>
   );
 }

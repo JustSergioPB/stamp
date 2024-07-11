@@ -1,21 +1,27 @@
-import { BaseZod, SecurityZod, StatusZod, ValidityZod } from "../zod";
-import { Content } from "./content";
+import {
+  BaseZod,
+  ContentZod,
+  SecurityZod,
+  StatusZod,
+  ValidityZod,
+} from "../zod";
 
 export type Template = {
   base?: BaseZod;
   security?: SecurityZod;
   status?: StatusZod;
   validity?: ValidityZod;
-  content: Content;
+  content: ContentZod;
   orgId: string;
+  jsonSchemaId?: string;
   id: string;
-  templateStatus: TemplateStatus;
+  state: TemplateState;
 };
 
-export const templateStatus = [
+export const templateStates = [
   "draft",
   "private",
   "public",
   "deprecated",
 ] as const;
-export type TemplateStatus = (typeof templateStatus)[number];
+export type TemplateState = (typeof templateStates)[number];

@@ -22,7 +22,7 @@ export class DefaultValueFactory {
       const keys = Object.keys(jsonSchema.properties);
       keys.forEach((key) => {
         if (!jsonSchema.properties?.[key]) return;
-        props[key] = DefaultValueFactory.create(jsonSchema.properties[key]);
+        props[key] = DefaultValueFactory.create(jsonSchema.properties[key]!);
       });
     }
     return props;

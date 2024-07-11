@@ -1,11 +1,11 @@
-import { Template, TemplateDetailedView, TemplateSummaryView } from "../models";
+import { Template, TemplateSummaryView } from "../models";
 
 export class SummaryMapper {
-  static map(data: Template | TemplateDetailedView): TemplateSummaryView {
+  static map(data: Template): TemplateSummaryView {
     return {
       id: data.id,
       name: data.base?.name,
-      status: data.templateStatus,
+      state: data.state,
       type: data.base?.type,
       lang: data.base?.lang,
     };

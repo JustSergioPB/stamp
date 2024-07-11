@@ -24,6 +24,7 @@ type Props = {
   lang: string;
 };
 
+//TODO: Change label depending on template or credentialSubject
 export default function IdForm({ control, lang }: Props) {
   const { t } = useTranslation(lang, "template");
   return (
