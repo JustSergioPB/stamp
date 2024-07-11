@@ -8,7 +8,7 @@ export type UserMongo = Omit<User, "id" | "orgId"> & {
 };
 
 export class UserMongoRepository extends MongoRepository {
-  private static collectionName = "users";
+  static collectionName = "users";
 
   static async search(query: SearchParams): Promise<PaginatedList<User>> {
     const collection = await this.connect<UserMongo>(

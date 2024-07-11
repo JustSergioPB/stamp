@@ -45,6 +45,7 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {
   templateId: string;
   orgId: string;
   formValue?: ContentZod;
+  disabled?: boolean;
 }
 
 //TODO: Patch min 1 error
@@ -53,6 +54,7 @@ export default function ContentForm({
   templateId,
   orgId,
   formValue,
+  disabled,
 }: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
@@ -73,6 +75,8 @@ export default function ContentForm({
       ? await updateContentAction(templateId, form.getValues())
       : await createTemplateAction(form.getValues());
 
+    setLoading(false);
+
     if (result.errorCode) {
       toast.error(tError(result.errorCode));
     } else {
@@ -82,8 +86,6 @@ export default function ContentForm({
       if (!formValue)
         router.push(`/${lang}/app/${orgId}/templates/${result.data}`);
     }
-
-    setLoading(false);
   }
 
   return (
@@ -92,6 +94,7 @@ export default function ContentForm({
         <Button
           variant={formValue ? "ghost" : "default"}
           size={formValue ? "icon" : "sm"}
+          disabled={disabled}
         >
           {formValue ? (
             <Pencil className="h-4 w-4" />

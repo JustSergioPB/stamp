@@ -6,7 +6,7 @@ import { CreateOrgDTO } from "../models/dtos";
 
 export type OrgMongo = Omit<Org, "id">;
 export class OrgMongoRepository extends MongoRepository {
-  private static collectionName = "orgs";
+  static collectionName = "orgs";
 
   static async search(query: SearchParams): Promise<PaginatedList<Org>> {
     const collection = await this.connect<OrgMongo>(

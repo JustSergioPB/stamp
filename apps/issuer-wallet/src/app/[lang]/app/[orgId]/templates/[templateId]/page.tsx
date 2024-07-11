@@ -41,33 +41,17 @@ export default async function Page({
       </Breadcrumb>
       <div className="flex gap-8">
         <div className="basis-3/5 grow shrink-0 space-y-8">
-          <BaseCard
-            lang={lang}
-            value={view.base}
-            id={view.id}
-            hasContent={!!view.content}
-          />
-          <ValidityCard lang={lang} value={view.validity} id={view.id} />
+          <BaseCard lang={lang} template={view} />
+          <ValidityCard lang={lang} template={view} />
           <div className="flex gap-8">
-            <SecurityCard
-              className="basis-1/2"
-              lang={lang}
-              value={view.security}
-              id={view.id}
-            />
-            <StatusCard
-              className="basis-1/2"
-              lang={lang}
-              value={view.status}
-              id={view.id}
-            />
+            <SecurityCard className="basis-1/2" template={view} lang={lang} />
+            <StatusCard className="basis-1/2" template={view} lang={lang} />
           </div>
         </div>
         <ContentCard
           className="basis-2/5 min-w-0"
+          template={view}
           lang={lang}
-          value={view.content}
-          templateId={view.id}
         />
       </div>
     </div>

@@ -3,29 +3,29 @@ import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
 import { useTranslation } from "@i18n/server";
 import { FileLock2, FileQuestion, Fingerprint } from "lucide-react";
 import ContentForm from "./content-form";
-import { ContentDetailedView } from "@features/credentials/template/models/views/content-detailed.view";
 import { ContentUtils } from "@features/credentials/template/utils/content.utils";
 import { ObjectJsonSchemaPill } from "./json-schema-pill";
+import { TemplateDetailedView } from "@features/credentials/template/models";
+import { TemplateUtils } from "@features/credentials/template/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  value: ContentDetailedView;
-  templateId: string;
+  template: TemplateDetailedView;
 }
 
 export default async function ContentCard({
   lang,
-  value,
-  templateId,
+  template,
   className,
 }: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tWord } = await useTranslation(lang, "words");
-  const content = ContentUtils.toZod(value);
+  const content = ContentUtils.toZod(template.content);
 
   function renderContent() {
-    if (!value) return <></>;
-    const withOutId = ContentUtils.removeIdFromSchema(value.credentialSubject);
+    const withOutId = ContentUtils.removeIdFromSchema(
+      template.content.credentialSubject
+    );
 
     return <ObjectJsonSchemaPill jsonSchema={withOutId} />;
   }
@@ -38,8 +38,9 @@ export default async function ContentCard({
           <ContentForm
             lang={lang}
             orgId={""}
-            templateId={templateId}
+            templateId={template.id}
             formValue={content}
+            disabled={!TemplateUtils.canEdit(template)}
           />
         </div>
       </CardHeader>
@@ -48,17 +49,19 @@ export default async function ContentCard({
         <div className="space-y-4">
           <Field label={tWord("identifiable")} Icon={FileQuestion}>
             <p className="text-sm">
-              {value?.id?.present ? tWord("yes") : tWord("no")}
+              {template.content.id?.present ? tWord("yes") : tWord("no")}
             </p>
           </Field>
           <Field label={tWord("idType")} Icon={Fingerprint}>
             <p className="text-sm">
-              {value?.id?.type ? t(`id.${value?.id?.type.toLowerCase()}`) : ""}
+              {template.content.id?.type
+                ? t(`id.${template.content.id?.type.toLowerCase()}`)
+                : ""}
             </p>
           </Field>
           <Field label={tWord("anonymous")} Icon={FileLock2}>
             <p className="text-sm">
-              {value?.isAnonymous ? tWord("yes") : tWord("no")}
+              {template.content.isAnonymous ? tWord("yes") : tWord("no")}
             </p>
           </Field>
         </div>

@@ -22,7 +22,7 @@ export async function createOrgAction(
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "create",
-      collection: "orgs",
+      collection: OrgMongoRepository.collectionName,
       documentId: orgId,
       changes: create,
     });

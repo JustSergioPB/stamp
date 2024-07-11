@@ -10,7 +10,7 @@ export type JsonSchemaMongoAggregated = JsonSchema & {
 };
 
 export class JsonSchemaMongoRepository extends MongoRepository {
-  static collectionName = "json-schema";
+  static collectionName = "json-schemas";
 
   static async create(create: ObjectJsonSchema): Promise<string> {
     const collection = await this.connect<JsonSchemaMongo>(

@@ -1,11 +1,9 @@
 import Field from "@components/stamp/field";
-import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import { SecurityZod } from "@features/credentials/template/models";
+import { TemplateDetailedView } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
 
 import {
-  Pencil,
   FileKey2,
   BadgeCheck,
   Handshake,
@@ -13,17 +11,16 @@ import {
   Share,
 } from "lucide-react";
 import SecurityForm from "./security-form";
+import { TemplateUtils } from "@features/credentials/template/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  value: SecurityZod | undefined;
-  id: string;
+  template: TemplateDetailedView;
 }
 
 export default async function SecurityCard({
   lang,
-  value,
-  id,
+  template,
   className,
 }: Props) {
   const { t } = await useTranslation(lang, "template");
@@ -33,23 +30,28 @@ export default async function SecurityCard({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{t("form.security.title")}</CardTitle>
-          <SecurityForm lang={lang} templateId={id} formValue={value} />
+          <SecurityForm
+            lang={lang}
+            templateId={template.id}
+            formValue={template.security}
+            disabled={!TemplateUtils.canEdit(template)}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <Field label={t("form.security.authorization.label")} Icon={FileKey2}>
           <p className="text-sm">
-            {value?.authorization ? tWord("yes") : tWord("no")}
+            {template.security?.authorization ? tWord("yes") : tWord("no")}
           </p>
         </Field>
         <Field label={t("form.security.assertion.label")} Icon={BadgeCheck}>
           <p className="text-sm">
-            {value?.assertion ? tWord("yes") : tWord("no")}
+            {template.security?.assertion ? tWord("yes") : tWord("no")}
           </p>
         </Field>
         <Field label={t("form.security.keyAgreement.label")} Icon={Handshake}>
           <p className="text-sm">
-            {value?.keyAgreement ? tWord("yes") : tWord("no")}
+            {template.security?.keyAgreement ? tWord("yes") : tWord("no")}
           </p>
         </Field>
         <Field
@@ -57,7 +59,9 @@ export default async function SecurityCard({
           Icon={HandCoins}
         >
           <p className="text-sm">
-            {value?.capabilityInvocation ? tWord("yes") : tWord("no")}
+            {template.security?.capabilityInvocation
+              ? tWord("yes")
+              : tWord("no")}
           </p>
         </Field>
         <Field
@@ -65,7 +69,9 @@ export default async function SecurityCard({
           Icon={Share}
         >
           <p className="text-sm">
-            {value?.capabilityDelegation ? tWord("yes") : tWord("no")}
+            {template.security?.capabilityDelegation
+              ? tWord("yes")
+              : tWord("no")}
           </p>
         </Field>
       </CardContent>

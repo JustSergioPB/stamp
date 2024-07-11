@@ -3,7 +3,7 @@
 import { ActionResult } from "@lib/action";
 import { revalidatePath } from "next/cache";
 import { TemplateMongoRepository } from "../repositories";
-import { ContentZod, UpdateTemplateDTO } from "../models";
+import { ContentZod, CreateTemplateDTO, UpdateTemplateDTO } from "../models";
 import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
@@ -24,8 +24,9 @@ export async function createTemplateAction(
     const next = ContentUtils.toDomain(content);
     const jsonSchemaId = await createContent(session, next);
 
-    const create = {
+    const create: CreateTemplateDTO = {
       orgId: session.orgId,
+      templateStatus: "draft",
       content: {
         id: content.id,
         isAnonymous: content.isAnonymous,
@@ -37,7 +38,7 @@ export async function createTemplateAction(
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "create",
-      collection: "template",
+      collection: TemplateMongoRepository.collectionName,
       documentId: templateId,
       changes: create,
     });
@@ -66,7 +67,7 @@ export async function updateTemplateAction(
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "update",
-      collection: "template",
+      collection: TemplateMongoRepository.collectionName,
       documentId: id,
       changes: update,
     });
@@ -118,7 +119,7 @@ export async function updateContentAction(
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "update",
-      collection: "template",
+      collection: TemplateMongoRepository.collectionName,
       documentId: id,
       changes: update,
     });
@@ -143,7 +144,7 @@ async function createContent(
   await AuditLogMongoRepository.create({
     userId: session.id,
     operation: "create",
-    collection: "json-schema",
+    collection: JsonSchemaMongoRepository.collectionName,
     documentId: jsonSchemaId,
     changes: jsonSchema,
   });

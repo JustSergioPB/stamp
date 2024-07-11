@@ -9,4 +9,13 @@ export type Template = {
   content: Content;
   orgId: string;
   id: string;
+  templateStatus: TemplateStatus;
 };
+
+export const templateStatus = [
+  "draft",
+  "private",
+  "public",
+  "deprecated",
+] as const;
+export type TemplateStatus = (typeof templateStatus)[number];

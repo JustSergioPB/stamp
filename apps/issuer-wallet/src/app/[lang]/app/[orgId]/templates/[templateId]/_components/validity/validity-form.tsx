@@ -36,9 +36,15 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {
   lang: string;
   templateId: string;
   formValue?: ValidityZod;
+  disabled?: boolean;
 }
 
-export default function ValdityForm({ lang, templateId, formValue }: Props) {
+export default function ValdityForm({
+  lang,
+  templateId,
+  formValue,
+  disabled,
+}: Props) {
   const { t } = useTranslation(lang, "template");
   const { t: tAction } = useTranslation(lang, "actions");
   const { t: tError } = useTranslation(lang, "errors");
@@ -57,19 +63,20 @@ export default function ValdityForm({ lang, templateId, formValue }: Props) {
       validity: data,
     });
 
+    setLoading(false);
+
     if (result.errorCode) {
       toast.error(tError(result.errorCode));
     } else {
       toast.success(tAction("success"));
+      setOpen(false);
     }
-
-    setLoading(false);
   }
 
   return (
     <Dialog open={open}>
       <DialogTrigger onClick={() => setOpen(true)} asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" disabled={disabled}>
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>

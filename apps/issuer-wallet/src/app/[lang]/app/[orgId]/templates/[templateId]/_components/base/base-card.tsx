@@ -1,13 +1,14 @@
 import ChipList from "@components/stamp/chip-list";
 import Field from "@components/stamp/field";
 import StatusBadge from "@components/stamp/status-badge";
-import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import { BaseZod } from "@features/credentials/template/models";
+import {
+  BaseZod,
+  TemplateDetailedView,
+  TemplateStatus,
+} from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
 import {
-  Pencil,
-  CirclePlus,
   FileSignature,
   Loader,
   Languages,
@@ -16,20 +17,20 @@ import {
   Text,
 } from "lucide-react";
 import BaseForm from "./base-form";
+import { TemplateUtils } from "@features/credentials/template/utils";
+import DeprecateButton from "../deprecate-button";
+import PublishButton from "../publish-button";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  value: BaseZod | undefined;
-  id: string;
-  hasContent: boolean;
+  template: TemplateDetailedView;
 }
 
 export default async function BaseCard({
   lang,
-  value,
   id,
-  hasContent,
   className,
+  template,
 }: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tLang } = await useTranslation(lang, "langs");
@@ -39,30 +40,36 @@ export default async function BaseCard({
     <Card className={className}>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>{value?.name ?? id}</CardTitle>
+          <CardTitle>{template.base?.name ?? id}</CardTitle>
           <div className="flex items-center gap-4">
-            <BaseForm lang={lang} templateId={id} formValue={value} />
+            <PublishButton lang={lang} template={template} />
+            <DeprecateButton lang={lang} template={template} />
+            <BaseForm
+              lang={lang}
+              templateId={template.id}
+              formValue={template.base}
+              disabled={!TemplateUtils.canEdit(template)}
+            />
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <Field type="vertical" label={t("summary.description")} Icon={Text}>
-          <p className="text-sm">{value?.description}</p>
+          <p className="text-sm">{template.base?.description}</p>
         </Field>
         <Field type="vertical" label={t("summary.type")} Icon={FileSignature}>
-          <ChipList items={value?.type ?? []} />
+          <ChipList items={template.base?.type ?? []} />
         </Field>
         <div className="flex gap-8">
           <div className="space-y-4 basis-1/2">
             <h3>{tWord("summary")}</h3>
             <Field label={t("summary.status")} Icon={Loader}>
-              <StatusBadge
-                value={t(hasContent ? "status.ready" : "status.notReady")}
-                variant={hasContent ? "success" : "base"}
-              />
+              <StatusBadge value={template.templateStatus} lang={lang} />
             </Field>
             <Field label={t("summary.lang")} Icon={Languages}>
-              <p className="text-sm">{value?.lang ? tLang(value?.lang) : ""}</p>
+              <p className="text-sm">
+                {template.base?.lang ? tLang(template.base?.lang) : ""}
+              </p>
             </Field>
           </div>
           <div className="space-y-4 basis-1/2">
@@ -70,13 +77,13 @@ export default async function BaseCard({
             <div className="space-y-4">
               <Field label={tWord("identifiable")} Icon={FileQuestion}>
                 <p className="text-sm">
-                  {value?.id?.present ? tWord("yes") : tWord("no")}
+                  {template.base?.id?.present ? tWord("yes") : tWord("no")}
                 </p>
               </Field>
               <Field label={tWord("idType")} Icon={Fingerprint}>
                 <p className="text-sm">
-                  {value?.id?.type
-                    ? t(`id.${value?.id?.type.toLowerCase()}`)
+                  {template.base?.id?.type
+                    ? t(`id.${template.base?.id?.type.toLowerCase()}`)
                     : ""}
                 </p>
               </Field>

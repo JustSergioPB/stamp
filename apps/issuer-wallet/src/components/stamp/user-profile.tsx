@@ -13,45 +13,28 @@ import {
 import { logoutAction } from "@features/auth/actions";
 import { User } from "@features/auth/models";
 import { useTranslation } from "@i18n/client";
-import { cn } from "@lib/utils";
 import { LogOut, PenTool, ShieldCheck, ShieldHalf } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-/**
- * <div className="flex flex-col">
-        <span className="font-semibold text-sm">{`${user.name} ${user.lastName}`}</span>
-        <span className="text-muted-foreground text-xs">{user.email}</span>
-      </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => {
-          logoutAction();
-          router.push(`/${lang}/auth`);
-        }}
-      >
-        <LogOut className="h-4 w-4" />
-      </Button>
- */
 interface Props extends React.HtmlHTMLAttributes<HTMLDivElement> {
   user: User;
   lang: string;
 }
 
-export default function UserProfile({ user, className, lang }: Props) {
+export default function UserProfile({ user, lang }: Props) {
   const router = useRouter();
   const { t } = useTranslation(lang, "words");
 
   function getAvatarFallbackBg() {
-    if (user.role === "superAdmin") return "bg-purple-100 text-purple-500";
-    if (user.role === "orgAdmin") return "bg-rose-100 text-rose-500";
-    if (user.role === "issuer") return "bg-orange-100 text-orange-500";
+    if (user.role === "superAdmin") return "bg-orange-100 text-orange-500";
+    if (user.role === "orgAdmin") return "bg-purple-100 text-purple-500";
+    if (user.role === "issuer") return "bg-blue-100 text-blue-500";
   }
 
   function getAvatarFallbackIcon() {
     if (user.role === "superAdmin") return <ShieldHalf className="h-5 w-5" />;
     if (user.role === "orgAdmin") return <ShieldCheck className="h-5 w-5" />;
-    if (user.role === "issuer") return <PenTool className="h-5 w-" />;
+    if (user.role === "issuer") return <PenTool className="h-5 w-5" />;
   }
 
   return (
@@ -63,7 +46,11 @@ export default function UserProfile({ user, className, lang }: Props) {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 translate-x-4 -translate-y-2" align="end" forceMount>
+      <DropdownMenuContent
+        className="w-56 translate-x-4 -translate-y-2"
+        align="end"
+        forceMount
+      >
         <DropdownMenuLabel className="font-normal">
           <div className="flex gap-1 items-center">
             <Avatar>

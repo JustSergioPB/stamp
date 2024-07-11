@@ -34,7 +34,7 @@ export type TemplateMongoAggregated = WithId<
   }
 >;
 export class TemplateMongoRepository extends MongoRepository {
-  private static collectionName = "templates";
+  static collectionName = "templates";
 
   static async search(query: SearchParams): Promise<PaginatedList<Template>> {
     const collection = await this.connect<TemplateMongo>(
@@ -148,6 +148,7 @@ export class TemplateMongoRepository extends MongoRepository {
 
     const documentRef = await collection.insertOne({
       _orgId: new ObjectId(create.orgId),
+      templateStatus: create.templateStatus,
       content: {
         id: create.content.id,
         isAnonymous: create.content.isAnonymous,
@@ -156,24 +157,6 @@ export class TemplateMongoRepository extends MongoRepository {
     });
 
     return documentRef.insertedId.toString();
-  }
-
-  static async getName(id: string): Promise<string | undefined> {
-    const collection = await this.connect<TemplateMongo>(
-      TemplateMongoRepository.collectionName
-    );
-
-    if (!collection) {
-      throw new Error("Failed to retrieve collection");
-    }
-
-    const document = await collection.findOne({ _id: new ObjectId(id) });
-
-    if (!document) {
-      throw new Error("Template not found");
-    }
-
-    return document.base?.name;
   }
 
   static async update(id: string, template: Partial<Template>): Promise<void> {

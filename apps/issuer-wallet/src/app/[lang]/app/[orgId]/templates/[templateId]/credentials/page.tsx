@@ -12,8 +12,7 @@ import { useTranslation } from "@i18n/server";
 import { SearchParams } from "@lib/query";
 import AddButton from "./_components/add-button";
 import { CredentialMongoRepository } from "@features/credentials/credential/repositories";
-import { ContentUtils } from "@features/credentials/template/utils/content.utils";
-import { JsonSchema } from "@stamp/domain";
+import { TemplateUtils } from "@features/credentials/template/utils";
 
 type Props = {
   searchParams: SearchParams;
@@ -28,12 +27,7 @@ export default async function Page({
   const { t: tTemplate } = await useTranslation(lang, "template");
   const view = await TemplateMongoRepository.getById(templateId);
   const paginatedList = await CredentialMongoRepository.search(searchParams);
-  let jsonSchema: JsonSchema | undefined;
-  if (view.content?.credentialSubject) {
-    jsonSchema = ContentUtils.removeIdFromSchema(
-      view.content.credentialSubject
-    );
-  }
+  const canEmit = TemplateUtils.canEmit(view);
 
   return (
     <div className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted flex flex-col">
@@ -63,13 +57,26 @@ export default async function Page({
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        {jsonSchema && <AddButton lang={lang} jsonSchema={jsonSchema} />}
+        <AddButton
+          lang={lang}
+          jsonSchema={view.content.credentialSubject}
+          disabled={!canEmit}
+        />
       </div>
       {paginatedList.items.length > 0 ? (
         <></>
       ) : (
-        <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
-          {jsonSchema && <AddButton lang={lang} jsonSchema={jsonSchema} />}
+        <EmptyScreen
+          title={canEmit ? t("empty.title") : tTemplate("emit.cant.title")}
+          subtitle={
+            canEmit ? t("empty.subtitle") : tTemplate("emit.cant.subtitle")
+          }
+        >
+          <AddButton
+            lang={lang}
+            jsonSchema={view.content.credentialSubject}
+            disabled={!canEmit}
+          />
         </EmptyScreen>
       )}
     </div>

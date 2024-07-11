@@ -8,8 +8,8 @@ import StampTable, { Column } from "@components/stamp/table";
 import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import ChipListCell from "@components/stamp/chip-list-cell";
-import StatusCell from "@components/stamp/status-cell";
 import ContentForm from "./[templateId]/_components/content/content-form";
+import StatusBadge from "@components/stamp/status-badge";
 
 type Props = {
   searchParams: SearchParams;
@@ -29,7 +29,7 @@ export default async function Page({
   });
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {
-    items: items.map((item) => SummaryMapper.fromTemplate(item)),
+    items: items.map((item) => SummaryMapper.map(item)),
     ...rest,
   };
 
@@ -50,12 +50,9 @@ export default async function Page({
       key: "status",
       name: t("summary.status"),
       cell: (item) => (
-        <StatusCell
-          value={t(
-            item.status === "ready" ? "status.ready" : "status.notReady"
-          )}
-          variant={item.status === "ready" ? "success" : "base"}
-        />
+        <div className="flex space-x-2">
+          <StatusBadge value={item.status} lang={lang} />
+        </div>
       ),
     },
     {

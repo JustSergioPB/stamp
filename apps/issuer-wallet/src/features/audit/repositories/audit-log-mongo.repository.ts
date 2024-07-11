@@ -8,8 +8,12 @@ export type MongoAuditLog = Omit<AuditLog, "id" | "userId" | "documentId"> & {
 };
 
 export class AuditLogMongoRepository extends MongoRepository {
+  static collectionName = "audit-logs";
+  
   static async create(auditLog: CreateAuditLogDTO): Promise<void> {
-    const collection = await this.connect<MongoAuditLog>("audit-logs");
+    const collection = await this.connect<MongoAuditLog>(
+      AuditLogMongoRepository.collectionName
+    );
 
     if (!collection) {
       throw new Error("Failed to retrieve collection");

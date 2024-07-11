@@ -1,30 +1,28 @@
 import Field from "@components/stamp/field";
-import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import { ValidityZod } from "@features/credentials/template/models";
+import { TemplateDetailedView } from "@features/credentials/template/models";
 import { useTranslation } from "@i18n/server";
-import { Pencil, Timer } from "lucide-react";
+import { Timer } from "lucide-react";
 import ValdityForm from "./validity-form";
+import { TemplateUtils } from "@features/credentials/template/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   lang: string;
-  value: ValidityZod | undefined;
-  id: string;
+  template: TemplateDetailedView;
 }
 
 export default async function ValidityCard({
   lang,
-  value,
-  id,
+  template,
   className,
 }: Props) {
   const { t } = await useTranslation(lang, "template");
   const { t: tWord } = await useTranslation(lang, "words");
 
   function getValidityString() {
-    if (!value) return t("form.validity.notSet");
+    if (!template.validity) return t("form.validity.notSet");
 
-    const { years, months, days, hours, mins, secs } = value;
+    const { years, months, days, hours, mins, secs } = template.validity;
 
     if (!years && !months && !days && !hours && !mins && !secs) {
       return t("form.validity.notExpires");
@@ -47,7 +45,12 @@ export default async function ValidityCard({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{t("form.validity.title")}</CardTitle>
-          <ValdityForm lang={lang} templateId={id} formValue={value} />
+          <ValdityForm
+            lang={lang}
+            templateId={template.id}
+            formValue={template.validity}
+            disabled={!TemplateUtils.canEdit(template)}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">

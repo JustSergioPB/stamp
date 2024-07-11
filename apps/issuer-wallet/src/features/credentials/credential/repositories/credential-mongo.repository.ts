@@ -8,7 +8,7 @@ export type VerifiableCredentialMongo = Omit<
   "credentialSubject"
 >;
 export class CredentialMongoRepository extends MongoRepository {
-  private static collectionName = "credentials";
+  static collectionName = "credentials";
 
   static async search(
     query: SearchParams

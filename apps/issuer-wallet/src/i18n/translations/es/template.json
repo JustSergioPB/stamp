@@ -225,7 +225,26 @@
     "backToTemplates": "Volver a plantillas"
   },
   "status": {
-    "ready": "Listo",
-    "notReady": "Borrador"
+    "private": "Privada",
+    "draft": "Borrador",
+    "public": "Publica",
+    "deprecated": "Deprecada"
+  },
+  "publish": {
+    "label": "Publicar",
+    "title": "Publicar plantilla",
+    "description": "¿Estás seguro de que quieres publicar esta plantilla? Una vez publicada, no podrás editarla.",
+    "cta": "Publicar"
+  },
+  "emit": {
+    "title": "Emitir credencial",
+    "cant": {
+      "title": "No se puede emitir con esta plantilla",
+      "subtitle": "No puedes emitir una credencial si la plantilla no es publica o privada"
+    },
+    "cta": "Emitir"
+  },
+  "deprecate": {
+    "label": "Deprecar"
   }
 }
