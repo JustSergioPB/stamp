@@ -29,11 +29,12 @@ export class TemplateMongoRepository extends MongoRepository {
     const count = await collection.countDocuments();
 
     return {
-      items: documents.map(({ _id, _orgId, ...document }) => {
+      items: documents.map(({ _id, _orgId, _jsonSchemaId, ...document }) => {
         let base: Template = {
           ...document,
           id: _id.toString(),
           orgId: _orgId.toString(),
+          jsonSchemaId: _jsonSchemaId?.toString(),
         };
 
         return base;
@@ -60,12 +61,13 @@ export class TemplateMongoRepository extends MongoRepository {
       throw new Error("Template not found");
     }
 
-    const { _id, _orgId, ...rest } = document;
+    const { _id, _orgId, _jsonSchemaId, ...rest } = document;
 
     return {
       ...rest,
       id: _id.toString(),
       orgId: _orgId.toString(),
+      jsonSchemaId: _jsonSchemaId?.toString(),
     };
   }
 

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { ReactNode } from "react";
 
+//TODO: Add icons for string date types
 export const iconMap: Record<JsonSchemaType, ReactNode> = {
   array: <List className="h-4 w-4 mr-2" />,
   boolean: <Binary className="h-4 w-4 mr-2" />,

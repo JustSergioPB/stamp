@@ -22,27 +22,6 @@ export class JsonSchemaMongoRepository extends MongoRepository {
     return insertedId.toString();
   }
 
-  static async update(id: string, update: ObjectJsonSchema): Promise<string> {
-    const collection = await this.connect<JsonSchemaMongo>(
-      JsonSchemaMongoRepository.collectionName
-    );
-
-    if (!collection) {
-      throw new Error("Failed to retrieve collection");
-    }
-
-    const { upsertedId } = await collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: update }
-    );
-
-    if (!upsertedId) {
-      throw new Error("Schema not found");
-    }
-
-    return upsertedId.toString();
-  }
-
   static async getById(id: string): Promise<JsonSchema> {
     const collection = await this.connect<JsonSchemaMongo>(
       JsonSchemaMongoRepository.collectionName
@@ -60,7 +39,11 @@ export class JsonSchemaMongoRepository extends MongoRepository {
       throw new Error("Schema not found");
     }
 
-    return schema;
+    const { _id, ...rest } = schema;
+
+    return {
+      ...rest,
+    };
   }
 
   static async search(query: SearchParams): Promise<PaginatedList<JsonSchema>> {

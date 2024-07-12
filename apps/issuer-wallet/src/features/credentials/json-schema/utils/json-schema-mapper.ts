@@ -42,12 +42,13 @@ export class JsonSchemaMapper {
 
     if (properties) {
       let mapped: { [key: string]: JsonSchema } = {};
+      base.required = [];
       properties.forEach((prop) => {
         const { schema, name, required } = this.toDomain(prop);
         mapped[name] = schema;
 
         if (required) {
-          base.required = [...(base.required ?? []), name];
+          base.required?.push(name);
         }
       });
       base.properties = mapped;

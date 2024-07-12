@@ -13,6 +13,7 @@ import { SearchParams } from "@lib/query";
 import AddButton from "./_components/add-button";
 import { CredentialMongoRepository } from "@features/credentials/credential/repositories";
 import { TemplateUtils } from "@features/credentials/template/utils";
+import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
 
 type Props = {
   searchParams: SearchParams;
@@ -26,6 +27,9 @@ export default async function Page({
   const { t } = await useTranslation(lang, "credential");
   const { t: tTemplate } = await useTranslation(lang, "template");
   const view = await TemplateMongoRepository.getById(templateId);
+  const jsonSchema = view.jsonSchemaId
+    ? await JsonSchemaMongoRepository.getById(view.jsonSchemaId)
+    : undefined;
   const paginatedList = await CredentialMongoRepository.search(searchParams);
   const canEmit = TemplateUtils.canEmit(view);
 
@@ -57,11 +61,9 @@ export default async function Page({
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        <AddButton
-          lang={lang}
-          jsonSchema={view.content.credentialSubject}
-          disabled={!canEmit}
-        />
+        {jsonSchema && (
+          <AddButton lang={lang} jsonSchema={jsonSchema} disabled={!canEmit} />
+        )}
       </div>
       {paginatedList.items.length > 0 ? (
         <></>
@@ -72,15 +74,15 @@ export default async function Page({
             canEmit ? t("empty.subtitle") : tTemplate("emit.cant.subtitle")
           }
         >
-          <AddButton
-            lang={lang}
-            jsonSchema={view.content.credentialSubject}
-            disabled={!canEmit}
-          />
+          {jsonSchema && (
+            <AddButton
+              lang={lang}
+              jsonSchema={jsonSchema}
+              disabled={!canEmit}
+            />
+          )}
         </EmptyScreen>
       )}
     </div>
   );
 }
-
-//TODO: Instead of empty screen if not content defined print alert

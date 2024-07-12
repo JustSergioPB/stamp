@@ -10,6 +10,30 @@ export const JSONSchemaTypes = [
 
 export type JsonSchemaType = (typeof JSONSchemaTypes)[number];
 
+export const stringJsonSchemaFormats = [
+  "date-time",
+  "time",
+  "date",
+  "duration",
+  "email",
+  "idn-email",
+  "hostname",
+  "idn-hostname",
+  "ipv4",
+  "ipv6",
+  "uuid",
+  "uri",
+  "uri-reference",
+  "iri",
+  "iri-reference",
+  "uri-template",
+  "json-pointer",
+  "relative-json-pointer",
+  "regex",
+] as const;
+
+export type StringJsonSchemaFormat = (typeof stringJsonSchemaFormats)[number];
+
 export type BaseJsonSchema = {
   $schema?: "https://json-schema.org/draft/2020-12/schema";
   $id?: string;

@@ -13,7 +13,7 @@ import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
 import { Session } from "@features/auth/models";
-import { JsonSchema, ObjectJsonSchema } from "@stamp/domain";
+import { JsonSchema } from "@stamp/domain";
 import { TemplateUtils } from "../utils";
 import { invalidTransitions } from "../constants/invalid-transitions.const";
 import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
@@ -133,7 +133,6 @@ export async function updateTemplateStateAction(
   }
 }
 
-//TODO: This will only happen when template is public
 async function createContent(
   session: Session,
   jsonSchema: JsonSchema

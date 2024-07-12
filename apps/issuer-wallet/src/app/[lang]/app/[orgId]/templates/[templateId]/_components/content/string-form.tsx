@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { useTranslation } from "@i18n/client";
+import { stringJsonSchemaFormats } from "@stamp/domain";
 import { useFormContext } from "react-hook-form";
 
 type Props = {
@@ -109,13 +110,11 @@ export default function StringForm({ lang, prefix }: Props) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {["date", "time", "date-time", "email", "uri", "did"].map(
-                    (format) => (
-                      <SelectItem key={format} value={format}>
-                        {t("form.content.format." + format)}
-                      </SelectItem>
-                    )
-                  )}
+                  {stringJsonSchemaFormats.map((format) => (
+                    <SelectItem key={format} value={format}>
+                      {t("form.content.format." + format)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

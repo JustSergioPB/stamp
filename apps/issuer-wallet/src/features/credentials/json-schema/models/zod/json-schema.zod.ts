@@ -1,4 +1,4 @@
-import { JSONSchemaTypes } from "@stamp/domain";
+import { JSONSchemaTypes, stringJsonSchemaFormats } from "@stamp/domain";
 import { z } from "zod";
 
 export const baseJsonSchemaZod = z.object({
@@ -16,7 +16,7 @@ export const baseJsonSchemaZod = z.object({
 export type BaseJsonSchemaZod = z.infer<typeof baseJsonSchemaZod>;
 
 export const stringJsonSchemaZod = baseJsonSchemaZod.extend({
-  format: z.string().optional(),
+  format: z.enum(stringJsonSchemaFormats).optional(),
   minLength: z.coerce.number().optional(),
   maxLength: z.coerce.number().optional(),
   pattern: z.string().optional(),

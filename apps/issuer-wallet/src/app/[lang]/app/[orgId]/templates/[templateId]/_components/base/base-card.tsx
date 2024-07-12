@@ -40,7 +40,7 @@ export default async function BaseCard({
           <div className="flex items-center gap-4">
             <PublishButton
               lang={lang}
-              template={template}
+              templateId={template.id}
               disabled={
                 template.state === "deprecated" || template.state === "public"
               }

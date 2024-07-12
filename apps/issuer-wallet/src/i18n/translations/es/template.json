@@ -227,14 +227,27 @@
   "state": {
     "private": "Privada",
     "draft": "Borrador",
-    "public": "Publica",
+    "public": "Pública",
     "deprecated": "Deprecada"
   },
   "publish": {
     "label": "Publicar",
     "title": "Publicar plantilla",
-    "description": "¿Estás seguro de que quieres publicar esta plantilla? Una vez publicada, no podrás editarla.",
-    "cta": "Publicar"
+    "description": "¿Has revisado que todo esté bien? Este cambio es irreversible y una vez publicada, no podrás editar el contenido de la plantilla",
+    "confirm": "Lo entiendo, publicar esta plantilla",
+    "form": {
+      "word": {
+        "label": "Por favor escribe la palabra 'publicar' para confirmar",
+        "placeholder": "¿Has revisado todo?"
+      },
+      "state": {
+        "private": "La plantilla sólo se puede usar en tu organización. Si quieres hacerla pública más tarde podrás hacerlo desde aquí.",
+        "public": "La plantilla se puede usar en cualquier organización pero solo tu organización puede emitir credenciales con ella"
+      }
+    },
+    "error": {
+      "noMatch": "La palabra de confirmación no coincide"
+    }
   },
   "emit": {
     "title": "Emitir credencial",

@@ -11,6 +11,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isLast?: boolean;
 }
 
+//TODO: Add dialog to check config details
+
 export default function JsonSchemaPill({
   jsonSchemaZod,
   className,
