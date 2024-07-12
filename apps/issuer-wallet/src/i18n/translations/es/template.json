@@ -245,6 +245,18 @@
     "cta": "Emitir"
   },
   "deprecate": {
-    "label": "Deprecar"
+    "label": "Deprecar",
+    "title": "Deprecar plantilla",
+    "description": "¿Estás seguro? Este cambio es irreversible y una vez deprecada, no podrás emitir nuevas credenciales con esta plantilla.",
+    "confirm": "Lo entiendo, deprecar esta plantilla",
+    "form": {
+      "word": {
+        "label": "Por favor escribe la palabra 'deprecar' para confirmar",
+        "placeholder": "¿Estás seguro?"
+      }
+    },
+    "error": {
+      "noMatch": "La palabra de confirmación no coincide"
+    }
   }
 }

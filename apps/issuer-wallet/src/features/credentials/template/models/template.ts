@@ -4,7 +4,7 @@ import {
   SecurityZod,
   StatusZod,
   ValidityZod,
-} from "../zod";
+} from "./zod";
 
 export type Template = {
   base?: BaseZod;

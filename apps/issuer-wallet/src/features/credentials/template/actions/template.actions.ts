@@ -13,7 +13,10 @@ import { AuditLogMongoRepository } from "@features/audit/repositories";
 import { verifySession } from "@features/auth/server";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
 import { Session } from "@features/auth/models";
-import { ObjectJsonSchema } from "@stamp/domain";
+import { JsonSchema, ObjectJsonSchema } from "@stamp/domain";
+import { TemplateUtils } from "../utils";
+import { invalidTransitions } from "../constants/invalid-transitions.const";
+import { JsonSchemaMapper } from "@features/credentials/json-schema/utils";
 
 export async function createTemplateAction(
   content: ContentZod
@@ -60,7 +63,11 @@ export async function updateTemplateAction(
       throw new Error("Forbidden");
     }
 
-    //TODO: Think if it's wort to make another call
+    const template = await TemplateMongoRepository.getById(id);
+
+    if (!TemplateUtils.canEdit(template)) {
+      throw new Error("Cannot edit templates that are not in draft state");
+    }
 
     await TemplateMongoRepository.update(id, update);
     await AuditLogMongoRepository.create({
@@ -81,7 +88,7 @@ export async function updateTemplateAction(
   }
 }
 
-export async function updateStateAction(
+export async function updateTemplateStateAction(
   id: string,
   state: TemplateState
 ): Promise<ActionResult<string>> {
@@ -92,15 +99,28 @@ export async function updateStateAction(
       throw new Error("Forbidden");
     }
 
-    //TODO: Configure side effects
+    const template = await TemplateMongoRepository.getById(id);
+    let update: UpdateTemplateDTO = { state };
 
-    await TemplateMongoRepository.update(id, { state });
+    if (invalidTransitions[template.state].includes(state)) {
+      throw new Error("Invalid transition");
+    }
+
+    if (state === "private" || (state === "public" && !template.jsonSchemaId)) {
+      const { schema: jsonSchema } = JsonSchemaMapper.toDomain(
+        template.content.credentialSubject
+      );
+      const jsonSchemaId = await createContent(session, jsonSchema);
+      update = { ...update, jsonSchemaId };
+    }
+
+    await TemplateMongoRepository.update(id, update);
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "update",
       collection: TemplateMongoRepository.collectionName,
       documentId: id,
-      changes: { status },
+      changes: update,
     });
     revalidatePath(`${id}`);
     return { data: id, errorCode: null };
@@ -116,7 +136,7 @@ export async function updateStateAction(
 //TODO: This will only happen when template is public
 async function createContent(
   session: Session,
-  jsonSchema: ObjectJsonSchema
+  jsonSchema: JsonSchema
 ): Promise<string> {
   const jsonSchemaId = await JsonSchemaMongoRepository.create(jsonSchema);
 

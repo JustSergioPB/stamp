@@ -1,4 +1,4 @@
-import { Template, TemplateState } from "../domain/template";
+import { Template, TemplateState } from "./template";
 
 export type TemplateSummaryView = Pick<Template, "id"> & {
   name?: string;

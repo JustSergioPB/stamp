@@ -38,8 +38,18 @@ export default async function BaseCard({
         <div className="flex items-center justify-between">
           <CardTitle>{template.base?.name ?? id}</CardTitle>
           <div className="flex items-center gap-4">
-            <PublishButton lang={lang} template={template} />
-            <DeprecateButton lang={lang} template={template} />
+            <PublishButton
+              lang={lang}
+              template={template}
+              disabled={
+                template.state === "deprecated" || template.state === "public"
+              }
+            />
+            <DeprecateButton
+              lang={lang}
+              templateId={template.id}
+              disabled={template.state === "deprecated"}
+            />
             <BaseForm
               lang={lang}
               templateId={template.id}
