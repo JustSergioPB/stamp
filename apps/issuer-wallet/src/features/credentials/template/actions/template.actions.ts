@@ -114,6 +114,7 @@ export async function updateTemplateStateAction(
       update = { ...update, jsonSchemaId };
     }
 
+    //TODO: Add support to generate credential schema from template
     await TemplateMongoRepository.update(id, update);
     await AuditLogMongoRepository.create({
       userId: session.id,
@@ -133,6 +134,7 @@ export async function updateTemplateStateAction(
   }
 }
 
+//TODO: Add support for blockchain for public
 async function createContent(
   session: Session,
   jsonSchema: JsonSchema

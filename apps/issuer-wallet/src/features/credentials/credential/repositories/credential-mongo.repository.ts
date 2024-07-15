@@ -26,18 +26,32 @@ export class CredentialMongoRepository extends MongoRepository {
       collection.find(),
       Object.keys({} as TemplateMongo)
     );
+
     const documents = await cursor.toArray();
     const count = await collection.countDocuments();
 
     return {
       items: documents.map(({ _id, ...rest }) => ({
         ...rest,
-        credentialSubject: {},
       })),
       count,
       currentPage: page,
       totalPages: Math.ceil(count / pageSize),
       pageSize,
     };
+  }
+
+  static async create(create: VerifiableCredentialV2): Promise<string> {
+    const collection = await this.connect<VerifiableCredentialMongo>(
+      CredentialMongoRepository.collectionName
+    );
+
+    if (!collection) {
+      throw new Error("Failed to retrieve collection");
+    }
+
+    const { insertedId } = await collection.insertOne(create);
+
+    return insertedId.toString();
   }
 }

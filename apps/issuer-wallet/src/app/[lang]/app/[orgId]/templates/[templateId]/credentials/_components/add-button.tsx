@@ -11,7 +11,7 @@ import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@i18n/client";
 import { Dialog } from "@radix-ui/react-dialog";
-import { JsonSchema } from "@stamp/domain";
+import { CredentialSubject, JsonSchema } from "@stamp/domain";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,16 +20,26 @@ import {
   ZodMapperFactory,
 } from "@features/credentials/json-schema/utils";
 import { JsonSchemaFormFactory } from "./json-schema-form-factory";
+import { Template } from "@features/credentials/template/models";
+import { createCredentialAction } from "@features/credentials/credential/actions";
+import { toast } from "sonner";
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   jsonSchema: JsonSchema;
+  template: Template;
   lang: string;
   disabled?: boolean;
 }
 
-export default function AddButton({ lang, disabled, jsonSchema }: Props) {
+export default function AddButton({
+  lang,
+  disabled,
+  jsonSchema,
+  template,
+}: Props) {
   const { t } = useTranslation(lang, "credential");
   const { t: tAction } = useTranslation(lang, "actions");
+  const { t: tError } = useTranslation(lang, "errors");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const mapper = ZodMapperFactory.create(jsonSchema.type);
@@ -41,8 +51,17 @@ export default function AddButton({ lang, disabled, jsonSchema }: Props) {
     defaultValues,
   });
 
-  function handleSubmit(data: unknown) {
-    console.log(data);
+  async function handleSubmit(data: CredentialSubject) {
+    setLoading(true);
+    const result = await createCredentialAction(template.id, data);
+    setLoading(false);
+
+    if (result.errorCode) {
+      toast.error(tError(result.errorCode));
+    } else {
+      toast.success(tAction("success"));
+      setOpen(false);
+    }
   }
 
   return (

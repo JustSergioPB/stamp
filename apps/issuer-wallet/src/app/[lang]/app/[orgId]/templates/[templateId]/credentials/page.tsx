@@ -14,6 +14,8 @@ import AddButton from "./_components/add-button";
 import { CredentialMongoRepository } from "@features/credentials/credential/repositories";
 import { TemplateUtils } from "@features/credentials/template/utils";
 import { JsonSchemaMongoRepository } from "@features/credentials/json-schema/repositories";
+import StampTable, { Column } from "@components/stamp/table";
+import { VerifiableCredentialV2 } from "@stamp/domain";
 
 type Props = {
   searchParams: SearchParams;
@@ -32,6 +34,14 @@ export default async function Page({
     : undefined;
   const paginatedList = await CredentialMongoRepository.search(searchParams);
   const canEmit = TemplateUtils.canEmit(view);
+
+  const columns: Column<VerifiableCredentialV2>[] = [
+    {
+      key: "id",
+      name: t("props.id"),
+      cell: (item) => item.id,
+    },
+  ];
 
   return (
     <div className="h-full p-8 space-y-8 overflow-y-auto overflow-x-hidden bg-muted flex flex-col">
@@ -62,11 +72,21 @@ export default async function Page({
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
         {jsonSchema && (
-          <AddButton lang={lang} jsonSchema={jsonSchema} disabled={!canEmit} />
+          <AddButton
+            lang={lang}
+            jsonSchema={jsonSchema}
+            disabled={!canEmit}
+            template={view}
+          />
         )}
       </div>
       {paginatedList.items.length > 0 ? (
-        <></>
+        <StampTable
+          lang={lang}
+          result={paginatedList}
+          columns={columns}
+          className="grow shrink-0 basis-auto"
+        />
       ) : (
         <EmptyScreen
           title={canEmit ? t("empty.title") : tTemplate("emit.cant.title")}
@@ -79,6 +99,7 @@ export default async function Page({
               lang={lang}
               jsonSchema={jsonSchema}
               disabled={!canEmit}
+              template={view}
             />
           )}
         </EmptyScreen>
