@@ -1,8 +1,11 @@
 {
   "title": "Plantillas",
-  "cta": "Crea, edita y gestiona tus plantillas aquí",
+  "cta": "Crea, edita y gestiona plantillas aquí",
   "add": "Añadir plantilla",
   "create": "Crear plantilla",
+  "overview": "Vista general",
+  "credentials": "Credenciales",
+  "template": "Plantilla",
   "summary": {
     "id": "Id",
     "name": "Nombre",
@@ -30,6 +33,11 @@
       "title": "Importante",
       "description": "Para que una plantilla esté lista para emitir credenciales, debes completar la información obligatoria"
     }
+  },
+  "id": {
+    "url": "URL",
+    "did": "DID",
+    "uuid": "UUID"
   },
   "form": {
     "base": {
@@ -69,6 +77,10 @@
       "id": {
         "label": "Identificador",
         "description": "El contenido tendrá un identificador único"
+      },
+      "isAnonymous": {
+        "label": "Anónimo",
+        "description": "Indica si se guarda una copia del contenido en el servidor o no"
       },
       "required": {
         "label": "Requerido"
@@ -176,6 +188,8 @@
     "validity": {
       "title": "Periodo de validez",
       "subtitle": "Configura el periodo de validez de la credencial generada a partir de esta plantilla. Si no quieres establecer un periodo de validez, déjalo en blanco.",
+      "notSet": "No configurado",
+      "notExpires": "No caduca",
       "years": {
         "label": "Años"
       },
@@ -210,8 +224,52 @@
   "actions": {
     "backToTemplates": "Volver a plantillas"
   },
-  "status": {
-    "ready": "Listo",
-    "notReady": "Borrador"
+  "state": {
+    "private": "Privada",
+    "draft": "Borrador",
+    "public": "Pública",
+    "deprecated": "Deprecada"
+  },
+  "publish": {
+    "label": "Publicar",
+    "title": "Publicar plantilla",
+    "description": "¿Has revisado que todo esté bien? Este cambio es irreversible y una vez publicada, no podrás editar el contenido de la plantilla",
+    "confirm": "Lo entiendo, publicar esta plantilla",
+    "form": {
+      "word": {
+        "label": "Por favor escribe la palabra 'publicar' para confirmar",
+        "placeholder": "¿Has revisado todo?"
+      },
+      "state": {
+        "private": "La plantilla sólo se puede usar en tu organización. Si quieres hacerla pública más tarde podrás hacerlo desde aquí.",
+        "public": "La plantilla se puede usar en cualquier organización pero solo tu organización puede emitir credenciales con ella"
+      }
+    },
+    "error": {
+      "noMatch": "La palabra de confirmación no coincide"
+    }
+  },
+  "emit": {
+    "title": "Emitir credencial",
+    "cant": {
+      "title": "No se puede emitir con esta plantilla",
+      "subtitle": "No puedes emitir una credencial si la plantilla no es publica o privada"
+    },
+    "cta": "Emitir"
+  },
+  "deprecate": {
+    "label": "Deprecar",
+    "title": "Deprecar plantilla",
+    "description": "¿Estás seguro? Este cambio es irreversible y una vez deprecada, no podrás emitir nuevas credenciales con esta plantilla.",
+    "confirm": "Lo entiendo, deprecar esta plantilla",
+    "form": {
+      "word": {
+        "label": "Por favor escribe la palabra 'deprecar' para confirmar",
+        "placeholder": "¿Estás seguro?"
+      }
+    },
+    "error": {
+      "noMatch": "La palabra de confirmación no coincide"
+    }
   }
 }

@@ -22,7 +22,7 @@ const cookie: Cookie = {
     secure: true,
     path: "/",
   },
-  duration: 4 * 60 * 60 * 1000,
+  duration: 8 * 60 * 60 * 1000,
 };
 
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -46,7 +46,7 @@ async function encrypt(payload: Session): Promise<string> {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("4h")
+    .setExpirationTime("8h")
     .sign(key);
 }
 

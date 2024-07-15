@@ -1,7 +1,7 @@
 import Sidebar, { NavLink } from "@components/stamp/sidebar";
 import { ReactNode } from "react";
 import Banner from "@components/stamp/banner";
-import { Braces, User } from "lucide-react";
+import { BookCopy, User } from "lucide-react";
 import UserProfile from "@components/stamp/user-profile";
 import { verifySession } from "@features/auth/server";
 import { UserMongoRepository } from "@features/auth/repositories";
@@ -27,12 +27,12 @@ export default async function Layout({
   const navLinks: NavLink[] = [
     {
       title: "templates",
-      icon: <Braces className="h-4 w-4 mr-2" />,
+      icon: <BookCopy className="h-4 w-4" />,
       href: `/${lang}/app/${orgId}/templates`,
     },
     {
       title: "users",
-      icon: <User className="h-4 w-4 mr-2" />,
+      icon: <User className="h-4 w-4" />,
       href: `/${lang}/app/${orgId}/users`,
     },
   ];
@@ -40,12 +40,11 @@ export default async function Layout({
   return (
     <main className="h-full overflow-hidden flex">
       <Sidebar
-        className="basis-64 shrink-0"
         lang={lang}
         links={navLinks}
         dictionary="sidebar"
-        header={<Banner className="p-4" />}
-        footer={<UserProfile className="p-4" user={user} lang={lang} />}
+        header={<Banner />}
+        footer={<UserProfile user={user} lang={lang} />}
       />
       <div className="h-full basis-auto grow shrink-0">{children}</div>
     </main>

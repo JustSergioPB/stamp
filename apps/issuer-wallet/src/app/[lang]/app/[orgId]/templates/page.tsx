@@ -1,15 +1,15 @@
 import { useTranslation } from "@i18n/server";
 import EmptyScreen from "@components/stamp/empty-screen";
-import AddButton from "./_components/add-button";
-import { SearchParams, QueryMapper } from "@lib/query";
-import { TemplateMongoRepository } from "@features/template/repositories";
-import { Template, TemplateSummaryView } from "@features/template/models";
-import { SummaryMapper } from "@features/template/utils";
+import { SearchParams } from "@lib/query";
+import { TemplateMongoRepository } from "@features/credentials/template/repositories";
+import { TemplateSummaryView } from "@features/credentials/template/models";
+import { SummaryMapper } from "@features/credentials/template/utils";
 import StampTable, { Column } from "@components/stamp/table";
 import LinkCell from "@components/stamp/link-cell";
 import TextCell from "@components/stamp/text-cell";
 import ChipListCell from "@components/stamp/chip-list-cell";
-import StatusCell from "@components/stamp/status-cell";
+import ContentForm from "./[templateId]/_components/content/content-form";
+import StateBadge from "@components/stamp/status-badge";
 
 type Props = {
   searchParams: SearchParams;
@@ -23,11 +23,13 @@ export default async function Page({
   const { t } = await useTranslation(lang, "template");
   const { t: tLang } = await useTranslation(lang, "langs");
 
-  const query = QueryMapper.fromURL<Template>({ ...searchParams, orgId });
-  const paginatedList = await TemplateMongoRepository.search(query);
+  const paginatedList = await TemplateMongoRepository.search({
+    ...searchParams,
+    orgId,
+  });
   const { items, ...rest } = paginatedList;
   const summaryPaginatedList = {
-    items: items.map((item) => SummaryMapper.fromTemplate(item)),
+    items: items.map((item) => SummaryMapper.map(item)),
     ...rest,
   };
 
@@ -45,15 +47,12 @@ export default async function Page({
       cell: (item) => <TextCell value={item.name ?? ""} />,
     },
     {
-      key: "status",
+      key: "state",
       name: t("summary.status"),
       cell: (item) => (
-        <StatusCell
-          value={t(
-            item.status === "ready" ? "status.ready" : "status.notReady"
-          )}
-          variant={item.status === "ready" ? "success" : "base"}
-        />
+        <div className="flex space-x-2">
+          <StateBadge value={item.state} lang={lang} />
+        </div>
       ),
     },
     {
@@ -69,13 +68,13 @@ export default async function Page({
   ];
 
   return (
-    <div className="h-full flex flex-col gap-8 p-8">
+    <div className="h-full flex flex-col gap-8 p-8 bg-muted">
       <div className="flex items-center justify-between gap-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
           <p className=" text-neutral-500">{t("cta")}</p>
         </div>
-        <AddButton lang={lang} orgId={orgId} />
+        <ContentForm lang={lang} orgId={orgId} templateId={""} />
       </div>
       {paginatedList.items.length > 0 ? (
         <StampTable
@@ -86,7 +85,7 @@ export default async function Page({
         />
       ) : (
         <EmptyScreen title={t("empty.title")} subtitle={t("empty.subtitle")}>
-          <AddButton lang={lang} orgId={orgId} />
+          <ContentForm lang={lang} orgId={orgId} templateId={""} />
         </EmptyScreen>
       )}
     </div>

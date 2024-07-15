@@ -1,8 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import acceptLanguage from "accept-language";
 import { fallbackLang, languages, langCookieName } from "./i18n/constants";
-import { verifySession } from "@features/auth/server";
-import { Session } from "@features/auth/models";
 
 acceptLanguage.languages(languages);
 

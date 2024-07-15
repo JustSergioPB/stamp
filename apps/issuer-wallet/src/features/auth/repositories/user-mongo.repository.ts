@@ -1,17 +1,17 @@
-import { MongoRepository } from "@lib/mongo";
+import { MongoRepository, QueryMapper } from "@lib/mongo";
 import { CreateUserDTO, UpdateUserDTO, User } from "../models";
-import { PaginatedList, Query } from "@lib/query";
 import { ObjectId } from "mongodb";
+import { SearchParams, PaginatedList } from "@lib/query";
 
-export type MongoUser = Omit<User, "id" | "orgId"> & {
+export type UserMongo = Omit<User, "id" | "orgId"> & {
   _orgId: ObjectId;
 };
 
 export class UserMongoRepository extends MongoRepository {
-  private static collectionName = "users";
+  static collectionName = "users";
 
-  static async search(query: Query<User>): Promise<PaginatedList<User>> {
-    const collection = await this.connect<MongoUser>(
+  static async search(query: SearchParams): Promise<PaginatedList<User>> {
+    const collection = await this.connect<UserMongo>(
       UserMongoRepository.collectionName
     );
 
@@ -19,14 +19,11 @@ export class UserMongoRepository extends MongoRepository {
       throw new Error("Failed to retrieve collection");
     }
 
-    const { page, pageSize, orderBy, orderDirection } = query;
-    const skip = page * Number(pageSize);
-    const cursor = collection.find().skip(skip).limit(Number(pageSize));
-
-    if (orderBy) {
-      cursor.sort({ [orderBy]: orderDirection === "desc" ? -1 : 1 });
-    }
-
+    const { cursor, page, pageSize } = QueryMapper.map(
+      query,
+      collection.find(),
+      Object.keys({} as UserMongo)
+    );
     const documents = await cursor.toArray();
     const count = await collection.countDocuments();
 
@@ -35,17 +32,16 @@ export class UserMongoRepository extends MongoRepository {
         ...document,
         orgId: _orgId.toString(),
         id: _id.toString(),
-        createdAt: _id.getTimestamp().toISOString(),
       })),
       count,
       currentPage: page,
       totalPages: Math.ceil(count / pageSize),
-      pageSize: pageSize,
+      pageSize,
     };
   }
 
   static async getById(id: string): Promise<User> {
-    const collection = await this.connect<MongoUser>(
+    const collection = await this.connect<UserMongo>(
       UserMongoRepository.collectionName
     );
 
@@ -71,7 +67,7 @@ export class UserMongoRepository extends MongoRepository {
   }
 
   static async getByEmail(email: string): Promise<User> {
-    const collection = await this.connect<MongoUser>(
+    const collection = await this.connect<UserMongo>(
       UserMongoRepository.collectionName
     );
 
@@ -97,7 +93,7 @@ export class UserMongoRepository extends MongoRepository {
   }
 
   static async create(create: CreateUserDTO): Promise<string> {
-    const collection = await this.connect<MongoUser>(
+    const collection = await this.connect<UserMongo>(
       UserMongoRepository.collectionName
     );
 
@@ -117,7 +113,7 @@ export class UserMongoRepository extends MongoRepository {
   }
 
   static async update(id: string, update: UpdateUserDTO): Promise<void> {
-    const collection = await this.connect<MongoUser>(
+    const collection = await this.connect<UserMongo>(
       UserMongoRepository.collectionName
     );
 

@@ -16,7 +16,7 @@ import { User } from "@features/auth/models";
 import { OrgMongoRepository } from "@features/auth/repositories";
 import { UserMongoRepository } from "@features/auth/repositories/user-mongo.repository";
 import { useTranslation } from "@i18n/server";
-import { QueryMapper, SearchParams } from "@lib/query";
+import { SearchParams } from "@lib/query";
 import { ArrowLeft } from "lucide-react";
 
 type Props = {
@@ -30,8 +30,10 @@ export default async function Page({
 }: Props) {
   const { t } = await useTranslation(lang, "users");
   const { t: tOrgs } = await useTranslation(lang, "orgs");
-  const query = QueryMapper.fromURL<User>({ ...searchParams, orgId: id });
-  const paginatedList = await UserMongoRepository.search(query);
+  const paginatedList = await UserMongoRepository.search({
+    ...searchParams,
+    orgId: id,
+  });
   const org = await OrgMongoRepository.getById(id);
 
   const columns: Column<User>[] = [

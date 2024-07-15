@@ -26,7 +26,7 @@ export async function createUserAction(
     await AuditLogMongoRepository.create({
       userId: session.id,
       operation: "create",
-      collection: "user",
+      collection: UserMongoRepository.collectionName,
       documentId: userId,
       changes: create,
     });
